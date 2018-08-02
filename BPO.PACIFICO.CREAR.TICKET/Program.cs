@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Robot.Util.Nacar;
 
 namespace BPO.PACIFICO.CREAR.TICKET.HIJO
 {
@@ -53,6 +54,7 @@ namespace BPO.PACIFICO.CREAR.TICKET.HIJO
 
         private void GetRobotParam()
         {
+          
           _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
           _estadoHijo = Convert.ToInt32(_robot.GetValueParamRobot("EstadoHijo").ValueParam);
           _estadoPadre = Convert.ToInt32(_robot.GetValueParamRobot("EstadoPadre").ValueParam);
