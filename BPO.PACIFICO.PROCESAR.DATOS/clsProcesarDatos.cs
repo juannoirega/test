@@ -57,6 +57,7 @@ namespace BPO.PACIFICO.ProcesarDatos
         {
             try
             {
+
                 ValidaProducto(ticket);
             }
             catch (Exception)
