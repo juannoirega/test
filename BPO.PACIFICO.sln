@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPO.PACIFICO.PROCESAR.DATOS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPO.PACIFICO.CREAR.TICKET.HIJO", "BPO.PACIFICO.CREAR.TICKET\BPO.PACIFICO.CREAR.TICKET.HIJO.csproj", "{662989EB-61F5-4A1E-81C3-B56549D5DA26}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robot.Util", "Robot.Util.Nacar\Robot.Util.csproj", "{521F4F83-BC5B-4FBC-A799-CF027808875E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{662989EB-61F5-4A1E-81C3-B56549D5DA26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{662989EB-61F5-4A1E-81C3-B56549D5DA26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{662989EB-61F5-4A1E-81C3-B56549D5DA26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{521F4F83-BC5B-4FBC-A799-CF027808875E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{521F4F83-BC5B-4FBC-A799-CF027808875E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{521F4F83-BC5B-4FBC-A799-CF027808875E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{521F4F83-BC5B-4FBC-A799-CF027808875E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
