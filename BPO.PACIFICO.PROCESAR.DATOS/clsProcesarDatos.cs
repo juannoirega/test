@@ -15,18 +15,21 @@ namespace BPO.PACIFICO.ProcesarDatos
     {
         #region "PARÁMETROS"
         static BaseRobot<Program> _robot = null;
-        private static int _nIdTipoLinea = 1;
-        private static int _nIdSinCastigo = 2;
-        private static int _nIdSinSiniestro = 3;
-        private static int _nIdEstado = 4;
-        private static int _nIdTipoAnulacion = 5;
-        private static int _nIdNomContratante = 6;
-        private static int _nIdNomContratanteCorreo = 7;
-        private static int _nIdNomAsegurado = 8;
-        private static int _nIdNomAseguradoCorreo = 9;
-        private static int _nIdVistoBueno = 10;
-        private static int _nIdFechaAnulacion = 11;
-        private static int _nIdFechaInicio = 12;
+        private static int _nIdNomContratante = 19;
+        private static int _nIdNomAsegurado = 18;
+        private static int _nIdTipoPoliza = 26;
+        private static int _nIdFechaInicioVigencia = 9;
+        private static int _nIdFechaFinVigencia = 8;
+        private static int _nIdProducto = 1034;
+        private static int _nIdVistoBueno = 1026;
+        private static int _nIdEstado = 1032;
+        private static int _nIdTipoVigencia = 0;
+        private static int _nIdAgente = 2;
+        private static int _nIdFechaHoraEmail = 15;
+        private static bool _bProrrata = false;
+        //Parámetros del Robot Procesamiento de Datos:
+        private static int _nDiasArrepentimiento = Convert.ToInt32(_robot.GetValueParamRobot("nDiasArrepentimiento").ValueParam);
+        private static int _nDiasDesistimiento = Convert.ToInt32(_robot.GetValueParamRobot("nDiasDesistimiento").ValueParam);
         #endregion
 
         static void Main(string[] args)
@@ -40,7 +43,6 @@ namespace BPO.PACIFICO.ProcesarDatos
             if (_robot.Tickets.Count < 1)
             {
                 return;
-
             }
             foreach (var ticket in _robot.Tickets)
             {
@@ -50,16 +52,27 @@ namespace BPO.PACIFICO.ProcesarDatos
             //throw new NotImplementedException();    
         }
 
+        //Inicia el procesamiento de datos:
         private void ProcesarTicket(Ticket ticket)
         {
-            //Invoca a la validación correspondiente:
-            switch (Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdTipoLinea).Value))
+            try
+            {
+                ValidaProducto(ticket);
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void ValidaProducto()
+        {
+            //Invoca a la validación correspondiente según producto:
+            switch (Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdProducto).Value))
             {
                 case 1:
                     //Valida las reglas generales para Autos:
-                    if (Convert.ToBoolean(ticket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdSinCastigo).Value) &&
-                        Convert.ToBoolean(ticket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdSinSiniestro).Value) &&
-                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value) == 1) //ID DEL ESTADO VIGENTE. 
+                    if (Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value) == 1) //ID DEL ESTADO VIGENTE. 
                     {
                         //Valida las reglas específicas:
                         if (ValidarReglasAutos(ticket))
@@ -70,6 +83,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                     break;
 
                 case 2:
+                    //Valida las reglas generales para LLPP:
                     if (ValidarReglasLLPP())
                     {
 
@@ -77,6 +91,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                     break;
 
                 case 3:
+                    //Valida las reglas generales para BANA:
                     if (ValidarReglasAlianzas())
                     {
 
@@ -84,6 +99,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                     break;
 
                 case 4:
+                    //Valida las reglas generales para RRGG:
                     if (ValidarReglasRRGG())
                     {
 
@@ -98,31 +114,27 @@ namespace BPO.PACIFICO.ProcesarDatos
         //1.- Autos:
         private bool ValidarReglasAutos(Ticket oTicket)
         {
-            switch (Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdTipoAnulacion).Value))
+            //VERIFICA QUE SEA EMISIÓN:
+            if (Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdTipoPoliza).Value) == 2)
             {
-                case 1:
-                    if (oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdNomContratante).Value == oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdNomContratanteCorreo).Value ||
-                        oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdNomAsegurado).Value == oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdNomAseguradoCorreo).Value)
+                TimeSpan nDiferencia = Convert.ToDateTime(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaHoraEmail).Value) - Convert.ToDateTime(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaInicioVigencia).Value);
+                int nDias = nDiferencia.Days;
+                //Si ha superado los días de arrepentimiento:
+                if (nDias > _nDiasArrepentimiento)
+                {
+                    if (oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdVistoBueno).Value.Length <= 0)
                     {
-                        return true;
+                        return false;
                     }
-                    break;
-                case 2:
-                    if (Convert.ToBoolean(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdVistoBueno).Value))
-                    {
-                        return true;
-                    }
-                    break;
-                case 3:
-                    if (Convert.ToInt32(Convert.ToDateTime(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaAnulacion).Value) - Convert.ToDateTime(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaInicio).Value))
-                        > Convert.ToInt32(_robot.GetValueParamRobot("nDiasProrrata").ValueParam))
-                    {
-
-                    }
-                    break;
-                default:
-                    break;
+                }
             }
+            else
+            {
+                //No son emisiones:
+
+            }
+
+
 
             try
             {
