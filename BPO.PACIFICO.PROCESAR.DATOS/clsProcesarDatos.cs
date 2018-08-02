@@ -41,32 +41,37 @@ namespace BPO.PACIFICO.ProcesarDatos
         protected override void Start()
         {
             if (_robot.Tickets.Count < 1)
-            {
                 return;
-            }
-            foreach (var ticket in _robot.Tickets)
-            {
-                ProcesarTicket(ticket);
-            }
 
-            //throw new NotImplementedException();    
+            LogStartStep(4);
+            foreach (Ticket ticket in _robot.Tickets)
+            {
+                try
+                {
+                    ProcesarTicket(ticket);
+                }
+                catch (Exception ex)
+                {
+                    LogFailStep(41, ex);
+                }  
+            }
+            Environment.Exit(0);
         }
 
         //Inicia el procesamiento de datos:
-        private void ProcesarTicket(Ticket ticket)
+        private void ProcesarTicket(Ticket ticketDatos)
         {
             try
             {
-
-                ValidaProducto(ticket);
+                ValidaProducto(ticketDatos);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                LogFailProcess(12, ex);
             }
         }
 
-        private void ValidaProducto()
+        private void ValidaProducto(Ticket ticketDatos)
         {
             //Invoca a la validación correspondiente según producto:
             switch (Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdProducto).Value))
