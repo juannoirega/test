@@ -3,4 +3,7 @@
 ################################################################################
 
 /BPO.PACIFICO/obj/Debug
+/.vs/BPO.PACIFICO
+/BPO.PACIFICO.PROCESAR.DATOS/obj/Debug
+/BPO.PACIFICO.CREAR.TICKET/obj/Debug
 /.vs/BPO.PACIFICO/v14

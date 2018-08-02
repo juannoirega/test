@@ -7,8 +7,8 @@
     <ProjectGuid>{662989EB-61F5-4A1E-81C3-B56549D5DA26}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BPO.PACIFICO.CREAR.TICKET</RootNamespace>
-    <AssemblyName>BPO.PACIFICO.CREAR.TICKET</AssemblyName>
+    <RootNamespace>BPO.PACIFICO.CREAR.TICKET.HIJO</RootNamespace>
+    <AssemblyName>BPO.PACIFICO.CREAR.TICKET.HIJO</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,6 +33,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="everis.Ees.Proxy">
+      <HintPath>..\..\Users\kribeirs\source\repos\Capacitacion\Capacitacion\everis.Ees.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.OData.Client, Version=6.19.0.11114, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.OData.Client.6.19.0\lib\net40\Microsoft.OData.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.OData.Core, Version=6.19.0.11114, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.OData.Core.6.19.0\lib\portable-net45+win+wpa81\Microsoft.OData.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.OData.Edm, Version=6.19.0.11114, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.OData.Edm.6.19.0\lib\portable-net45+win+wpa81\Microsoft.OData.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Spatial, Version=6.19.0.11114, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Spatial.6.19.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
