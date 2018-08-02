@@ -40,6 +40,7 @@ namespace BPO.PACIFICO.ProcesarDatos
             if (_robot.Tickets.Count < 1)
             {
                 return;
+
             }
             foreach (var ticket in _robot.Tickets)
             {
