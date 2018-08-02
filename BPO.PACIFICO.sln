@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPO.PACIFICO.CAPTURAR.EMAIL", "BPO.PACIFICO\BPO.PACIFICO.CAPTURAR.EMAIL.csproj", "{879535BF-158C-40C5-911B-A2C673F08E2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPO.PACIFICO.PROCESAR.DATOS", "BPO.PACIFICO.PROCESAR.DATOS\BPO.PACIFICO.PROCESAR.DATOS.csproj", "{3B1BD443-671E-45A8-9F0D-2E1A5B38B259}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPO.PACIFICO.CREAR.TICKET", "BPO.PACIFICO.CREAR.TICKET\BPO.PACIFICO.CREAR.TICKET.csproj", "{662989EB-61F5-4A1E-81C3-B56549D5DA26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPO.PACIFICO.CREAR.TICKET.HIJO", "BPO.PACIFICO.CREAR.TICKET\BPO.PACIFICO.CREAR.TICKET.HIJO.csproj", "{662989EB-61F5-4A1E-81C3-B56549D5DA26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0A05CD5B-93AA-4794-AA91-0A986DC34989}
 	EndGlobalSection
 EndGlobal
