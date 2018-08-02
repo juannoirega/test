@@ -74,14 +74,14 @@ namespace BPO.PACIFICO.ProcesarDatos
         private void ValidaProducto(Ticket ticketDatos)
         {
             //Invoca a la validación correspondiente según producto:
-            switch (Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdProducto).Value))
+            switch (Convert.ToInt32(ticketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdProducto).Value))
             {
                 case 1:
                     //Valida las reglas generales para Autos:
-                    if (Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value) == 1) //ID DEL ESTADO VIGENTE. 
+                    if (Convert.ToInt32(ticketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value) == 1) //ID DEL ESTADO VIGENTE. 
                     {
                         //Valida las reglas específicas:
-                        if (ValidarReglasAutos(ticket))
+                        if (ValidarReglasAutos(ticketDatos))
                         {
 
                         }
