@@ -67,16 +67,16 @@ namespace BPO.PACIFICO.ProcesarDatos
         {
             try
             {
-                _nIdNombreContratante = eesFields.Default.dni;
-                _nIdNombreAsegurado = eesFields.Default.dni;
-                _nIdTipoPoliza = eesFields.Default.dni;
-                _nIdFechaInicioVigencia = eesFields.Default.dni;
-                _nIdFechaFinVigencia = eesFields.Default.dni;
-                _nIdProducto = eesFields.Default.dni;
-                _nIdVistoBueno = eesFields.Default.dni;
-                _nIdEstado = eesFields.Default.dni;
-                _nIdFechaHoraEmail = eesFields.Default.dni;
-                _nIdCanal = eesFields.Default.dni;
+                _nIdNombreContratante = eesFields.Default.nombre_asegurado;
+                _nIdNombreAsegurado = eesFields.Default.nombre_asegurado;
+                _nIdTipoPoliza = eesFields.Default.nombre_asegurado;
+                _nIdFechaInicioVigencia = eesFields.Default.nombre_asegurado;
+                _nIdFechaFinVigencia = eesFields.Default.nombre_asegurado;
+                _nIdProducto = eesFields.Default.nombre_asegurado;
+                _nIdVistoBueno = eesFields.Default.nombre_asegurado;
+                _nIdEstado = eesFields.Default.nombre_asegurado;
+                _nIdFechaHoraEmail = eesFields.Default.nombre_asegurado;
+                _nIdCanal = eesFields.Default.nombre_asegurado;
                 //Parámetros del Robot Procesamiento de Datos:
                 _nDiasArrepentimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasArrepentimiento").ValueParam);
                 _nDiasDesistimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasDesistimiento").ValueParam);
