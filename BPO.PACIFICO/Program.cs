@@ -1,4 +1,7 @@
-﻿using Google.Apis.Auth.OAuth2;
+﻿using everis.Ees.Proxy.Core;
+using everis.Ees.Proxy.Services.Interfaces;
+using Everis.Ees.Entities;
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
@@ -8,19 +11,43 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using everis.Ees.Proxy.Services;
 
 namespace GmailQuickstart
 {
-    class Program
+    class Program : IRobot
     {
+        static BaseRobot<Program> _robot = null;
         // If modifying these scopes, delete your previously saved credentials
         // at ~/.credentials/gmail-dotnet-quickstart.json
         static string[] Scopes = { GmailService.Scope.GmailReadonly };
         static string ApplicationName = "Gmail API .NET Quickstart";
 
         static void Main(string[] args)
+        {
+            _robot = new BaseRobot<Program>(args);
+            _robot.Start();
+
+           
+        }
+        protected override void Start()
+        {
+            Ticket newTicket = new Ticket { };
+            var container = ODataContextWrapper.GetContainer();
+
+            List<DomainValue> list = container.DomainValues.Where(a => a.DomainId==1009).ToList();
+
+              
+           
+            
+            Email();
+
+        }
+
+        public void Email()
         {
             UserCredential credential;
 
@@ -50,7 +77,7 @@ namespace GmailQuickstart
             request.LabelIds = "INBOX";
             request.IncludeSpamTrash = false;
             request.Q = "is:unread";
-            
+
             // List Messages.
             IList<Message> messages = request.Execute().Messages;
             Console.WriteLine("Messages:");
@@ -98,16 +125,21 @@ namespace GmailQuickstart
                                 byte[] data = Convert.FromBase64String(codedBody);
                                 body = Encoding.UTF8.GetString(data);
 
-
+                               
                                 //now you have the data you want....
-
+                                buscar(Convert.ToString(subject));
+                                Console.WriteLine("{0}", subject);
+                                date = String.Empty;
+                                from = String.Empty;
+                                break;
                             }
 
                         }
                     }
 
-                    var abc = message.Payload.Headers;
-                    Console.WriteLine("{0}", abc);
+                    //var abc = message.Payload.Headers;
+
+                   
                 }
             }
             else
@@ -136,7 +168,6 @@ namespace GmailQuickstart
             */
             Console.Read();
         }
-
         static String getNestedParts(IList<MessagePart> part, string curr)
         {
             string str = curr;
@@ -165,5 +196,21 @@ namespace GmailQuickstart
             }
 
         }
+
+        public void buscar(string DigitarTexto)
+        {
+
+            Regex regex;
+            MatchCollection matches;
+
+            regex = new Regex(@"(?:hola)");
+            matches = regex.Matches(DigitarTexto);
+            Console.WriteLine("Se encontraron {0} letras. ", matches.Count);
+
+
+        }
+
+
+
     }
 }
