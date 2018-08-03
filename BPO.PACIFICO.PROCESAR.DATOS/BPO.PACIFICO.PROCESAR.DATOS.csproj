@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="everis.Ees.Proxy">
-      <HintPath>..\..\ANINAMAC\EES\EES 2018-V2.0\Instaladores\everis.Ees.Proxy.2018.2.0.1\everis.Ees.Proxy.dll</HintPath>
+      <HintPath>..\resorces\everis.Ees.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.OData.Client">
       <HintPath>..\..\ANINAMAC\EES\EES 2018-V2.0\Instaladores\everis.Ees.Proxy.2018.2.0.1\Microsoft.OData.Client.dll</HintPath>
@@ -54,6 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Robot.Util.Nacar\Robot.Util.csproj">
+      <Project>{521f4f83-bc5b-4fbc-a799-cf027808875e}</Project>
+      <Name>Robot.Util</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
