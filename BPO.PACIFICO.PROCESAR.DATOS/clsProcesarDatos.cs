@@ -8,28 +8,28 @@ using everis.Ees.Proxy.Core;
 using Everis.Ees.Entities;
 using System.Threading;
 using Microsoft.VisualBasic;
+using Robot.Util.Nacar;
 
 namespace BPO.PACIFICO.ProcesarDatos
 {
     public class Program : IRobot
     {
         #region "PARÁMETROS"
-        static BaseRobot<Program> _robot = null;
-        private static int _nIdNomContratante = 19;
-        private static int _nIdNomAsegurado = 18;
-        private static int _nIdTipoPoliza = 26;
-        private static int _nIdFechaInicioVigencia = 9;
-        private static int _nIdFechaFinVigencia = 8;
-        private static int _nIdProducto = 1034;
-        private static int _nIdVistoBueno = 1026;
-        private static int _nIdEstado = 1032;
-        private static int _nIdTipoVigencia = 0;
-        private static int _nIdAgente = 2;
-        private static int _nIdFechaHoraEmail = 15;
+        private static BaseRobot<Program> _robot = null;
+        private static int _nIdTipoPoliza;
+        private static int _nIdFechaInicioVigencia;
+        private static int _nIdFechaFinVigencia;
+        private static int _nIdProducto;
+        private static int _nIdVistoBueno;
+        private static int _nIdEstado;
+        private static int _nIdFechaHoraEmail;
+        private static int _nIdCanal;
+        private static int _nDiasArrepentimiento;
+        private static int _nDiasDesistimiento;
         private static bool _bProrrata = false;
-        //Parámetros del Robot Procesamiento de Datos:
-        private static int _nDiasArrepentimiento = Convert.ToInt32(_robot.GetValueParamRobot("nDiasArrepentimiento").ValueParam);
-        private static int _nDiasDesistimiento = Convert.ToInt32(_robot.GetValueParamRobot("nDiasDesistimiento").ValueParam);
+        private static string _cLineaPersonal;
+        private static string _cCanal;
+        private static string _cTipoPoliza;
         #endregion
 
         static void Main(string[] args)
@@ -43,7 +43,9 @@ namespace BPO.PACIFICO.ProcesarDatos
             if (_robot.Tickets.Count < 1)
                 return;
 
+            ObtenerParametros();
             LogStartStep(4);
+            //Recorre uno a uno los tickets asignados al Robot:
             foreach (Ticket ticket in _robot.Tickets)
             {
                 try
@@ -58,12 +60,38 @@ namespace BPO.PACIFICO.ProcesarDatos
             Environment.Exit(0);
         }
 
+        //Obtiene valores para los parámetros del Robot desde EES:
+        private void ObtenerParametros()
+        {
+            _nIdTipoPoliza = eesFields.Default.dni;
+            _nIdFechaInicioVigencia = eesFields.Default.dni;
+            _nIdFechaFinVigencia = eesFields.Default.dni;
+            _nIdProducto = eesFields.Default.dni;
+            _nIdVistoBueno = eesFields.Default.dni;
+            _nIdEstado = eesFields.Default.dni;
+            _nIdFechaHoraEmail = eesFields.Default.dni;
+            _nIdCanal = eesFields.Default.dni;
+            _nDiasArrepentimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasArrepentimiento").ValueParam);
+            _nDiasDesistimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasDesistimiento").ValueParam);
+            _cLineaPersonal = _robot.GetValueParamRobot("LineaPersonal").ValueParam;
+            _cCanal = _robot.GetValueParamRobot("Canal").ValueParam;
+            _cTipoPoliza = _robot.GetValueParamRobot("TipoPoliza").ValueParam;
+        }
+
         //Inicia el procesamiento de datos:
-        private void ProcesarTicket(Ticket ticketDatos)
+        private void ProcesarTicket(Ticket oTicketDatos)
         {
             try
             {
-                ValidaProducto(ticketDatos);
+                if (Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value) == 1) //ID DEL ESTADO VIGENTE. 
+                {
+                    if (!ValidarNoVacios(oTicketDatos)) return;
+                    ValidaProducto(oTicketDatos);
+                }
+                else
+                {
+                    //Enviar a mesa de control: No es estado VIGENTE.
+                }       
             }
             catch (Exception ex)
             {
@@ -71,153 +99,88 @@ namespace BPO.PACIFICO.ProcesarDatos
             }
         }
 
-        private void ValidaProducto(Ticket ticketDatos)
+        //Valida que los campos del TicketValues no estén vacíos:
+        private bool ValidarNoVacios(Ticket oTicketDatos)
         {
-            //Invoca a la validación correspondiente según producto:
-            switch (Convert.ToInt32(ticketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdProducto).Value))
+            if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value.Length > 0)
+                return false;
+            return true;
+        }
+
+        private void ValidaProducto(Ticket oTicketDatos)
+        {
+            //Valida reglas con los datos obtenidos:
+            if (ReglasDeValidacion(oTicketDatos))
             {
-                case 1:
-                    //Valida las reglas generales para Autos:
-                    if (Convert.ToInt32(ticketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value) == 1) //ID DEL ESTADO VIGENTE. 
-                    {
-                        //Valida las reglas específicas:
-                        if (ValidarReglasAutos(ticketDatos))
-                        {
-
-                        }
-                    }
-                    break;
-
-                case 2:
-                    //Valida las reglas generales para LLPP:
-                    if (ValidarReglasLLPP())
-                    {
-
-                    }
-                    break;
-
-                case 3:
-                    //Valida las reglas generales para BANA:
-                    if (ValidarReglasAlianzas())
-                    {
-
-                    }
-                    break;
-
-                case 4:
-                    //Valida las reglas generales para RRGG:
-                    if (ValidarReglasRRGG())
-                    {
-
-                    }
-                    break;
-                default:
-                    break;
+                ActualizarTicket(oTicketDatos);
             }
         }
 
         #region "REGLAS DE VALIDACIÓN"
-        //1.- Autos:
-        private bool ValidarReglasAutos(Ticket oTicket)
+        private bool ReglasDeValidacion(Ticket oTicketDatos)
         {
+            TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaHoraEmail).Value)
+                        - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaInicioVigencia).Value);
+
+            //Para saber si es Prorrata:
+            TimeSpan nProrrata = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaFinVigencia).Value)
+                                    - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaInicioVigencia).Value);
+
             //VERIFICA QUE SEA EMISIÓN:
-            if (Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdTipoPoliza).Value) == 2)
+            if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdTipoPoliza).Value == _cTipoPoliza)
             {
-                TimeSpan nDiferencia = Convert.ToDateTime(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaHoraEmail).Value) - Convert.ToDateTime(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaInicioVigencia).Value);
-                int nDias = nDiferencia.Days;
-                //Si ha superado los días de arrepentimiento:
-                if (nDias > _nDiasArrepentimiento)
+                if (nDiferencia.Days > _nDiasDesistimiento)
                 {
-                    if (oTicket.TicketValues.FirstOrDefault(o => o.FieldId == _nIdVistoBueno).Value.Length <= 0)
+                    //Verifica que tenga VoBo:
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdVistoBueno).Value.Length <= 0)
+                    {
+                        return false;
+                    }
+                }
+
+                if (nProrrata.Days != 365)
+                {
+                    _bProrrata = true;
+                }
+            }
+            else //Es renovación:
+            {
+                //Si es prorrata:
+                if (nProrrata.Days != 365)
+                {
+                    _bProrrata = true;
+                    if (nDiferencia.Days > _nDiasDesistimiento)
+                    {
+                        //Verifica que tenga VoBo:
+                        if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdVistoBueno).Value.Length <= 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                //Es devolución al 100%:
+                else if (nDiferencia.Days > _nDiasArrepentimiento)
+                {
+                    //Verifica que tenga VoBo:
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdVistoBueno).Value.Length <= 0)
                     {
                         return false;
                     }
                 }
             }
-            else
-            {
-                //No son emisiones:
-
-            }
-
-
-
-            try
-            {
-                ActualizarTicket();
-                return true;
-            }
-            catch
-            {
-                Pausa();
-            }
-            return false;
-        }
-
-        //2.- Línas Generales:
-        private bool ValidarReglasLLPP()
-        {
-            try
-            {
-                ActualizarTicket();
-                return true;
-            }
-            catch
-            {
-                Pausa();
-            }
-            return false;
-        }
-
-        //3.- Banca y Alianzas:
-        private bool ValidarReglasAlianzas()
-        {
-            try
-            {
-                ActualizarTicket();
-                return true;
-            }
-            catch
-            {
-                Pausa();
-            }
-            return false;
-        }
-
-        //4.- Riesgos Generales:
-        private bool ValidarReglasRRGG()
-        {
-            try
-            {
-                ActualizarTicket();
-                return true;
-            }
-            catch
-            {
-                Pausa();
-            }
-            return false;
+            return true;
         }
         #endregion
 
-        private void Pausa(double nTiempo = 1)
-        {
-            Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
-        }
-
         //Actualiza ticket con los nuevos datos para la anulación de póliza
-        private void ActualizarTicket()
+        private void ActualizarTicket(Ticket oTicketActual)
         {
-
+            //Verifica si es VTAR-BCP:
+            if ((oTicketActual.TicketValues.FirstOrDefault(o => o.FieldId == _nIdProducto).Value == _cLineaPersonal) &&
+                (oTicketActual.TicketValues.FirstOrDefault(o => o.FieldId == _nIdCanal).Value == _cCanal))
+            {
+                //Enviar al Portal BCP:
+            }
         }
-
-
-
-        //Concatena ubicación y nombre de imagen en archivo:
-        private string EnlaceImagen(string cNombre)
-        {
-            return (String.Concat(@"Imagenes/", cNombre));
-        }
-
     }
 }
