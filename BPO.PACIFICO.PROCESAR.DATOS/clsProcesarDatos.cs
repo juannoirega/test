@@ -16,6 +16,8 @@ namespace BPO.PACIFICO.ProcesarDatos
     {
         #region "PARÁMETROS"
         private static BaseRobot<Program> _robot = null;
+        private static int _nIdNombreContratante;
+        private static int _nIdNombreAsegurado;
         private static int _nIdTipoPoliza;
         private static int _nIdFechaInicioVigencia;
         private static int _nIdFechaFinVigencia;
@@ -63,19 +65,29 @@ namespace BPO.PACIFICO.ProcesarDatos
         //Obtiene valores para los parámetros del Robot desde EES:
         private void ObtenerParametros()
         {
-            _nIdTipoPoliza = eesFields.Default.dni;
-            _nIdFechaInicioVigencia = eesFields.Default.dni;
-            _nIdFechaFinVigencia = eesFields.Default.dni;
-            _nIdProducto = eesFields.Default.dni;
-            _nIdVistoBueno = eesFields.Default.dni;
-            _nIdEstado = eesFields.Default.dni;
-            _nIdFechaHoraEmail = eesFields.Default.dni;
-            _nIdCanal = eesFields.Default.dni;
-            _nDiasArrepentimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasArrepentimiento").ValueParam);
-            _nDiasDesistimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasDesistimiento").ValueParam);
-            _cLineaPersonal = _robot.GetValueParamRobot("LineaPersonal").ValueParam;
-            _cCanal = _robot.GetValueParamRobot("Canal").ValueParam;
-            _cTipoPoliza = _robot.GetValueParamRobot("TipoPoliza").ValueParam;
+            try
+            {
+                _nIdNombreContratante = eesFields.Default.dni;
+                _nIdNombreAsegurado = eesFields.Default.dni;
+                _nIdTipoPoliza = eesFields.Default.dni;
+                _nIdFechaInicioVigencia = eesFields.Default.dni;
+                _nIdFechaFinVigencia = eesFields.Default.dni;
+                _nIdProducto = eesFields.Default.dni;
+                _nIdVistoBueno = eesFields.Default.dni;
+                _nIdEstado = eesFields.Default.dni;
+                _nIdFechaHoraEmail = eesFields.Default.dni;
+                _nIdCanal = eesFields.Default.dni;
+                //Parámetros del Robot Procesamiento de Datos:
+                _nDiasArrepentimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasArrepentimiento").ValueParam);
+                _nDiasDesistimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasDesistimiento").ValueParam);
+                _cLineaPersonal = _robot.GetValueParamRobot("LineaPersonal").ValueParam;
+                _cCanal = _robot.GetValueParamRobot("Canal").ValueParam;
+                _cTipoPoliza = _robot.GetValueParamRobot("TipoPoliza").ValueParam;
+            }
+            catch (Exception Ex)
+            {
+                LogFailStep(12, Ex);
+            }
         }
 
         //Inicia el procesamiento de datos:
@@ -83,27 +95,45 @@ namespace BPO.PACIFICO.ProcesarDatos
         {
             try
             {
-                if (Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value) == 1) //ID DEL ESTADO VIGENTE. 
+                //Valida que no tenga campos vacíos:
+                if (!ValidarVacios(oTicketDatos))
                 {
-                    if (!ValidarNoVacios(oTicketDatos)) return;
-                    ValidaProducto(oTicketDatos);
+                    if (Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value) == 1) //ID DEL ESTADO VIGENTE. 
+                    {
+                        ValidaProducto(oTicketDatos);
+                    }
+                    else
+                    {
+                        //Enviar a mesa de control: No es estado VIGENTE.
+
+                    }  
                 }
                 else
                 {
-                    //Enviar a mesa de control: No es estado VIGENTE.
-                }       
+                    //Enviar a mesa de control: Tiene campos vacíos.
+                }
             }
-            catch (Exception ex)
+            catch (Exception Ex)
             {
-                LogFailProcess(12, ex);
+                LogFailStep(12, Ex);
             }
         }
 
         //Valida que los campos del TicketValues no estén vacíos:
-        private bool ValidarNoVacios(Ticket oTicketDatos)
+        private bool ValidarVacios(Ticket oTicketDatos)
         {
-            if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value.Length > 0)
-                return false;
+            if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value.Length > 0 &&
+                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdTipoPoliza).Value.Length > 0 &&
+                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaInicioVigencia).Value.Length > 0 &&
+                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaFinVigencia).Value.Length > 0 &&
+                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaHoraEmail).Value.Length > 0 &&
+                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdNombreContratante).Value.Length > 0 &&
+                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdNombreAsegurado).Value.Length > 0 && 
+                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdCanal).Value.Length > 0 &&
+                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdProducto).Value.Length > 0) 
+                {
+                    return false;
+                }
             return true;
         }
 
@@ -113,6 +143,11 @@ namespace BPO.PACIFICO.ProcesarDatos
             if (ReglasDeValidacion(oTicketDatos))
             {
                 ActualizarTicket(oTicketDatos);
+            }
+            else
+            {
+                //Enviar a mesa de control:
+
             }
         }
 
@@ -175,12 +210,7 @@ namespace BPO.PACIFICO.ProcesarDatos
         //Actualiza ticket con los nuevos datos para la anulación de póliza
         private void ActualizarTicket(Ticket oTicketActual)
         {
-            //Verifica si es VTAR-BCP:
-            if ((oTicketActual.TicketValues.FirstOrDefault(o => o.FieldId == _nIdProducto).Value == _cLineaPersonal) &&
-                (oTicketActual.TicketValues.FirstOrDefault(o => o.FieldId == _nIdCanal).Value == _cCanal))
-            {
-                //Enviar al Portal BCP:
-            }
+
         }
     }
 }
