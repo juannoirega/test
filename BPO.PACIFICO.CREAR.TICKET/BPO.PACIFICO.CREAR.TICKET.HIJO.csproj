@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="everis.Ees.Proxy">
-      <HintPath>..\resorces\everis.Ees.Proxy.dll</HintPath>
+      <HintPath>..\..\Users\kribeirs\source\repos\Capacitacion\Capacitacion\everis.Ees.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.OData.Client, Version=6.19.0.11114, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.OData.Client.6.19.0\lib\net40\Microsoft.OData.Client.dll</HintPath>

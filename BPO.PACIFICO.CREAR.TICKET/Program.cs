@@ -54,7 +54,6 @@ namespace BPO.PACIFICO.CREAR.TICKET.HIJO
 
         private void GetRobotParam()
         {
-          
           _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
           _estadoHijo = Convert.ToInt32(_robot.GetValueParamRobot("EstadoHijo").ValueParam);
           _estadoPadre = Convert.ToInt32(_robot.GetValueParamRobot("EstadoPadre").ValueParam);
@@ -68,28 +67,24 @@ namespace BPO.PACIFICO.CREAR.TICKET.HIJO
                 GeneraHijo(ticketPadre);
             }
             catch { throw new Exception("Error na gerecion de Hijos"); }
-            
+
             EnviarPadre(ticketPadre, false);
 
         }
         private void EnviarPadre(Ticket ticketPadre, bool error)
         {
-            try
-            {
-                var container = ODataContextWrapper.GetContainer();
+            var container = ODataContextWrapper.GetContainer();
 
-                var ticket = container.Tickets.FirstOrDefault(o => o.Id == ticketPadre.Id);
+            var ticket = container.Tickets.FirstOrDefault(o => o.Id == ticketPadre.Id);
 
-                if (error)
-                    ticket.StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoError).Value);
-                else
-                    ticket.StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoPadre).Value);
+            if(error)
+                ticket.StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoError).Value);
+            else
+                ticket.StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoPadre).Value);
 
-                container.UpdateObject(ticket);
+            container.UpdateObject(ticket);
 
-                container.SaveChanges();
-            }
-            catch { throw new Exception("Error al cambiar lo estado de el Ticket Padre"); }
+            container.SaveChanges();
         }
         private void GeneraHijo(Ticket ticketPadre)
         {
