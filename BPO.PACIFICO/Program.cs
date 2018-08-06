@@ -83,58 +83,8 @@ namespace GmailQuickstart
             {
                 foreach (var message in messages)
                 {
-                    var infoRequest = service.Users.Messages.Get("bponaa@gmail.com", message.Id);
-                    var infoResponse = infoRequest.Execute();
-                    if (infoResponse != null)
-                    {
-                        String from = "";
-                        String date = "";
-                        String subject = "";
-                        String body = "";
-
-                        foreach (var mParts in infoResponse.Payload.Headers)
-                        {
-                            if (mParts.Name == "Date")
-                            {
-                                date = mParts.Value;
-                            }
-                            else if (mParts.Name == "From")
-                            {
-                                from = mParts.Value;
-                            }
-                            else if (mParts.Name == "Subject")
-                            {
-                                subject = mParts.Value;
-                            }
-
-                            if (date != "" && from != "")
-                            {
-                                if (infoResponse.Payload.Parts == null && infoResponse.Payload.Body != null)
-                                {
-                                    body = infoResponse.Payload.Body.Data;
-                                }
-                                else
-                                {
-                                    body = getNestedParts(infoResponse.Payload.Parts, "");
-                                }
-                                String newBody = decodeBase64(body);
-
-
-                                //now you have the data you want....
-                                EvaluarPuntuacion(subject);
-
-
-
-                                date = String.Empty;
-                                from = String.Empty;
-                                break;
-                            }
-
-                        }
-                    }
-
-                    //var abc = message.Payload.Headers;
-
+                    Message infoResponse = service.Users.Messages.Get("bponaa@gmail.com", message.Id).Execute();
+                    AcionRequest(infoResponse);
 
                 }
             }
@@ -163,6 +113,58 @@ namespace GmailQuickstart
             }
             */
             Console.Read();
+        }
+        public void AcionRequest( Message infoResponse)
+        {
+            
+            if (infoResponse != null)
+            {
+                String from = String.Empty;
+                String date = String.Empty;
+                String subject = String.Empty;
+                String body = String.Empty;
+
+                foreach (var mParts in infoResponse.Payload.Headers)
+                {
+                    if (mParts.Name == "Date")
+                    {
+                        date = mParts.Value;
+                    }
+                    else if (mParts.Name == "From")
+                    {
+                        from = mParts.Value;
+                    }
+                    else if (mParts.Name == "Subject")
+                    {
+                        subject = mParts.Value;
+                    }
+
+                    if (date != "" && from != "")
+                    {
+                        if (infoResponse.Payload.Parts == null && infoResponse.Payload.Body != null)
+                        {
+                            body = infoResponse.Payload.Body.Data;
+                        }
+                        else
+                        {
+                            body = getNestedParts(infoResponse.Payload.Parts, "");
+                        }
+                        String newBody = decodeBase64(body);
+
+
+                        //now you have the data you want....
+                        EvaluarPuntuacion(subject);
+
+
+
+                        date = String.Empty;
+                        from = String.Empty;
+                        break;
+                    }
+
+                }
+            }
+
         }
         static String getNestedParts(IList<MessagePart> part, string curr)
         {
