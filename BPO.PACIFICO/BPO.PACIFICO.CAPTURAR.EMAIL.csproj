@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="everis.Ees.Proxy">
-      <HintPath>..\..\..\..\..\Documents\Pacifico\Entrada 2\Librerias\everis.Ees.Proxy.dll</HintPath>
+      <HintPath>..\..\Users\aninamac\Documents\Visual Studio 2015\Projects\BPO.v3.Robot1\everis.Ees.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis, Version=1.34.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.34.0\lib\net45\Google.Apis.dll</HintPath>
@@ -59,6 +59,9 @@
     <Reference Include="Google.Apis.PlatformServices, Version=1.34.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.34.0\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.OData.Client">
+      <HintPath>..\..\ANINAMAC\EES\EES 2018-V2.0\Instaladores\everis.Ees.Proxy.2018.2.0.1\Microsoft.OData.Client.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
