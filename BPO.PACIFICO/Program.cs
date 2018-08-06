@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using everis.Ees.Proxy.Services;
+using BPO.PACIFICO;
 
 namespace GmailQuickstart
 {
@@ -24,27 +25,22 @@ namespace GmailQuickstart
         // If modifying these scopes, delete your previously saved credentials
         // at ~/.credentials/gmail-dotnet-quickstart.json
         static string[] Scopes = { GmailService.Scope.GmailReadonly };
+        static string[] _palabras = new string[2];
         static string ApplicationName = "Gmail API .NET Quickstart";
-
+        static List<Puntuacion> puntos = new List<Puntuacion>();
         static void Main(string[] args)
         {
             _robot = new BaseRobot<Program>(args);
             _robot.Start();
 
-           
+
         }
         protected override void Start()
         {
-            Ticket newTicket = new Ticket { };
-            var container = ODataContextWrapper.GetContainer();
 
-            List<DomainValue> list = container.DomainValues.Where(a => a.DomainId==1009).ToList();
 
-              
-           
-            
+
             Email();
-
         }
 
         public void Email()
@@ -119,16 +115,14 @@ namespace GmailQuickstart
                                 {
                                     body = getNestedParts(infoResponse.Payload.Parts, "");
                                 }
-                                //need to replace some characters as the data for the email's body is base64
-                                String codedBody = body.Replace("-", "+");
-                                codedBody = codedBody.Replace("_", "/");
-                                byte[] data = Convert.FromBase64String(codedBody);
-                                body = Encoding.UTF8.GetString(data);
+                                String newBody = decodeBase64(body);
 
-                               
+
                                 //now you have the data you want....
-                                buscar(Convert.ToString(subject));
-                                Console.WriteLine("{0}", subject);
+                                EvaluarPuntuacion(subject);
+
+
+
                                 date = String.Empty;
                                 from = String.Empty;
                                 break;
@@ -139,7 +133,7 @@ namespace GmailQuickstart
 
                     //var abc = message.Payload.Headers;
 
-                   
+
                 }
             }
             else
@@ -197,16 +191,80 @@ namespace GmailQuickstart
 
         }
 
-        public void buscar(string DigitarTexto)
+        public int buscarPalabrasClaves(string DigitarTexto, string palabras)
+        {
+            palabras = String.Format(palabras, "{0:D15}");
+
+            return new Regex(@"(?:" + palabras + " )").Matches(DigitarTexto).Count;
+
+        }
+
+        public List<DomainValue> listadoValoresDominios()
+        {
+            var container = ODataContextWrapper.GetContainer();
+
+            return container.DomainValues.Where(a => a.DomainId == 1009).ToList();
+        }
+
+        static string decodeBase64(string sInput)
+        {
+            String codedBody = Regex.Replace(sInput, "([-])", "+");
+            byte[] data = Convert.FromBase64String(codedBody.Replace("=", "/"));
+            return Encoding.UTF8.GetString(data);
+        }
+
+        public void EvaluarPuntuacion(string asunto)
         {
 
-            Regex regex;
-            MatchCollection matches;
+            List<DomainValue> listado = listadoValoresDominios();
 
-            regex = new Regex(@"(?:hola)");
-            matches = regex.Matches(DigitarTexto);
-            Console.WriteLine("Se encontraron {0} letras. ", matches.Count);
+            string palabraClave = String.Empty;
+            int contador = 0;
 
+            foreach (DomainValue b in listado)
+            {
+                palabraClave = b.Value.ToString();
+                contador = buscarPalabrasClaves(asunto, palabraClave);
+
+
+                if (contador > 0)
+                    puntos.Add(new Puntuacion() { contador = contador, palabra = palabraClave });
+            }
+
+            int[] valores = MaioresValores();
+
+            //isto sera hecho depues de validar lo cuerpo tambien
+            if (((valores[0] * 100) / (valores[0] + valores[1])) >= 70)
+            {
+                //Enviar a lo Crear Ticket Hijo con los parametros do workflow de la _palabra[0]; en ticketsvalues
+            }
+            else
+            {
+
+                // Enviar a la pantalla de classificaicon manual
+            }
+        }
+
+        public int[] MaioresValores()
+        {
+            int[] valores = new int[2];
+
+            foreach (Puntuacion p in puntos)
+            {
+                if (p.contador > valores[0])
+                {
+                    valores[0] = p.contador;
+                    _palabras[0] = p.palabra;
+                }
+                else
+                 if (p.contador > valores[1])
+                {
+                    valores[1] = p.contador;
+                    _palabras[1] = p.palabra;
+                }
+            }
+
+            return valores;
 
         }
 
