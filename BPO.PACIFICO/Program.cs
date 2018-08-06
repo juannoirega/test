@@ -32,9 +32,11 @@ namespace GmailQuickstart
         {
             _robot = new BaseRobot<Program>(args);
             _robot.Start();
+            
 
 
         }
+     
         protected override void Start()
         {
 
@@ -209,7 +211,8 @@ namespace GmailQuickstart
         static string decodeBase64(string sInput)
         {
             String codedBody = Regex.Replace(sInput, "([-])", "+");
-            byte[] data = Convert.FromBase64String(codedBody.Replace("=", "/"));
+            codedBody = Regex.Replace(codedBody, "([_])", "+");
+            byte[] data = Convert.FromBase64String(Regex.Replace(codedBody,"=", "/"));
             return Encoding.UTF8.GetString(data);
         }
 
