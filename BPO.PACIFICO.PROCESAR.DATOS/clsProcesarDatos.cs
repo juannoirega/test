@@ -32,6 +32,9 @@ namespace BPO.PACIFICO.ProcesarDatos
         private static string _cLineaPersonal;
         private static string _cCanal;
         private static string _cTipoPoliza;
+        private static int _nEstadoPoliza;
+        private static StateAction _oMesaControl;
+        private static List<StateAction> _oAcciones;
         #endregion
 
         static void Main(string[] args)
@@ -52,6 +55,8 @@ namespace BPO.PACIFICO.ProcesarDatos
             {
                 try
                 {
+                    _oAcciones = _robot.GetNextStateAction(ticket);
+                    _oMesaControl = _oAcciones.Where(a => a.ActionId == 1).SingleOrDefault();
                     ProcesarTicket(ticket);
                 }
                 catch (Exception ex)
@@ -67,14 +72,13 @@ namespace BPO.PACIFICO.ProcesarDatos
         {
             try
             {
-                _nIdNombreContratante = eesFields.Default.nombre_asegurado;
+                _nIdNombreContratante = eesFields.Default.nombre_contratante;
                 _nIdNombreAsegurado = eesFields.Default.nombre_asegurado;
                 _nIdTipoPoliza = eesFields.Default.nombre_asegurado;
                 _nIdFechaInicioVigencia = eesFields.Default.nombre_asegurado;
                 _nIdFechaFinVigencia = eesFields.Default.nombre_asegurado;
                 _nIdProducto = eesFields.Default.nombre_asegurado;
                 _nIdVistoBueno = eesFields.Default.nombre_asegurado;
-                _nIdEstado = eesFields.Default.nombre_asegurado;
                 _nIdFechaHoraEmail = eesFields.Default.nombre_asegurado;
                 _nIdCanal = eesFields.Default.nombre_asegurado;
                 //Parámetros del Robot Procesamiento de Datos:
@@ -83,6 +87,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                 _cLineaPersonal = _robot.GetValueParamRobot("LineaPersonal").ValueParam;
                 _cCanal = _robot.GetValueParamRobot("Canal").ValueParam;
                 _cTipoPoliza = _robot.GetValueParamRobot("TipoPoliza").ValueParam;
+                _nEstadoPoliza = Convert.ToInt32(_robot.GetValueParamRobot("EstadoPoliza").ValueParam);
             }
             catch (Exception Ex)
             {
@@ -98,19 +103,20 @@ namespace BPO.PACIFICO.ProcesarDatos
                 //Valida que no tenga campos vacíos:
                 if (!ValidarVacios(oTicketDatos))
                 {
-                    if (Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value) == 1) //ID DEL ESTADO VIGENTE. 
+                    if (Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value) == _nEstadoPoliza) //ID DEL ESTADO VIGENTE. 
                     {
                         ValidaProducto(oTicketDatos);
                     }
                     else
                     {
                         //Enviar a mesa de control: No es estado VIGENTE.
-
+                        EstadoSiguiente(oTicketDatos);
                     }  
                 }
                 else
                 {
                     //Enviar a mesa de control: Tiene campos vacíos.
+                    EstadoSiguiente(oTicketDatos);
                 }
             }
             catch (Exception Ex)
@@ -122,19 +128,19 @@ namespace BPO.PACIFICO.ProcesarDatos
         //Valida que los campos del TicketValues no estén vacíos:
         private bool ValidarVacios(Ticket oTicketDatos)
         {
-            if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdTipoPoliza).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaInicioVigencia).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaFinVigencia).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaHoraEmail).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdNombreContratante).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdNombreAsegurado).Value.Length > 0 && 
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdCanal).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdProducto).Value.Length > 0) 
-                {
-                    return false;
-                }
+            int [] oCampos = {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email};
+
+            foreach (int campo in oCampos)
+                if (String.IsNullOrWhiteSpace(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == campo).Value))
+                    return false;         
+                   
             return true;
+        }
+
+        //Envía el ticket al siguiente estado:
+        private void EstadoSiguiente(Ticket oTicket)
+        {
+            _robot.SaveTicketNextState(oTicket, _oMesaControl.Id);
         }
 
         private void ValidaProducto(Ticket oTicketDatos)
@@ -147,14 +153,14 @@ namespace BPO.PACIFICO.ProcesarDatos
             else
             {
                 //Enviar a mesa de control:
-
+                EstadoSiguiente(oTicketDatos);
             }
         }
 
         #region "REGLAS DE VALIDACIÓN"
         private bool ReglasDeValidacion(Ticket oTicketDatos)
         {
-            TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaHoraEmail).Value)
+            TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
                         - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaInicioVigencia).Value);
 
             //Para saber si es Prorrata:
@@ -177,6 +183,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                 {
                     _bProrrata = true;
                 }
+                oTicketDatos.TicketValues.Add( new TicketValue { FieldId= 55, Id= oTicketDatos.Id, Value = "true", ClonedValueOrder = null });
             }
             else //Es renovación:
             {
