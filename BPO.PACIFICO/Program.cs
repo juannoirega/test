@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using everis.Ees.Proxy.Services;
 using BPO.PACIFICO;
+using Everis.Ees.Entities.Enums;
 
 namespace GmailQuickstart
 {
@@ -218,7 +219,7 @@ namespace GmailQuickstart
             return Encoding.UTF8.GetString(data);
         }
 
-        public void EvaluarPuntuacion(string asunto)
+        public void EvaluarPuntuacion(string texto)
         {
 
             List<DomainValue> listado = listadoValoresDominios();
@@ -230,7 +231,7 @@ namespace GmailQuickstart
             foreach (DomainValue b in listado)
             {
                 palabraClave = b.Value.ToString();
-                int contador = buscarPalabrasClaves(asunto, palabraClave);
+                int contador = buscarPalabrasClaves(texto, palabraClave);
 
 
                 if (contador > 0)
@@ -243,6 +244,7 @@ namespace GmailQuickstart
             if (((valores[0] * 100) / (valores[0] + valores[1])) >= 70)
             {
                 //Enviar a lo Crear Ticket Hijo con los parametros do workflow de la _palabra[0]; en ticketsvalues
+                EnviarCreacionTicket(texto);
             }
             else
             {
@@ -250,7 +252,20 @@ namespace GmailQuickstart
                 // Enviar a la pantalla de classificaicon manual
             }
         }
+        public void EnviarCreacionTicket(string texto)
+        {
+            Ticket ticketPadre = new Ticket { Priority = PriorityType.Media, RobotVirtualMachineId = null, StateId = 2};
+            
+            AdicionarNumeroPoliza(ticketPadre, texto);
 
+
+        }
+
+        public void AdicionarNumeroPoliza(Ticket ticket, string texto)
+        {
+            ticket.TicketValues.Add(new TicketValue { Value = Regex.Match(texto, "(2[1-9])[0-9]{4}[0-9]{4}").Value, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = 1 });  
+
+        }
         public int[] MaioresValores()
         {
             int[] valores = new int[2];
