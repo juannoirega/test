@@ -73,18 +73,22 @@ namespace BPO.PACIFICO.CREAR.TICKET.HIJO
         }
         private void EnviarPadre(Ticket ticketPadre, bool error)
         {
-            var container = ODataContextWrapper.GetContainer();
+            try
+            {
+                var container = ODataContextWrapper.GetContainer();
 
-            var ticket = container.Tickets.FirstOrDefault(o => o.Id == ticketPadre.Id);
+                var ticket = container.Tickets.FirstOrDefault(o => o.Id == ticketPadre.Id);
 
-            if(error)
-                ticket.StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoError).Value);
-            else
-                ticket.StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoPadre).Value);
+                if (error)
+                    ticket.StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoError).Value);
+                else
+                    ticket.StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoPadre).Value);
 
-            container.UpdateObject(ticket);
+                container.UpdateObject(ticket);
 
-            container.SaveChanges();
+                container.SaveChanges();
+            }
+            catch { throw new Exception("No fue posible realizar lo cambio de estado de el ticket Padre"); }
         }
         private void GeneraHijo(Ticket ticketPadre)
         {
