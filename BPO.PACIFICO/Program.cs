@@ -32,11 +32,11 @@ namespace GmailQuickstart
         {
             _robot = new BaseRobot<Program>(args);
             _robot.Start();
-            
+
 
 
         }
-     
+
         protected override void Start()
         {
 
@@ -114,9 +114,9 @@ namespace GmailQuickstart
             */
             Console.Read();
         }
-        public void AcionRequest( Message infoResponse)
+        public void AcionRequest(Message infoResponse)
         {
-            
+
             if (infoResponse != null)
             {
                 String from = String.Empty;
@@ -149,11 +149,11 @@ namespace GmailQuickstart
                         {
                             body = getNestedParts(infoResponse.Payload.Parts, "");
                         }
-                        String newBody = decodeBase64(body);
+
 
 
                         //now you have the data you want....
-                        EvaluarPuntuacion(subject);
+                        EvaluarPuntuacion(String.Concat(decodeBase64(body), " ", subject));
 
 
 
@@ -214,7 +214,7 @@ namespace GmailQuickstart
         {
             String codedBody = Regex.Replace(sInput, "([-])", "+");
             codedBody = Regex.Replace(codedBody, "([_])", "+");
-            byte[] data = Convert.FromBase64String(Regex.Replace(codedBody,"=", "/"));
+            byte[] data = Convert.FromBase64String(Regex.Replace(codedBody, "=", "/"));
             return Encoding.UTF8.GetString(data);
         }
 
@@ -223,13 +223,14 @@ namespace GmailQuickstart
 
             List<DomainValue> listado = listadoValoresDominios();
 
+
             string palabraClave = String.Empty;
-            int contador = 0;
+
 
             foreach (DomainValue b in listado)
             {
                 palabraClave = b.Value.ToString();
-                contador = buscarPalabrasClaves(asunto, palabraClave);
+                int contador = buscarPalabrasClaves(asunto, palabraClave);
 
 
                 if (contador > 0)
@@ -258,8 +259,11 @@ namespace GmailQuickstart
             {
                 if (p.contador > valores[0])
                 {
+                    valores[1] = valores[0];
+                    _palabras[1] = _palabras[0];
                     valores[0] = p.contador;
                     _palabras[0] = p.palabra;
+
                 }
                 else
                  if (p.contador > valores[1])
