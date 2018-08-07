@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3B1BD443-671E-45A8-9F0D-2E1A5B38B259}</ProjectGuid>
+    <ProjectGuid>{034EF5A8-1D1E-453A-B88F-1D581688BD83}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BPO.PACIFICO.PROCESAR.DATOS</RootNamespace>
-    <AssemblyName>BPO.PACIFICO.PROCESAR.DATOS</AssemblyName>
+    <RootNamespace>BPO.PACIFICO.REGISTRAR.ENVIAR.BPM</RootNamespace>
+    <AssemblyName>BPO.PACIFICO.REGISTRAR.ENVIAR.BPM</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Robot.Util.Nacar\Robot.Util.csproj">
-      <Project>{521f4f83-bc5b-4fbc-a799-cf027808875e}</Project>
+      <Project>{521F4F83-BC5B-4FBC-A799-CF027808875E}</Project>
       <Name>Robot.Util</Name>
     </ProjectReference>
   </ItemGroup>

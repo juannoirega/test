@@ -16,22 +16,20 @@ namespace BPO.PACIFICO.ProcesarDatos
     {
         #region "PARÁMETROS"
         private static BaseRobot<Program> _robot = null;
-        private static int _nIdNombreContratante;
-        private static int _nIdNombreAsegurado;
-        private static int _nIdTipoPoliza;
-        private static int _nIdFechaInicioVigencia;
-        private static int _nIdFechaFinVigencia;
-        private static int _nIdProducto;
-        private static int _nIdVistoBueno;
-        private static int _nIdEstado;
-        private static int _nIdFechaHoraEmail;
-        private static int _nIdCanal;
         private static int _nDiasArrepentimiento;
         private static int _nDiasDesistimiento;
-        private static bool _bProrrata = false;
+        private static string _cConProrrata = "No";
         private static string _cLineaPersonal;
         private static string _cCanal;
         private static string _cTipoPoliza;
+        private static string _cEstadoPoliza;
+        private static int _nIdMesaControl;
+        private static int _nIdPantallaValidacion;
+        private static int _nIdNotificacion;
+        private static StateAction _oMesaControl;
+        private static StateAction _oPantallaValidacion;
+        private static StateAction _oNotificacion;
+        private static List<StateAction> _oAcciones;
         #endregion
 
         static void Main(string[] args)
@@ -52,11 +50,15 @@ namespace BPO.PACIFICO.ProcesarDatos
             {
                 try
                 {
+                    _oAcciones = _robot.GetNextStateAction(ticket);
+                    _oMesaControl = _oAcciones.Where(a => a.ActionId == _nIdMesaControl).SingleOrDefault();
+                    _oPantallaValidacion = _oAcciones.Where(b => b.ActionId == _nIdPantallaValidacion).SingleOrDefault();
+                    _oNotificacion = _oAcciones.Where(c => c.ActionId == _nIdNotificacion).SingleOrDefault();
                     ProcesarTicket(ticket);
                 }
-                catch (Exception ex)
+                catch (Exception Ex)
                 {
-                    LogFailStep(41, ex);
+                    LogFailStep(12, Ex);
                 }  
             }
             Environment.Exit(0);
@@ -67,22 +69,16 @@ namespace BPO.PACIFICO.ProcesarDatos
         {
             try
             {
-                _nIdNombreContratante = eesFields.Default.nombre_asegurado;
-                _nIdNombreAsegurado = eesFields.Default.nombre_asegurado;
-                _nIdTipoPoliza = eesFields.Default.nombre_asegurado;
-                _nIdFechaInicioVigencia = eesFields.Default.nombre_asegurado;
-                _nIdFechaFinVigencia = eesFields.Default.nombre_asegurado;
-                _nIdProducto = eesFields.Default.nombre_asegurado;
-                _nIdVistoBueno = eesFields.Default.nombre_asegurado;
-                _nIdEstado = eesFields.Default.nombre_asegurado;
-                _nIdFechaHoraEmail = eesFields.Default.nombre_asegurado;
-                _nIdCanal = eesFields.Default.nombre_asegurado;
                 //Parámetros del Robot Procesamiento de Datos:
                 _nDiasArrepentimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasArrepentimiento").ValueParam);
                 _nDiasDesistimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasDesistimiento").ValueParam);
                 _cLineaPersonal = _robot.GetValueParamRobot("LineaPersonal").ValueParam;
                 _cCanal = _robot.GetValueParamRobot("Canal").ValueParam;
                 _cTipoPoliza = _robot.GetValueParamRobot("TipoPoliza").ValueParam;
+                _cEstadoPoliza = _robot.GetValueParamRobot("EstadoPoliza").ValueParam;
+                _nIdMesaControl = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
+                _nIdPantallaValidacion = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
+                _nIdNotificacion = Convert.ToInt32(_robot.GetValueParamRobot("EstadoNotificacion").ValueParam);
             }
             catch (Exception Ex)
             {
@@ -95,45 +91,41 @@ namespace BPO.PACIFICO.ProcesarDatos
         {
             try
             {
-                //Valida que no tenga campos vacíos:
+                //Valida campos no vacíos:
                 if (!ValidarVacios(oTicketDatos))
                 {
-                    if (Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value) == 1) //ID DEL ESTADO VIGENTE. 
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToLower() == _cEstadoPoliza.ToLower()) //Estado: VIGENTE. 
                     {
                         ValidaProducto(oTicketDatos);
                     }
                     else
                     {
-                        //Enviar a mesa de control: No es estado VIGENTE.
-
+                        //Enviar a notificación de correo:
+                        CambiarEstadoTicket(oTicketDatos, _oNotificacion);
                     }  
                 }
                 else
                 {
                     //Enviar a mesa de control: Tiene campos vacíos.
+                    CambiarEstadoTicket(oTicketDatos,_oMesaControl);
                 }
             }
             catch (Exception Ex)
             {
-                LogFailStep(12, Ex);
+                LogFailStep(17, Ex);
             }
         }
 
         //Valida que los campos del TicketValues no estén vacíos:
         private bool ValidarVacios(Ticket oTicketDatos)
         {
-            if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdEstado).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdTipoPoliza).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaInicioVigencia).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaFinVigencia).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaHoraEmail).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdNombreContratante).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdNombreAsegurado).Value.Length > 0 && 
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdCanal).Value.Length > 0 &&
-                oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdProducto).Value.Length > 0) 
-                {
-                    return false;
-                }
+            int [] oCampos = new int [] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
+                                        eesFields.Default.tipo,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
+                                        eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
+
+            foreach (int campo in oCampos)
+                if (String.IsNullOrWhiteSpace(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == campo).Value))
+                    return false;         
             return true;
         }
 
@@ -142,32 +134,33 @@ namespace BPO.PACIFICO.ProcesarDatos
             //Valida reglas con los datos obtenidos:
             if (ReglasDeValidacion(oTicketDatos))
             {
-                ActualizarTicket(oTicketDatos);
+                AgregarNuevoTicketValue(oTicketDatos);
+                CambiarEstadoTicket(oTicketDatos, _oPantallaValidacion);
             }
             else
             {
-                //Enviar a mesa de control:
-
+                //Enviar a notificación de correo:
+                CambiarEstadoTicket(oTicketDatos,_oNotificacion);
             }
         }
 
         #region "REGLAS DE VALIDACIÓN"
         private bool ReglasDeValidacion(Ticket oTicketDatos)
         {
-            TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaHoraEmail).Value)
-                        - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaInicioVigencia).Value);
+            TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
+                        - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
 
             //Para saber si es Prorrata:
-            TimeSpan nProrrata = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaFinVigencia).Value)
-                                    - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdFechaInicioVigencia).Value);
+            TimeSpan nProrrata = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_fin_vigencia).Value)
+                                    - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
 
             //VERIFICA QUE SEA EMISIÓN:
-            if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdTipoPoliza).Value == _cTipoPoliza)
+            if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo).Value == _cTipoPoliza)
             {
                 if (nDiferencia.Days > _nDiasDesistimiento)
                 {
                     //Verifica que tenga VoBo:
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdVistoBueno).Value.Length <= 0)
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
                     {
                         return false;
                     }
@@ -175,7 +168,7 @@ namespace BPO.PACIFICO.ProcesarDatos
 
                 if (nProrrata.Days != 365)
                 {
-                    _bProrrata = true;
+                    _cConProrrata = "Si";
                 }
             }
             else //Es renovación:
@@ -183,11 +176,11 @@ namespace BPO.PACIFICO.ProcesarDatos
                 //Si es prorrata:
                 if (nProrrata.Days != 365)
                 {
-                    _bProrrata = true;
+                    _cConProrrata = "Si";
                     if (nDiferencia.Days > _nDiasDesistimiento)
                     {
                         //Verifica que tenga VoBo:
-                        if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdVistoBueno).Value.Length <= 0)
+                        if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
                         {
                             return false;
                         }
@@ -197,7 +190,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                 else if (nDiferencia.Days > _nDiasArrepentimiento)
                 {
                     //Verifica que tenga VoBo:
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == _nIdVistoBueno).Value.Length <= 0)
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
                     {
                         return false;
                     }
@@ -207,10 +200,17 @@ namespace BPO.PACIFICO.ProcesarDatos
         }
         #endregion
 
-        //Actualiza ticket con los nuevos datos para la anulación de póliza
-        private void ActualizarTicket(Ticket oTicketActual)
+        //Agrega nuevo ticket value al Ticket actual:
+        private void AgregarNuevoTicketValue(Ticket oTicketDatos)
         {
+            oTicketDatos.TicketValues.Add(new TicketValue { FieldId = eesFields.Default.aplica_prorrata, Id = oTicketDatos.Id, Value = _cConProrrata, ClonedValueOrder = null });
+        }
 
+        //Envía el ticket al siguiente estado:
+        private void CambiarEstadoTicket(Ticket oTicket, StateAction oAccion)
+        {
+            //Estado = 1: Mesa de Control, Estado = 2: Notificación de Correo.
+            _robot.SaveTicketNextState(oTicket, oAccion.Id);
         }
     }
 }
