@@ -94,7 +94,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                 //Valida que no tenga campos vacíos:
                 if (!ValidarVacios(oTicketDatos))
                 {
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value == _cEstadoPoliza) //Estado: VIGENTE. 
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToLower() == _cEstadoPoliza.ToLower()) //Estado: VIGENTE. 
                     {
                         ValidaProducto(oTicketDatos);
                     }
@@ -112,7 +112,7 @@ namespace BPO.PACIFICO.ProcesarDatos
             }
             catch (Exception Ex)
             {
-                LogFailStep(12, Ex);
+                LogFailStep(17, Ex);
             }
         }
 
@@ -120,7 +120,8 @@ namespace BPO.PACIFICO.ProcesarDatos
         private bool ValidarVacios(Ticket oTicketDatos)
         {
             int [] oCampos = new int [] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
-                                        eesFields.Default.tipo,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia};
+                                        eesFields.Default.tipo,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
+                                        eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
 
             foreach (int campo in oCampos)
                 if (String.IsNullOrWhiteSpace(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == campo).Value))
