@@ -43,7 +43,7 @@ namespace GmailQuickstart
 
         protected override void Start()
         {
-            GetRobotParam();
+          //  GetRobotParam();
             Email();
         }
 
@@ -94,7 +94,7 @@ namespace GmailQuickstart
                 foreach (Message message in messages)
                 {
                     Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
-                    AcionRequest(infoResponse, service, message.Id);
+                    AcionRequest(infoResponse, service);
                 }
             }
             else
@@ -104,7 +104,7 @@ namespace GmailQuickstart
 
             
         }
-        public void AcionRequest(Message infoResponse, GmailService service, string messageId)
+        public void AcionRequest(Message infoResponse, GmailService service)
         {
 
             if (infoResponse != null)
@@ -139,10 +139,9 @@ namespace GmailQuickstart
                         {
                             body = getNestedParts(infoResponse.Payload.Parts, "");
                         }
-                        if (!String.IsNullOrEmpty(infoResponse.Payload.Filename))
+                        if (!String.IsNullOrEmpty(infoResponse.Payload.Parts.FirstOrDefault(o => o.Filename != "").Filename))
                         {
-                            List<string> adjuntos = GetFiles(service, infoResponse.Payload.Parts, messageId);
-                            
+                            List<string> adjuntos = GetFiles(service, infoResponse.Payload.Parts, infoResponse.Id);
 
                         }
 
@@ -165,15 +164,18 @@ namespace GmailQuickstart
             List<string> files = new List<string>();
             foreach (MessagePart part in parts)
             {
-                String attId = part.Body.AttachmentId;
-                
-                MessagePartBody attachPart = service.Users.Messages.Attachments.Get(_userId, messageId, attId).Execute();
-                String attachData = Regex.Replace(attachPart.Data, "-", "+");
-                attachData = Regex.Replace(attachData ,"_", "/");
-                attachData = Regex.Replace(attachData, "=", "/");
-                byte[] data = Convert.FromBase64String(attachData);
-                File.WriteAllBytes(Path.Combine("C:\\", part.Filename), data);
-                files.Add(part.Filename);
+                if (!String.IsNullOrEmpty(part.Filename))
+                {
+                    String attId = part.Body.AttachmentId;
+
+                    MessagePartBody attachPart = service.Users.Messages.Attachments.Get(_userId, messageId, attId).Execute();
+                    String attachData = Regex.Replace(attachPart.Data, "-", "+");
+                    attachData = Regex.Replace(attachData, "_", "/");
+                    attachData = Regex.Replace(attachData, "=", "/");
+                    byte[] data = Convert.FromBase64String(attachData);
+                    File.WriteAllBytes(Path.Combine("C:\\", part.Filename), data);
+                    files.Add(Path.Combine("C:\\", part.Filename));
+                }
             }
             return files;
 
