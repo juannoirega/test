@@ -91,7 +91,7 @@ namespace BPO.PACIFICO.ProcesarDatos
         {
             try
             {
-                //Valida que no tenga campos vacíos:
+                //Valida campos no vacíos:
                 if (!ValidarVacios(oTicketDatos))
                 {
                     if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToLower() == _cEstadoPoliza.ToLower()) //Estado: VIGENTE. 
