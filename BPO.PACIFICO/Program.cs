@@ -29,6 +29,7 @@ namespace GmailQuickstart
         static string[] Scopes = { GmailService.Scope.GmailReadonly };
         static string[] _palabras = new string[2];
         static string[] _valores = new string[6];
+        static string _userId = "bponaa@gmail.com";
         static int[] _fields = { eesFields.Default.cuepor_email, eesFields.Default.titulo_email, eesFields.Default.estado_erro, eesFields.Default.estado_hijo, eesFields.Default.estado_padre, eesFields.Default.fields };
         static string ApplicationName = "Gmail API .NET Quickstart";
         static List<DomainValue> _listado = listadoValoresDominios();
@@ -72,7 +73,7 @@ namespace GmailQuickstart
             }
 
             // Create Gmail API service.
-            var service = new GmailService(new BaseClientService.Initializer()
+            GmailService service = new GmailService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
@@ -84,6 +85,7 @@ namespace GmailQuickstart
             request.LabelIds = "INBOX";
             request.IncludeSpamTrash = false;
             request.Q = "is:unread";
+            
 
             // List Messages.
             IList<Message> messages = request.Execute().Messages;
@@ -93,7 +95,7 @@ namespace GmailQuickstart
                 foreach (var message in messages)
                 {
                     Message infoResponse = service.Users.Messages.Get("bponaa@gmail.com", message.Id).Execute();
-                    AcionRequest(infoResponse);
+                    AcionRequest(infoResponse, service);
                 }
             }
             else
@@ -103,7 +105,7 @@ namespace GmailQuickstart
 
             
         }
-        public void AcionRequest(Message infoResponse)
+        public void AcionRequest(Message infoResponse, GmailService service)
         {
 
             if (infoResponse != null)
@@ -138,6 +140,12 @@ namespace GmailQuickstart
                         {
                             body = getNestedParts(infoResponse.Payload.Parts, "");
                         }
+                        if (!String.IsNullOrEmpty(infoResponse.Payload.Filename))
+                        {
+                            List<string> adjuntos = GetFiles(service, infoResponse.Payload.Parts);
+                            
+
+                        }
 
                         _valores[0] = decodeBase64(body);
                         _valores[1] = subject;
@@ -151,6 +159,17 @@ namespace GmailQuickstart
 
                 }
             }
+
+        }
+        private List<string> GetFiles(GmailService service, IList<MessagePart> parts)
+        {
+            foreach (MessagePart part in parts)
+            {
+                String attId = part.Body.AttachmentId;
+                //MessagePartBody attachPart = service.Users.Messages.Attachments.Get(userId, messageId, attId).Execute();
+            }
+            return null;
+
 
         }
 
