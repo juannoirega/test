@@ -1,6 +1,9 @@
 ﻿using everis.Ees.Proxy.Core;
 using everis.Ees.Proxy.Services.Interfaces;
 using Everis.Ees.Entities;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Chrome;
 using Robot.Util.Nacar;
 using System;
 using System.Collections.Generic;
@@ -14,8 +17,13 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
     {
         #region "PARÁMETROS"
         private static BaseRobot<Program> _robot = null;
+        private static IWebDriver _oDriver = null;
+        private static IWebElement _oElement;
         private static int _nIdEstadoError;
         private static int _nIdEstadoFinal;
+        private static string _cUrlOnBase = string.Empty;
+        private static string _cUsuarioOnBase = string.Empty;
+        private static string _cContraseñaOnBase = string.Empty;
         private static StateAction _oMesaControl;
         private static StateAction _oRegistro;
         private static List<StateAction> _oAcciones;
@@ -24,6 +32,8 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         static void Main(string[] args)
         {
             _robot = new BaseRobot<Program>(args);
+            _oDriver = new FirefoxDriver();
+            //_oDriver = new ChromeDriver();
             _robot.Start();
         }
 
@@ -58,6 +68,9 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 //Parámetros del Robot Procesamiento de Datos:
                 _nIdEstadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
                 _nIdEstadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoFinal").ValueParam);
+                _cUrlOnBase = _robot.GetValueParamRobot("URLOnBase").ValueParam;
+                _cUsuarioOnBase = _robot.GetValueParamRobot("UsuarioOnBase").ValueParam;
+                _cContraseñaOnBase = _robot.GetValueParamRobot("ContraseñaOnBase").ValueParam;
             }
             catch (Exception Ex)
             {
@@ -73,7 +86,8 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 //Valida campos no vacíos:
                 if (!ValidarVacios(oTicketDatos))
                 {
-
+                    IngresarBPM();
+                    RegistrarBPM();
                 }
                 else
                 {
@@ -100,6 +114,37 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         {
             //Estado = 1: Mesa de Control, Estado = 2: Notificación de Correo.
             _robot.SaveTicketNextState(oTicket, oAccion.Id);
+        }
+
+        //Ingresa al sistema OnBase:
+        private void IngresarBPM()
+        {
+            try
+            {
+                _oDriver.Url = _cUrlOnBase;
+                _oDriver.Manage().Window.Maximize();
+                _oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("NavPanelIFrame")));
+                _oDriver.FindElement(By.LinkText("VSER_Consulta de Solicitudes 1"));
+
+                _oElement.Click();
+            }
+            catch (Exception Ex)
+            {
+                LogFailStep(12, Ex);
+            }
+        }
+
+        //Realiza el registro de anulación en OnBase:
+        private void RegistrarBPM()
+        {
+            try
+            {
+
+            }
+            catch (Exception Ex)
+            {
+                LogFailStep(12, Ex);
+            }
         }
     }
 }

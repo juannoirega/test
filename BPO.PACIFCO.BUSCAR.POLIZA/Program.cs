@@ -110,6 +110,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
                 _driverGlobal.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
                 Thread.Sleep(300);
+
             }
             catch (Exception ex)
             {

@@ -220,5 +220,14 @@ namespace Robot.Util.Nacar {
                 return ((int)(this["numero_de_credito"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("27")]
+        public int tipo_de_linea {
+            get {
+                return ((int)(this["tipo_de_linea"]));
+            }
+        }
     }
 }
