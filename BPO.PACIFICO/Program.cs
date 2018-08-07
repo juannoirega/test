@@ -163,6 +163,7 @@ namespace GmailQuickstart
         }
         private List<string> GetFiles(GmailService service, IList<MessagePart> parts, string messageId)
         {
+            List<string> files = new List<string>();
             foreach (MessagePart part in parts)
             {
                 String attId = part.Body.AttachmentId;
@@ -171,8 +172,11 @@ namespace GmailQuickstart
                 String attachData = Regex.Replace(attachPart.Data, "-", "+");
                 attachData = Regex.Replace(attachData ,"_", "/");
                 attachData = Regex.Replace(attachData, "=", "/");
+                byte[] data = Convert.FromBase64String(attachData);
+                File.WriteAllBytes(Path.Combine("C:\\", part.Filename), data);
+                files.Add(part.Filename);
             }
-            return null;
+            return files;
 
 
         }
@@ -221,6 +225,7 @@ namespace GmailQuickstart
             return container.DomainValues.Where(a => a.DomainId == 1009).ToList();
         }
 
+
         static string decodeBase64(string sInput)
         {
             String codedBody = Regex.Replace(sInput, "([-])", "+");
@@ -228,6 +233,7 @@ namespace GmailQuickstart
             byte[] data = Convert.FromBase64String(Regex.Replace(codedBody, "=", "/"));
             return Encoding.UTF8.GetString(data);
         }
+
 
         public void EvaluarPuntuacion(string texto, Ticket ticket)
         {
@@ -258,6 +264,8 @@ namespace GmailQuickstart
                 CreacionTicket(texto, ticket, false);
             }
         }
+
+
         public void CreacionTicket(string texto, Ticket ticketPadre, bool flag)
         {
             AdicionarNumeroPoliza(ticketPadre, texto);
@@ -269,7 +277,6 @@ namespace GmailQuickstart
                 ticketPadre.StateId = 3;
 
             _robot.SaveNewTicket(ticketPadre);
-            
 
         }
 
