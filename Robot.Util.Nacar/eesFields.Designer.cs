@@ -223,10 +223,55 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("27")]
-        public int tipo_de_linea {
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int cuerpo_de_email {
             get {
-                return ((int)(this["tipo_de_linea"]));
+                return ((int)(this["cuerpo_de_email"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public int numero_de_poliza {
+            get {
+                return ((int)(this["numero_de_poliza"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1029")]
+        public int estado_hijo {
+            get {
+                return ((int)(this["estado_hijo"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1027")]
+        public int estado_padre {
+            get {
+                return ((int)(this["estado_padre"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1028")]
+        public int estado_error {
+            get {
+                return ((int)(this["estado_error"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1030")]
+        public int fields {
+            get {
+                return ((int)(this["fields"]));
             }
         }
     }

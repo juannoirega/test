@@ -27,13 +27,14 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         private static StateAction _oMesaControl;
         private static StateAction _oRegistro;
         private static List<StateAction> _oAcciones;
+        private static Functions _Functiones;
         #endregion
 
         static void Main(string[] args)
         {
             _robot = new BaseRobot<Program>(args);
             _oDriver = new FirefoxDriver();
-            //_oDriver = new ChromeDriver();
+            _Functiones = new Functions();
             _robot.Start();
         }
 
@@ -86,7 +87,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 //Valida campos no vacíos:
                 if (!ValidarVacios(oTicketDatos))
                 {
-                    IngresarBPM();
+                    _Functiones.IngresarBPM(_cUrlOnBase, _cUsuarioOnBase, _cContraseñaOnBase);
                     RegistrarBPM();
                 }
                 else
@@ -104,8 +105,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         //Valida que no tenga campos vacíos:
         private bool ValidarVacios(Ticket oTicketDatos)
         {
-            int[] oCampos = new int[] { eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
-                                        eesFields.Default.tipo_de_linea};
+            int[] oCampos = new int[] { eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado};
             return true;
         }
 
@@ -117,22 +117,22 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         }
 
         //Ingresa al sistema OnBase:
-        private void IngresarBPM()
-        {
-            try
-            {
-                _oDriver.Url = _cUrlOnBase;
-                _oDriver.Manage().Window.Maximize();
-                _oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("NavPanelIFrame")));
-                _oDriver.FindElement(By.LinkText("VSER_Consulta de Solicitudes 1"));
-
-                _oElement.Click();
-            }
-            catch (Exception Ex)
-            {
-                LogFailStep(12, Ex);
-            }
-        }
+        //private void IngresarBPM()
+        //{
+        //    try
+        //    {
+        //        _oDriver.Url = _cUrlOnBase;
+        //        _oDriver.Manage().Window.Maximize();
+        //        _oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("NavPanelIFrame")));
+        //        _oDriver.FindElement(By.LinkText("VSER_Consulta de Solicitudes 1"));
+                
+        //        _oElement.Click();
+        //    }
+        //    catch (Exception Ex)
+        //    {
+        //        LogFailStep(12, Ex);
+        //    }
+        //}
 
         //Realiza el registro de anulación en OnBase:
         private void RegistrarBPM()

@@ -68,8 +68,23 @@
     <Setting Name="numero_de_credito" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">23</Value>
     </Setting>
-    <Setting Name="tipo_de_linea" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">27</Value>
+    <Setting Name="cuerpo_de_email" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="numero_de_poliza" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="estado_hijo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1029</Value>
+    </Setting>
+    <Setting Name="estado_padre" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1027</Value>
+    </Setting>
+    <Setting Name="estado_error" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1028</Value>
+    </Setting>
+    <Setting Name="fields" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1030</Value>
     </Setting>
   </Settings>
 </SettingsFile>
