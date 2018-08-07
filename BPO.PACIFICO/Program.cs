@@ -80,7 +80,7 @@ namespace GmailQuickstart
             });
 
             // Define parameters of request.
-            UsersResource.MessagesResource.ListRequest request = service.Users.Messages.List("bponaa@gmail.com");
+            UsersResource.MessagesResource.ListRequest request = service.Users.Messages.List(_userId);
             request.MaxResults = 5;
             request.LabelIds = "INBOX";
             request.IncludeSpamTrash = false;
@@ -92,10 +92,10 @@ namespace GmailQuickstart
             Console.WriteLine("Messages:");
             if (messages != null && messages.Count > 0)
             {
-                foreach (var message in messages)
+                foreach (Message message in messages)
                 {
-                    Message infoResponse = service.Users.Messages.Get("bponaa@gmail.com", message.Id).Execute();
-                    AcionRequest(infoResponse, service);
+                    Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
+                    AcionRequest(infoResponse, service, message.Id);
                 }
             }
             else
@@ -105,7 +105,7 @@ namespace GmailQuickstart
 
             
         }
-        public void AcionRequest(Message infoResponse, GmailService service)
+        public void AcionRequest(Message infoResponse, GmailService service, string messageId)
         {
 
             if (infoResponse != null)
@@ -142,7 +142,7 @@ namespace GmailQuickstart
                         }
                         if (!String.IsNullOrEmpty(infoResponse.Payload.Filename))
                         {
-                            List<string> adjuntos = GetFiles(service, infoResponse.Payload.Parts);
+                            List<string> adjuntos = GetFiles(service, infoResponse.Payload.Parts, messageId);
                             
 
                         }
@@ -161,12 +161,16 @@ namespace GmailQuickstart
             }
 
         }
-        private List<string> GetFiles(GmailService service, IList<MessagePart> parts)
+        private List<string> GetFiles(GmailService service, IList<MessagePart> parts, string messageId)
         {
             foreach (MessagePart part in parts)
             {
                 String attId = part.Body.AttachmentId;
-                //MessagePartBody attachPart = service.Users.Messages.Attachments.Get(userId, messageId, attId).Execute();
+                
+                MessagePartBody attachPart = service.Users.Messages.Attachments.Get(_userId, messageId, attId).Execute();
+                String attachData = Regex.Replace(attachPart.Data, "-", "+");
+                attachData = Regex.Replace(attachData ,"_", "/");
+                attachData = Regex.Replace(attachData, "=", "/");
             }
             return null;
 
