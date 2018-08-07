@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace BPO.PACIFCO.BUSCAR.POLIZA
 {
+
     class Program : IRobot
     {
         private static BaseRobot<Program> _robot = null;
