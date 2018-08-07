@@ -69,25 +69,25 @@
       <Value Profile="(Default)">23</Value>
     </Setting>
     <Setting Name="titulo_email" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="cuepor_email" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">7</Value>
     </Setting>
     <Setting Name="numero_poliza" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">25</Value>
     </Setting>
     <Setting Name="estado_hijo" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">1029</Value>
     </Setting>
     <Setting Name="estado_padre" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">1027</Value>
     </Setting>
     <Setting Name="estado_erro" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">1028</Value>
     </Setting>
     <Setting Name="fields" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">1030</Value>
     </Setting>
   </Settings>
 </SettingsFile>
