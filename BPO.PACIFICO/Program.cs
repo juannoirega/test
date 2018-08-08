@@ -288,7 +288,7 @@ namespace GmailQuickstart
 
         public void AdicionarNumeroPoliza(Ticket ticket, string texto)
         {
-            ticket.TicketValues.Add(new TicketValue { Value = Regex.Match(texto, "(2[1-9])[0-9]{4}[0-9]{4}").Value, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_poliza });
+            ticket.TicketValues.Add(new TicketValue { Value = Regex.Match(texto, "(2[1-9])[0-9]{4}[0-9]{4}").Value, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
 
         }
         public int[] MaioresValores()
