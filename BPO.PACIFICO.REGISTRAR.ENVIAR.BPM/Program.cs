@@ -24,17 +24,19 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         private static string _cUrlOnBase = string.Empty;
         private static string _cUsuarioOnBase = string.Empty;
         private static string _cContraseñaOnBase = string.Empty;
+        private static string _cTipoSolicitud1 = string.Empty;
+        private static string _cTipoSolicitud2 = string.Empty;
         private static StateAction _oMesaControl;
         private static StateAction _oRegistro;
         private static List<StateAction> _oAcciones;
-        private static Functions _Functiones;
+        private static Functions _Funciones;
         #endregion
 
         static void Main(string[] args)
         {
             _robot = new BaseRobot<Program>(args);
             _oDriver = new FirefoxDriver();
-            _Functiones = new Functions();
+            _Funciones = new Functions();
             _robot.Start();
         }
 
@@ -72,6 +74,8 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 _cUrlOnBase = _robot.GetValueParamRobot("URLOnBase").ValueParam;
                 _cUsuarioOnBase = _robot.GetValueParamRobot("UsuarioOnBase").ValueParam;
                 _cContraseñaOnBase = _robot.GetValueParamRobot("ContraseñaOnBase").ValueParam;
+                _cTipoSolicitud1 = _robot.GetValueParamRobot("TipoSolicitud1").ValueParam;
+                _cTipoSolicitud2 = _robot.GetValueParamRobot("TipoSolicitud2").ValueParam;
             }
             catch (Exception Ex)
             {
@@ -87,8 +91,8 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 //Valida campos no vacíos:
                 if (!ValidarVacios(oTicketDatos))
                 {
-                    _Functiones.IngresarBPM(_cUrlOnBase, _cUsuarioOnBase, _cContraseñaOnBase);
-                    RegistrarBPM();
+                    _Funciones.IngresarBPM(_cUrlOnBase, _cUsuarioOnBase, _cContraseñaOnBase);
+                    RegistrarBPM(oTicketDatos);
                 }
                 else
                 {
@@ -98,7 +102,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             }
             catch (Exception Ex)
             {
-                LogFailStep(17, Ex);
+                LogFailStep(12, Ex);
             }
         }
 
@@ -116,34 +120,59 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             _robot.SaveTicketNextState(oTicket, oAccion.Id);
         }
 
-        //Ingresa al sistema OnBase:
-        //private void IngresarBPM()
-        //{
-        //    try
-        //    {
-        //        _oDriver.Url = _cUrlOnBase;
-        //        _oDriver.Manage().Window.Maximize();
-        //        _oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("NavPanelIFrame")));
-        //        _oDriver.FindElement(By.LinkText("VSER_Consulta de Solicitudes 1"));
-                
-        //        _oElement.Click();
-        //    }
-        //    catch (Exception Ex)
-        //    {
-        //        LogFailStep(12, Ex);
-        //    }
-        //}
-
         //Realiza el registro de anulación en OnBase:
-        private void RegistrarBPM()
+        private void RegistrarBPM(Ticket oTicketDatos)
         {
             try
             {
+                _oDriver = new FirefoxDriver();
+                //_oDriver.SwitchTo().Frame(_oDriver.FindElement(By.LinkText("lbCustomQueries")));
+                //Clic en pestaña Consultas Personalizadas:
+                _oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("subDownArrow")));
 
+                //_oDriver.SwitchTo().Frame(_oDriver.FindElement(By.LinkText("VSER_Formulario Solicitud de Polizas")));
+                //Click en "Nuevo Formulario":
+                _oDriver.FindElement(By.XPath("//*[@id='SubMenuOptionsTable']/tbody/tr[2]/td"));
+
+                //Clic en VSER_Formulario Solicitud de Polizas:
+                _oDriver.FindElement(By.ClassName("formName"));
+
+                //Selecciona tipo de solicitud:
+                _oDriver.FindElement(By.Id("tipodesolicitud_input")).Click();
+                _oDriver.FindElement(By.Id("tipodesolicitud_input")).SendKeys(_cTipoSolicitud2); //EN DURO SE ESTÁ ENVIANDO "ENDOSO".
+                Repeticiones(1, "tipodesolicitud_input", Keys.Down);
+                _oDriver.FindElement(By.Id("tipodesolicitud_input")).SendKeys(Keys.Enter);                
+
+                //Ingresa fecha hora de email:
+                _oDriver.FindElement(By.Id("fechayhoraderecepción_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_hora_de_email).Value);
+
+                //Selecciona Línea de Negocio:
+                _oDriver.FindElement(By.Id("linea_negocio_input")).Click();
+                Repeticiones(2, "linea_negocio_input", Keys.Down);
+                _oDriver.FindElement(By.Id("linea_negocio_input")).SendKeys(Keys.Enter);
+
+                //Selecciona Producto:
+                _oDriver.FindElement(By.Id("producto_input")).Click();
+                Repeticiones(11, "producto_input", Keys.Down);
+                _oDriver.FindElement(By.Id("producto_input")).SendKeys(Keys.Enter);
+                _Funciones.Pausa(3);
+
+
+                string cContratante = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value;
+                string cAsegurado = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_asegurado).Value;
+                     
             }
             catch (Exception Ex)
             {
                 LogFailStep(12, Ex);
+            }
+        }
+
+        private void Repeticiones(int nVeces, string cElemento, string cKeys)
+        {
+            for (int i = 0; i < nVeces; i++)
+            {
+                _oDriver.FindElement(By.Id(cElemento)).SendKeys(cKeys);
             }
         }
     }

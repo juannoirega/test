@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Threading;
 
 namespace Robot.Util.Nacar
 {
@@ -28,6 +28,11 @@ namespace Robot.Util.Nacar
             var alert = _oDriver.SwitchTo().Alert();
             alert.SetAuthenticationCredentials(Usuario, Contraseña);
             alert.Accept();
+        }
+
+        public void Pausa(double nTiempo = 1)
+        {
+            Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
         }
     }
 }
