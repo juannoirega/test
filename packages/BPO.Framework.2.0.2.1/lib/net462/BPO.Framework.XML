@@ -1,0 +1,3951 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BPO.Framework</name>
+    </assembly>
+    <members>
+        <member name="T:BPO.Framework.AssemblyHelper.ComboItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.AssemblyHelper.ComboItem.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.AssemblyHelper.ComboItem.Value">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.AssemblyHelper.ComboItem.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.AssemblyHelper.ComboItem.#ctor(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Value"></param>
+            <param name="Name"></param>
+        </member>
+        <member name="M:BPO.Framework.AssemblyHelper.ComboItem.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.BPOCitrix.Imagem">
+            <summary>
+            Classe que contem funções de OCR e comparação de imagem
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Imagem.VerificaExistenciaImagem(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Single)">
+            <summary>
+            Verifica se a imagem existe em uma determinada região da tela
+            </summary>
+            <param name="searchImage">Imagem que você procura</param>
+            <param name="xPos">Posição inicial em X de uma região, na tela, onde a imagem vai ser procurada</param>
+            <param name="yPos">Posição inicial em Y de uma região, na tela, onde a imagem vai ser procurada</param>
+            <param name="width">Largura da região, na tela, onde a imagem vai ser procurada</param>
+            <param name="height">Altura da região, na tela, onde a imagem vai ser procurada</param>
+            <param name="timeOut">Tempo total, em segundos, que a procura pode levar</param>
+            <param name="click">Se deseja clicar na imagem encontrada. Padrão = false</param>
+            <param name="precisao">Porcentagem de precisão para encontrar a imagem. Padrão = 0.921f</param>
+            <returns>True para imagem encontrada e False para imagem não encontrada</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Imagem.VerificaExistenciaImagem(System.String,System.Drawing.Rectangle,System.Int32,System.Boolean,System.Single)">
+            <summary>
+            Verifica se a imagem existe em uma determinada região da tela
+            </summary>
+            <param name="searchImage">Imagem que você procura</param>
+            <param name="searchZone">Área que a imagem vai ser procurada</param>
+            <param name="timeOut">Tempo total, em segundos, que a procura pode levar</param>
+            <param name="click">Se deseja clicar na imagem encontrada. Padrão = false</param>
+            <param name="precisao">Porcentagem de precisão para encontrar a imagem. Padrão = 0.921f</param>
+            <returns>True para imagem encontrada e False para imagem não encontrada</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Imagem.VerificaExistenciaImagem(System.String,System.String,System.Drawing.Rectangle,System.Int32,System.Boolean,System.Single)">
+            <summary>
+            Verifica se a imagem existe em uma determinada imagem
+            </summary>
+            <param name="searchImage">Imagem que você procura</param>
+            <param name="targetImage">Imagem onde vai ocorrer a busca</param>
+            <param name="searchZone">Área onde vai ser procurada a imagem</param>
+            <param name="timeOut">Tempo total, em segundos, que a procura pode levar</param>
+            <param name="click">Se deseja clicar na imagem encontrada. Padrão = false</param>
+            <param name="precisao">Porcentagem de precisão para encontrar a imagem. Padrão = 0.921f</param>
+            <returns>True para imagem encontrada e False para imagem não encontrada</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Imagem.VerificaExistenciaImagem(System.Drawing.Image,System.Drawing.Image,System.Drawing.Rectangle,System.Int32,System.Boolean,System.Single)">
+            <summary>
+            Verifica se a imagem existe em uma determinada imagem
+            </summary>
+            <param name="searchImage">Imagem que você procura</param>
+            <param name="targetImage">Imagem onde vai ocorrer a busca</param>
+            <param name="searchZone">Área onde vai ser procurada a imagem</param>
+            <param name="timeOut">Tempo total, em segundos, que a procura pode levar</param>
+            <param name="click">Se deseja clicar na imagem encontrada. Padrão = false</param>
+            <param name="precisao">Porcentagem de precisão para encontrar a imagem. Padrão = 0.921f</param>
+            <returns>True para imagem encontrada e False para imagem não encontrada</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Imagem.GetTextImage(System.Drawing.Image)">
+            <summary>
+            Retira o texto contido na imagem
+            </summary>
+            <param name="image">Imagem que contem o texto</param>
+            <returns>Texto contido na imagem ou Nulo para erro de leitura</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Imagem.GetTextImage(System.String)">
+            <summary>
+            Retira o texto contido na imagem
+            </summary>
+            <param name="image">Imagem que contem o texto</param>
+            <returns>Texto contido na imagem ou Nulo para erro de leitura</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Imagem.GetTextImage(System.Drawing.Rectangle)">
+            <summary>
+            Retira o texto contido em uma região da tela
+            </summary>
+            <param name="searchZone">Região da tela onde vai ser realizada a leitura</param>
+            <returns>Texto contido na imagem ou Nulo para erro de leitura</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Imagem.GetTextImage(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Retira o texto contido em uma região da tela
+            </summary>
+            <param name="xPos">Posição inicial em X de uma região, na tela, onde vai ocorrer a leitura</param>
+            <param name="yPos">Posição inicial em Y de uma região, na tela, onde vai ocorrer a leitura</param>
+            <param name="width">Largura da região, na tela, onde vai ocorrer a leitura</param>
+            <param name="height">Altura da região, na tela, onde vai ocorrer a leitura</param>
+            <returns>Texto contido na imagem ou Nulo para erro de leitura</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Imagem.CaptureScreen">
+            <summary>
+            Tira um print da tela
+            </summary>
+            <returns>Image</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Imagem.CaptureScreenRegionWindow(System.Drawing.Rectangle)">
+            <summary>
+            Tira um print de uma determinada região da tela
+            </summary>
+            <param name="region">Região da tela que o print vai ser tirado</param>
+            <returns>Print da região</returns>
+        </member>
+        <member name="T:BPO.Framework.BPOCitrix.Keyboard">
+            <summary>
+            Classe que simula as teclas de um Teclado
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Keyboard.KeyPress(BPO.Framework.BPOCitrix.VirtualKeyCode)">
+            <summary>
+            Pressionar Tecla
+            </summary>
+            <param name="keyCode">Tecla a ser pressionada</param>
+            <returns>Sempre Nulo</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Keyboard.KeyPress(BPO.Framework.BPOCitrix.VirtualKeyCode,System.Int32)">
+            <summary>
+            Pressionar Tecla
+            </summary>
+            <param name="keyCode">Tecla a ser pressionada</param>
+            <param name="time">Quantidade de vezes que a tecla vai ser pressionada</param>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Keyboard.MultipleKeyPress(BPO.Framework.BPOCitrix.VirtualKeyCode,BPO.Framework.BPOCitrix.VirtualKeyCode)">
+            <summary>
+            Pressionar conjunto de Teclas
+            </summary>
+            <param name="keyCode1">Primeira tecla a ser pressionada</param>
+            <param name="keyCode2">Segunda tecla a ser pressionada</param>
+            <returns>Sempre Nulo</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Keyboard.MultipleKeyPress(BPO.Framework.BPOCitrix.VirtualKeyCode,BPO.Framework.BPOCitrix.VirtualKeyCode,BPO.Framework.BPOCitrix.VirtualKeyCode)">
+            <summary>
+            Pressionar conjunto de Teclas
+            </summary>
+            <param name="keyCode1">Primeira tecla a ser pressionada</param>
+            <param name="keyCode2">Segunda tecla a ser pressionada</param>
+            <param name="keyCode3">Terceira tecla a ser pressionada</param>
+            <returns>Sempre Nulo</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Keyboard.AltKeyCode(BPO.Framework.BPOCitrix.VirtualKeyCode,BPO.Framework.BPOCitrix.VirtualKeyCode,BPO.Framework.BPOCitrix.VirtualKeyCode,BPO.Framework.BPOCitrix.VirtualKeyCode)">
+            <summary>
+            Enviar caracteres especiais por Código Numérico
+            </summary>
+            <param name="keyCode1">Primeiro dígito do código</param>
+            <param name="keyCode2">Segundo dígito do código</param>
+            <param name="keyCode3">Terceiro dígito do código</param>
+            <param name="keyCode4">Quarto dígito do código</param>
+            <returns>Sempre Nulo</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Keyboard.MultipleKeyPress(System.Collections.Generic.List{System.Int32})">
+            <summary>
+            Pressionar conjunto de Teclas                                                                           
+            </summary>
+            <param name="lstKeyCode">Lista de teclas que serão pressionadas</param>
+            <returns>Sempre Nulo</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Keyboard.KeyPress(System.String)">
+            <summary>
+            Enviar texto
+            </summary>
+            <param name="key">Texto desejado</param>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Keyboard.KeyPress(System.Int32)">
+            <summary>
+            Pressionar Tecla de acordo com o keyvalue do evento KeyEventArgs
+            </summary>
+            <param name="keyValue">KeyEventArgs - e.KeyValue</param>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Keyboard.CopiarDados(BPO.Framework.BPOCitrix.TipoRetornoClipboard,System.Int32)">
+            <summary>
+            Simula o atalho Ctrl+C
+            </summary>
+            <param name="tipo">Tipo do dado que está sendo copiado</param>
+            <param name="tentativas">Quantidade de vezes que o evento tentará copiar os dados. Padrão é 6x</param>
+            <returns>Obejeto que pode ser Texto, Imagem, iDataObject ou Nulo para inexistente</returns>
+        </member>
+        <member name="T:BPO.Framework.BPOCitrix.Mouse">
+            <summary>
+            Classe que simula o Mouse
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Mouse.Click">
+            <summary>
+            Simula o clique do botão esquerdo do mouse
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Mouse.Click(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Simula o clique do botão esquerdo do mouse em uma determinada posição e uma quantidade de vezes
+            </summary>
+            <param name="xPos">Posição em X na tela</param>
+            <param name="yPos">Posição em Y na tela</param>
+            <param name="times">Quantidade de cliques. Padrão = um clique</param>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Mouse.RightClick">
+            <summary>
+            Simula o clique do botão direito do mouse
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Mouse.RightClick(System.Int32,System.Int32)">
+            <summary>
+            Simula o clique do botão direito do mouse em uma determinada posição
+            </summary>
+            <param name="xPos">Posição em X na tela</param>
+            <param name="yPos">Posição em Y na tela</param>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Mouse.Move(System.Int32,System.Int32)">
+            <summary>
+            Move o cursor do mouse para uma determinada posição na tela
+            </summary>
+            <param name="xPos">Posição em X na tela</param>
+            <param name="yPos">Posição em Y na tela</param>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Mouse.ClickAndDrag(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Simular o clicar e arrastar do mouse
+            </summary>
+            <param name="xPosInicial">Posição inicial de arrasto em X, na tela</param>
+            <param name="yPosInicial">Posição inicial de arrasto em Y, na tela</param>
+            <param name="xPosFinal">Posição final de arrasto em X, na tela</param>
+            <param name="yPosFinal">Posição final de arrasto em Y, na tela</param>
+            <param name="delay">Tempo, em milissegundo, que o mouse efetuará o movimento arrastar</param>
+        </member>
+        <member name="M:BPO.Framework.BPOCitrix.Mouse.ClickAndDrag(System.Int32,System.Int32,System.Collections.Generic.List{System.Int32[]})">
+            <summary>
+            Simular o clicar e arrastar do mouse
+            </summary>
+            <param name="xPosInicial">Posição inicial de arrasto em X, na tela</param>
+            <param name="yPosInicial">Posição inicial de arrasto em Y, na tela</param>
+            <param name="lstPosicao">Lista de posições da tela que o mouse vai passar</param>
+        </member>
+        <member name="T:BPO.Framework.BPOCitrix.VirtualKeyCode">
+            <summary>
+            The list of VirtualKeyCodes (see: http://msdn.microsoft.com/en-us/library/ms645540(VS.85).aspx)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.LBUTTON">
+            <summary>
+            Left mouse button
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.RBUTTON">
+            <summary>
+            Right mouse button
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.CANCEL">
+            <summary>
+            Control-break processing
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.MBUTTON">
+            <summary>
+            Middle mouse button (three-button mouse) - NOT contiguous with LBUTTON and RBUTTON
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.XBUTTON1">
+            <summary>
+            Windows 2000/XP: X1 mouse button - NOT contiguous with LBUTTON and RBUTTON
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.XBUTTON2">
+            <summary>
+            Windows 2000/XP: X2 mouse button - NOT contiguous with LBUTTON and RBUTTON
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.BACK">
+            <summary>
+            BACKSPACE key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.TAB">
+            <summary>
+            TAB key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.CLEAR">
+            <summary>
+            CLEAR key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.RETURN">
+            <summary>
+            ENTER key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.SHIFT">
+            <summary>
+            SHIFT key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.CONTROL">
+            <summary>
+            CTRL key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.MENU">
+            <summary>
+            ALT key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.PAUSE">
+            <summary>
+            PAUSE key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.CAPITAL">
+            <summary>
+            CAPS LOCK key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.KANA">
+            <summary>
+            Input Method Editor (IME) Kana mode
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.HANGEUL">
+            <summary>
+            IME Hanguel mode (maintained for compatibility; use HANGUL)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.HANGUL">
+            <summary>
+            IME Hangul mode
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.JUNJA">
+            <summary>
+            IME Junja mode
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.FINAL">
+            <summary>
+            IME final mode
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.HANJA">
+            <summary>
+            IME Hanja mode
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.KANJI">
+            <summary>
+            IME Kanji mode
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.ESCAPE">
+            <summary>
+            ESC key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.CONVERT">
+            <summary>
+            IME convert
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NONCONVERT">
+            <summary>
+            IME nonconvert
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.ACCEPT">
+            <summary>
+            IME accept
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.MODECHANGE">
+            <summary>
+            IME mode change request
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.SPACE">
+            <summary>
+            SPACEBAR
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.PRIOR">
+            <summary>
+            PAGE UP key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NEXT">
+            <summary>
+            PAGE DOWN key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.END">
+            <summary>
+            END key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.HOME">
+            <summary>
+            HOME key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.LEFT">
+            <summary>
+            LEFT ARROW key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.UP">
+            <summary>
+            UP ARROW key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.RIGHT">
+            <summary>
+            RIGHT ARROW key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.DOWN">
+            <summary>
+            DOWN ARROW key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.SELECT">
+            <summary>
+            SELECT key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.PRINT">
+            <summary>
+            PRINT key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.EXECUTE">
+            <summary>
+            EXECUTE key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.SNAPSHOT">
+            <summary>
+            PRINT SCREEN key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.INSERT">
+            <summary>
+            INS key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.DELETE">
+            <summary>
+            DEL key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.HELP">
+            <summary>
+            HELP key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_0">
+            <summary>
+            0 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_1">
+            <summary>
+            1 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_2">
+            <summary>
+            2 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_3">
+            <summary>
+            3 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_4">
+            <summary>
+            4 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_5">
+            <summary>
+            5 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_6">
+            <summary>
+            6 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_7">
+            <summary>
+            7 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_8">
+            <summary>
+            8 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_9">
+            <summary>
+            9 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_A">
+            <summary>
+            A key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_B">
+            <summary>
+            B key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_C">
+            <summary>
+            C key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_D">
+            <summary>
+            D key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_E">
+            <summary>
+            E key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_F">
+            <summary>
+            F key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_G">
+            <summary>
+            G key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_H">
+            <summary>
+            H key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_I">
+            <summary>
+            I key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_J">
+            <summary>
+            J key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_K">
+            <summary>
+            K key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_L">
+            <summary>
+            L key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_M">
+            <summary>
+            M key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_N">
+            <summary>
+            N key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_O">
+            <summary>
+            O key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_P">
+            <summary>
+            P key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_Q">
+            <summary>
+            Q key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_R">
+            <summary>
+            R key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_S">
+            <summary>
+            S key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_T">
+            <summary>
+            T key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_U">
+            <summary>
+            U key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_V">
+            <summary>
+            V key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_W">
+            <summary>
+            W key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_X">
+            <summary>
+            X key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_Y">
+            <summary>
+            Y key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VK_Z">
+            <summary>
+            Z key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.LWIN">
+            <summary>
+            Left Windows key (Microsoft Natural keyboard)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.RWIN">
+            <summary>
+            Right Windows key (Natural keyboard)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.APPS">
+            <summary>
+            Applications key (Natural keyboard)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.SLEEP">
+            <summary>
+            Computer Sleep key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NUMPAD0">
+            <summary>
+            Numeric keypad 0 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NUMPAD1">
+            <summary>
+            Numeric keypad 1 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NUMPAD2">
+            <summary>
+            Numeric keypad 2 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NUMPAD3">
+            <summary>
+            Numeric keypad 3 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NUMPAD4">
+            <summary>
+            Numeric keypad 4 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NUMPAD5">
+            <summary>
+            Numeric keypad 5 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NUMPAD6">
+            <summary>
+            Numeric keypad 6 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NUMPAD7">
+            <summary>
+            Numeric keypad 7 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NUMPAD8">
+            <summary>
+            Numeric keypad 8 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NUMPAD9">
+            <summary>
+            Numeric keypad 9 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.MULTIPLY">
+            <summary>
+            Multiply key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.ADD">
+            <summary>
+            Add key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.SEPARATOR">
+            <summary>
+            Separator key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.SUBTRACT">
+            <summary>
+            Subtract key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.DECIMAL">
+            <summary>
+            Decimal key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.DIVIDE">
+            <summary>
+            Divide key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F1">
+            <summary>
+            F1 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F2">
+            <summary>
+            F2 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F3">
+            <summary>
+            F3 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F4">
+            <summary>
+            F4 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F5">
+            <summary>
+            F5 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F6">
+            <summary>
+            F6 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F7">
+            <summary>
+            F7 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F8">
+            <summary>
+            F8 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F9">
+            <summary>
+            F9 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F10">
+            <summary>
+            F10 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F11">
+            <summary>
+            F11 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F12">
+            <summary>
+            F12 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F13">
+            <summary>
+            F13 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F14">
+            <summary>
+            F14 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F15">
+            <summary>
+            F15 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F16">
+            <summary>
+            F16 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F17">
+            <summary>
+            F17 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F18">
+            <summary>
+            F18 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F19">
+            <summary>
+            F19 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F20">
+            <summary>
+            F20 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F21">
+            <summary>
+            F21 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F22">
+            <summary>
+            F22 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F23">
+            <summary>
+            F23 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.F24">
+            <summary>
+            F24 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NUMLOCK">
+            <summary>
+            NUM LOCK key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.SCROLL">
+            <summary>
+            SCROLL LOCK key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.LSHIFT">
+            <summary>
+            Left SHIFT key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.RSHIFT">
+            <summary>
+            Right SHIFT key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.LCONTROL">
+            <summary>
+            Left CONTROL key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.RCONTROL">
+            <summary>
+            Right CONTROL key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.LMENU">
+            <summary>
+            Left MENU key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.RMENU">
+            <summary>
+            Right MENU key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.BROWSER_BACK">
+            <summary>
+            Windows 2000/XP: Browser Back key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.BROWSER_FORWARD">
+            <summary>
+            Windows 2000/XP: Browser Forward key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.BROWSER_REFRESH">
+            <summary>
+            Windows 2000/XP: Browser Refresh key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.BROWSER_STOP">
+            <summary>
+            Windows 2000/XP: Browser Stop key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.BROWSER_SEARCH">
+            <summary>
+            Windows 2000/XP: Browser Search key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.BROWSER_FAVORITES">
+            <summary>
+            Windows 2000/XP: Browser Favorites key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.BROWSER_HOME">
+            <summary>
+            Windows 2000/XP: Browser Start and Home key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VOLUME_MUTE">
+            <summary>
+            Windows 2000/XP: Volume Mute key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VOLUME_DOWN">
+            <summary>
+            Windows 2000/XP: Volume Down key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.VOLUME_UP">
+            <summary>
+            Windows 2000/XP: Volume Up key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.MEDIA_NEXT_TRACK">
+            <summary>
+            Windows 2000/XP: Next Track key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.MEDIA_PREV_TRACK">
+            <summary>
+            Windows 2000/XP: Previous Track key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.MEDIA_STOP">
+            <summary>
+            Windows 2000/XP: Stop Media key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.MEDIA_PLAY_PAUSE">
+            <summary>
+            Windows 2000/XP: Play/Pause Media key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.LAUNCH_MAIL">
+            <summary>
+            Windows 2000/XP: Start Mail key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.LAUNCH_MEDIA_SELECT">
+            <summary>
+            Windows 2000/XP: Select Media key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.LAUNCH_APP1">
+            <summary>
+            Windows 2000/XP: Start Application 1 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.LAUNCH_APP2">
+            <summary>
+            Windows 2000/XP: Start Application 2 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_1">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the ';:' key 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_PLUS">
+            <summary>
+            Windows 2000/XP: For any country/region, the '+' key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_COMMA">
+            <summary>
+            Windows 2000/XP: For any country/region, the ',' key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_MINUS">
+            <summary>
+            Windows 2000/XP: For any country/region, the '-' key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_PERIOD">
+            <summary>
+            Windows 2000/XP: For any country/region, the '.' key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_2">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the '/?' key 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_3">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the '`~' key 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_4">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the '[{' key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_5">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the '\|' key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_6">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the ']}' key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_7">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the 'single-quote/double-quote' key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_8">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_102">
+            <summary>
+            Windows 2000/XP: Either the angle bracket key or the backslash key on the RT 102-key keyboard
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.PROCESSKEY">
+            <summary>
+            Windows 95/98/Me, Windows NT 4.0, Windows 2000/XP: IME PROCESS key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.PACKET">
+            <summary>
+            Windows 2000/XP: Used to pass Unicode characters as if they were keystrokes. The PACKET key is the low word of a 32-bit Virtual Key value used for non-keyboard input methods. For more information, see Remark in KEYBDINPUT, SendInput, WM_KEYDOWN, and WM_KEYUP
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.ATTN">
+            <summary>
+            Attn key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.CRSEL">
+            <summary>
+            CrSel key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.EXSEL">
+            <summary>
+            ExSel key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.EREOF">
+            <summary>
+            Erase EOF key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.PLAY">
+            <summary>
+            Play key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.ZOOM">
+            <summary>
+            Zoom key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.NONAME">
+            <summary>
+            Reserved
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.PA1">
+            <summary>
+            PA1 key
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.VirtualKeyCode.OEM_CLEAR">
+            <summary>
+            Clear key
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.BPOCitrix.Util.ScreenResolution">
+            <summary>
+            Classe Resolução da Tela
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.Util.ScreenResolution.MainResolution">
+            <summary>
+            Resolução da tela onde a aplicação está instalada.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOCitrix.Util.ScreenResolution.DevScreenResolution">
+            <summary>
+            Resolução da tela onde a aplicação está sendo desenvolvida.
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.BPOCitrix.TipoRetornoClipboard">
+            <summary>
+            Tipo de retorno do Clipboard
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.TipoRetornoClipboard.Imagem">
+            <summary>
+            Imagem
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.TipoRetornoClipboard.Texto">
+            <summary>
+            Texto
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOCitrix.TipoRetornoClipboard.iDataObject">
+            <summary>
+            Objeto
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.HARDWAREINPUT">
+            <summary>
+            The HARDWAREINPUT structure contains information about a simulated message generated by an input device other than a keyboard or mouse.  (see: http://msdn.microsoft.com/en-us/library/ms646269(VS.85).aspx)
+            Declared in Winuser.h, include Windows.h
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.HARDWAREINPUT.Msg">
+            <summary>
+            Value specifying the message generated by the input hardware. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.HARDWAREINPUT.ParamL">
+            <summary>
+            Specifies the low-order word of the lParam parameter for uMsg. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.HARDWAREINPUT.ParamH">
+            <summary>
+            Specifies the high-order word of the lParam parameter for uMsg. 
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.INPUT">
+            <summary>
+            The INPUT structure is used by SendInput to store information for synthesizing input events such as keystrokes, mouse movement, and mouse clicks. (see: http://msdn.microsoft.com/en-us/library/ms646270(VS.85).aspx)
+            Declared in Winuser.h, include Windows.h
+            </summary>
+            <remarks>
+            This structure contains information identical to that used in the parameter list of the keybd_event or mouse_event function.
+            Windows 2000/XP: INPUT_KEYBOARD supports nonkeyboard input methods, such as handwriting recognition or voice recognition, as if it were text input by using the KEYEVENTF_UNICODE flag. For more information, see the remarks section of KEYBDINPUT.
+            </remarks>
+        </member>
+        <member name="F:BPO.Framework.INPUT.Type">
+            <summary>
+            Specifies the type of the input event. This member can be one of the following values. 
+            <see cref="F:BPO.Framework.InputType.Mouse"/> - The event is a mouse event. Use the mi structure of the union.
+            <see cref="F:BPO.Framework.InputType.Keyboard"/> - The event is a keyboard event. Use the ki structure of the union.
+            <see cref="F:BPO.Framework.InputType.Hardware"/> - Windows 95/98/Me: The event is from input hardware other than a keyboard or mouse. Use the hi structure of the union.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.INPUT.Data">
+            <summary>
+            The data structure that contains information about the simulated Mouse, Keyboard or Hardware event.
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.InputType">
+            <summary>
+            Specifies the type of the input event. This member can be one of the following values. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.InputType.Mouse">
+            <summary>
+            INPUT_MOUSE = 0x00 (The event is a mouse event. Use the mi structure of the union.)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.InputType.Keyboard">
+            <summary>
+            INPUT_KEYBOARD = 0x01 (The event is a keyboard event. Use the ki structure of the union.)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.InputType.Hardware">
+            <summary>
+            INPUT_HARDWARE = 0x02 (Windows 95/98/Me: The event is from input hardware other than a keyboard or mouse. Use the hi structure of the union.)
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.KEYBDINPUT">
+            <summary>
+            The KEYBDINPUT structure contains information about a simulated keyboard event.  (see: http://msdn.microsoft.com/en-us/library/ms646271(VS.85).aspx)
+            Declared in Winuser.h, include Windows.h
+            </summary>
+            <remarks>
+            Windows 2000/XP: INPUT_KEYBOARD supports nonkeyboard-input methodssuch as handwriting recognition or voice recognitionas if it were text input by using the KEYEVENTF_UNICODE flag. If KEYEVENTF_UNICODE is specified, SendInput sends a WM_KEYDOWN or WM_KEYUP message to the foreground thread's message queue with wParam equal to VK_PACKET. Once GetMessage or PeekMessage obtains this message, passing the message to TranslateMessage posts a WM_CHAR message with the Unicode character originally specified by wScan. This Unicode character will automatically be converted to the appropriate ANSI value if it is posted to an ANSI window.
+            Windows 2000/XP: Set the KEYEVENTF_SCANCODE flag to define keyboard input in terms of the scan code. This is useful to simulate a physical keystroke regardless of which keyboard is currently being used. The virtual key value of a key may alter depending on the current keyboard layout or what other keys were pressed, but the scan code will always be the same.
+            </remarks>
+        </member>
+        <member name="F:BPO.Framework.KEYBDINPUT.KeyCode">
+            <summary>
+            Specifies a virtual-key code. The code must be a value in the range 1 to 254. The Winuser.h header file provides macro definitions (VK_*) for each value. If the dwFlags member specifies KEYEVENTF_UNICODE, wVk must be 0. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.KEYBDINPUT.Scan">
+            <summary>
+            Specifies a hardware scan code for the key. If dwFlags specifies KEYEVENTF_UNICODE, wScan specifies a Unicode character which is to be sent to the foreground application. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.KEYBDINPUT.Flags">
+            <summary>
+            Specifies various aspects of a keystroke. This member can be certain combinations of the following values.
+            KEYEVENTF_EXTENDEDKEY - If specified, the scan code was preceded by a prefix byte that has the value 0xE0 (224).
+            KEYEVENTF_KEYUP - If specified, the key is being released. If not specified, the key is being pressed.
+            KEYEVENTF_SCANCODE - If specified, wScan identifies the key and wVk is ignored. 
+            KEYEVENTF_UNICODE - Windows 2000/XP: If specified, the system synthesizes a VK_PACKET keystroke. The wVk parameter must be zero. This flag can only be combined with the KEYEVENTF_KEYUP flag. For more information, see the Remarks section. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.KEYBDINPUT.Time">
+            <summary>
+            Time stamp for the event, in milliseconds. If this parameter is zero, the system will provide its own time stamp. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.KEYBDINPUT.ExtraInfo">
+            <summary>
+            Specifies an additional value associated with the keystroke. Use the GetMessageExtraInfo function to obtain this information. 
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.KeyboardFlag">
+            <summary>
+            Specifies various aspects of a keystroke. This member can be certain combinations of the following values.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.KeyboardFlag.ExtendedKey">
+            <summary>
+            KEYEVENTF_EXTENDEDKEY = 0x0001 (If specified, the scan code was preceded by a prefix byte that has the value 0xE0 (224).)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.KeyboardFlag.KeyUp">
+            <summary>
+            KEYEVENTF_KEYUP = 0x0002 (If specified, the key is being released. If not specified, the key is being pressed.)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.KeyboardFlag.Unicode">
+            <summary>
+            KEYEVENTF_UNICODE = 0x0004 (If specified, wScan identifies the key and wVk is ignored.)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.KeyboardFlag.ScanCode">
+            <summary>
+            KEYEVENTF_SCANCODE = 0x0008 (Windows 2000/XP: If specified, the system synthesizes a VK_PACKET keystroke. The wVk parameter must be zero. This flag can only be combined with the KEYEVENTF_KEYUP flag. For more information, see the Remarks section.)
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.MouseFlag">
+            <summary>
+            The set of MouseFlags for use in the Flags property of the <see cref="T:BPO.Framework.MOUSEINPUT"/> structure. (See: http://msdn.microsoft.com/en-us/library/ms646273(VS.85).aspx)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.Move">
+            <summary>
+            Specifies that movement occurred.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.LeftDown">
+            <summary>
+            Specifies that the left button was pressed.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.LeftUp">
+            <summary>
+            Specifies that the left button was released.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.RightDown">
+            <summary>
+            Specifies that the right button was pressed.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.RightUp">
+            <summary>
+            Specifies that the right button was released.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.MiddleDown">
+            <summary>
+            Specifies that the middle button was pressed.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.MiddleUp">
+            <summary>
+            Specifies that the middle button was released.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.XDown">
+            <summary>
+            Windows 2000/XP: Specifies that an X button was pressed.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.XUp">
+            <summary>
+            Windows 2000/XP: Specifies that an X button was released.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.VerticalWheel">
+            <summary>
+            Windows NT/2000/XP: Specifies that the wheel was moved, if the mouse has a wheel. The amount of movement is specified in mouseData. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.HorizontalWheel">
+            <summary>
+            Specifies that the wheel was moved horizontally, if the mouse has a wheel. The amount of movement is specified in mouseData. Windows 2000/XP:  Not supported.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.VirtualDesk">
+            <summary>
+            Windows 2000/XP: Maps coordinates to the entire desktop. Must be used with MOUSEEVENTF_ABSOLUTE.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MouseFlag.Absolute">
+            <summary>
+            Specifies that the dx and dy members contain normalized absolute coordinates. If the flag is not set, dxand dy contain relative data (the change in position since the last reported position). This flag can be set, or not set, regardless of what kind of mouse or other pointing device, if any, is connected to the system. For further information about relative mouse motion, see the following Remarks section.
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.MOUSEINPUT">
+            <summary>
+            The MOUSEINPUT structure contains information about a simulated mouse event. (see: http://msdn.microsoft.com/en-us/library/ms646273(VS.85).aspx)
+            Declared in Winuser.h, include Windows.h
+            </summary>
+            <remarks>
+            If the mouse has moved, indicated by MOUSEEVENTF_MOVE, dx and dy specify information about that movement. The information is specified as absolute or relative integer values. 
+            If MOUSEEVENTF_ABSOLUTE value is specified, dx and dy contain normalized absolute coordinates between 0 and 65,535. The event procedure maps these coordinates onto the display surface. Coordinate (0,0) maps onto the upper-left corner of the display surface; coordinate (65535,65535) maps onto the lower-right corner. In a multimonitor system, the coordinates map to the primary monitor. 
+            Windows 2000/XP: If MOUSEEVENTF_VIRTUALDESK is specified, the coordinates map to the entire virtual desktop.
+            If the MOUSEEVENTF_ABSOLUTE value is not specified, dx and dy specify movement relative to the previous mouse event (the last reported position). Positive values mean the mouse moved right (or down); negative values mean the mouse moved left (or up). 
+            Relative mouse motion is subject to the effects of the mouse speed and the two-mouse threshold values. A user sets these three values with the Pointer Speed slider of the Control Panel's Mouse Properties sheet. You can obtain and set these values using the SystemParametersInfo function. 
+            The system applies two tests to the specified relative mouse movement. If the specified distance along either the x or y axis is greater than the first mouse threshold value, and the mouse speed is not zero, the system doubles the distance. If the specified distance along either the x or y axis is greater than the second mouse threshold value, and the mouse speed is equal to two, the system doubles the distance that resulted from applying the first threshold test. It is thus possible for the system to multiply specified relative mouse movement along the x or y axis by up to four times.
+            </remarks>
+        </member>
+        <member name="F:BPO.Framework.MOUSEINPUT.X">
+            <summary>
+            Specifies the absolute position of the mouse, or the amount of motion since the last mouse event was generated, depending on the value of the dwFlags member. Absolute data is specified as the x coordinate of the mouse; relative data is specified as the number of pixels moved. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MOUSEINPUT.Y">
+            <summary>
+            Specifies the absolute position of the mouse, or the amount of motion since the last mouse event was generated, depending on the value of the dwFlags member. Absolute data is specified as the y coordinate of the mouse; relative data is specified as the number of pixels moved. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MOUSEINPUT.MouseData">
+            <summary>
+            If dwFlags contains MOUSEEVENTF_WHEEL, then mouseData specifies the amount of wheel movement. A positive value indicates that the wheel was rotated forward, away from the user; a negative value indicates that the wheel was rotated backward, toward the user. One wheel click is defined as WHEEL_DELTA, which is 120. 
+            Windows Vista: If dwFlags contains MOUSEEVENTF_HWHEEL, then dwData specifies the amount of wheel movement. A positive value indicates that the wheel was rotated to the right; a negative value indicates that the wheel was rotated to the left. One wheel click is defined as WHEEL_DELTA, which is 120.
+            Windows 2000/XP: IfdwFlags does not contain MOUSEEVENTF_WHEEL, MOUSEEVENTF_XDOWN, or MOUSEEVENTF_XUP, then mouseData should be zero. 
+            If dwFlags contains MOUSEEVENTF_XDOWN or MOUSEEVENTF_XUP, then mouseData specifies which X buttons were pressed or released. This value may be any combination of the following flags. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MOUSEINPUT.Flags">
+            <summary>
+            A set of bit flags that specify various aspects of mouse motion and button clicks. The bits in this member can be any reasonable combination of the following values. 
+            The bit flags that specify mouse button status are set to indicate changes in status, not ongoing conditions. For example, if the left mouse button is pressed and held down, MOUSEEVENTF_LEFTDOWN is set when the left button is first pressed, but not for subsequent motions. Similarly, MOUSEEVENTF_LEFTUP is set only when the button is first released. 
+            You cannot specify both the MOUSEEVENTF_WHEEL flag and either MOUSEEVENTF_XDOWN or MOUSEEVENTF_XUP flags simultaneously in the dwFlags parameter, because they both require use of the mouseData field. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MOUSEINPUT.Time">
+            <summary>
+            Time stamp for the event, in milliseconds. If this parameter is 0, the system will provide its own time stamp. 
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MOUSEINPUT.ExtraInfo">
+            <summary>
+            Specifies an additional value associated with the mouse event. An application calls GetMessageExtraInfo to obtain this extra information. 
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.MOUSEKEYBDHARDWAREINPUT">
+            <summary>
+            The combined/overlayed structure that includes Mouse, Keyboard and Hardware Input message data (see: http://msdn.microsoft.com/en-us/library/ms646270(VS.85).aspx)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MOUSEKEYBDHARDWAREINPUT.Mouse">
+            <summary>
+            The <see cref="T:BPO.Framework.MOUSEINPUT"/> definition.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MOUSEKEYBDHARDWAREINPUT.Keyboard">
+            <summary>
+            The <see cref="T:BPO.Framework.KEYBDINPUT"/> definition.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.MOUSEKEYBDHARDWAREINPUT.Hardware">
+            <summary>
+            The <see cref="T:BPO.Framework.HARDWAREINPUT"/> definition.
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.NativeMethods">
+            <summary>
+            References all of the Native Windows API methods for the WindowsInput functionality.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.NativeMethods.GetAsyncKeyState(System.UInt16)">
+            <summary>
+            The GetAsyncKeyState function determines whether a key is up or down at the time the function is called, and whether the key was pressed after a previous call to GetAsyncKeyState. (See: http://msdn.microsoft.com/en-us/library/ms646293(VS.85).aspx)
+            </summary>
+            <param name="virtualKeyCode">Specifies one of 256 possible virtual-key codes. For more information, see Virtual Key Codes. Windows NT/2000/XP: You can use left- and right-distinguishing constants to specify certain keys. See the Remarks section for further information.</param>
+            <returns>
+            If the function succeeds, the return value specifies whether the key was pressed since the last call to GetAsyncKeyState, and whether the key is currently up or down. If the most significant bit is set, the key is down, and if the least significant bit is set, the key was pressed after the previous call to GetAsyncKeyState. However, you should not rely on this last behavior; for more information, see the Remarks. 
+            
+            Windows NT/2000/XP: The return value is zero for the following cases: 
+            - The current desktop is not the active desktop
+            - The foreground thread belongs to another process and the desktop does not allow the hook or the journal record.
+            
+            Windows 95/98/Me: The return value is the global asynchronous key state for each virtual key. The system does not check which thread has the keyboard focus.
+            
+            Windows 95/98/Me: Windows 95 does not support the left- and right-distinguishing constants. If you call GetAsyncKeyState with these constants, the return value is zero. 
+            </returns>
+            <remarks>
+            The GetAsyncKeyState function works with mouse buttons. However, it checks on the state of the physical mouse buttons, not on the logical mouse buttons that the physical buttons are mapped to. For example, the call GetAsyncKeyState(VK_LBUTTON) always returns the state of the left physical mouse button, regardless of whether it is mapped to the left or right logical mouse button. You can determine the system's current mapping of physical mouse buttons to logical mouse buttons by calling 
+            Copy CodeGetSystemMetrics(SM_SWAPBUTTON) which returns TRUE if the mouse buttons have been swapped.
+            
+            Although the least significant bit of the return value indicates whether the key has been pressed since the last query, due to the pre-emptive multitasking nature of Windows, another application can call GetAsyncKeyState and receive the "recently pressed" bit instead of your application. The behavior of the least significant bit of the return value is retained strictly for compatibility with 16-bit Windows applications (which are non-preemptive) and should not be relied upon.
+            
+            You can use the virtual-key code constants VK_SHIFT, VK_CONTROL, and VK_MENU as values for the vKey parameter. This gives the state of the SHIFT, CTRL, or ALT keys without distinguishing between left and right. 
+            
+            Windows NT/2000/XP: You can use the following virtual-key code constants as values for vKey to distinguish between the left and right instances of those keys. 
+            
+            Code Meaning 
+            VK_LSHIFT Left-shift key. 
+            VK_RSHIFT Right-shift key. 
+            VK_LCONTROL Left-control key. 
+            VK_RCONTROL Right-control key. 
+            VK_LMENU Left-menu key. 
+            VK_RMENU Right-menu key. 
+            
+            These left- and right-distinguishing constants are only available when you call the GetKeyboardState, SetKeyboardState, GetAsyncKeyState, GetKeyState, and MapVirtualKey functions. 
+            </remarks>
+        </member>
+        <member name="M:BPO.Framework.NativeMethods.GetKeyState(System.UInt16)">
+            <summary>
+            The GetKeyState function retrieves the status of the specified virtual key. The status specifies whether the key is up, down, or toggled (on, off alternating each time the key is pressed). (See: http://msdn.microsoft.com/en-us/library/ms646301(VS.85).aspx)
+            </summary>
+            <param name="virtualKeyCode">
+            Specifies a virtual key. If the desired virtual key is a letter or digit (A through Z, a through z, or 0 through 9), nVirtKey must be set to the ASCII value of that character. For other keys, it must be a virtual-key code. 
+            If a non-English keyboard layout is used, virtual keys with values in the range ASCII A through Z and 0 through 9 are used to specify most of the character keys. For example, for the German keyboard layout, the virtual key of value ASCII O (0x4F) refers to the "o" key, whereas VK_OEM_1 refers to the "o with umlaut" key.
+            </param>
+            <returns>
+            The return value specifies the status of the specified virtual key, as follows: 
+            If the high-order bit is 1, the key is down; otherwise, it is up.
+            If the low-order bit is 1, the key is toggled. A key, such as the CAPS LOCK key, is toggled if it is turned on. The key is off and untoggled if the low-order bit is 0. A toggle key's indicator light (if any) on the keyboard will be on when the key is toggled, and off when the key is untoggled.
+            </returns>
+            <remarks>
+            The key status returned from this function changes as a thread reads key messages from its message queue. The status does not reflect the interrupt-level state associated with the hardware. Use the GetAsyncKeyState function to retrieve that information. 
+            An application calls GetKeyState in response to a keyboard-input message. This function retrieves the state of the key when the input message was generated. 
+            To retrieve state information for all the virtual keys, use the GetKeyboardState function. 
+            An application can use the virtual-key code constants VK_SHIFT, VK_CONTROL, and VK_MENU as values for the nVirtKey parameter. This gives the status of the SHIFT, CTRL, or ALT keys without distinguishing between left and right. An application can also use the following virtual-key code constants as values for nVirtKey to distinguish between the left and right instances of those keys. 
+            VK_LSHIFT
+            VK_RSHIFT
+            VK_LCONTROL
+            VK_RCONTROL
+            VK_LMENU
+            VK_RMENU
+            
+            These left- and right-distinguishing constants are available to an application only through the GetKeyboardState, SetKeyboardState, GetAsyncKeyState, GetKeyState, and MapVirtualKey functions. 
+            </remarks>
+        </member>
+        <member name="M:BPO.Framework.NativeMethods.SendInput(System.UInt32,BPO.Framework.INPUT[],System.Int32)">
+            <summary>
+            The SendInput function synthesizes keystrokes, mouse motions, and button clicks.
+            </summary>
+            <param name="numberOfInputs">Number of structures in the Inputs array.</param>
+            <param name="inputs">Pointer to an array of INPUT structures. Each structure represents an event to be inserted into the keyboard or mouse input stream.</param>
+            <param name="sizeOfInputStructure">Specifies the size, in bytes, of an INPUT structure. If cbSize is not the size of an INPUT structure, the function fails.</param>
+            <returns>The function returns the number of events that it successfully inserted into the keyboard or mouse input stream. If the function returns zero, the input was already blocked by another thread. To get extended error information, call GetLastError.Microsoft Windows Vista. This function fails when it is blocked by User Interface Privilege Isolation (UIPI). Note that neither GetLastError nor the return value will indicate the failure was caused by UIPI blocking.</returns>
+            <remarks>
+            Microsoft Windows Vista. This function is subject to UIPI. Applications are permitted to inject input only into applications that are at an equal or lesser integrity level.
+            The SendInput function inserts the events in the INPUT structures serially into the keyboard or mouse input stream. These events are not interspersed with other keyboard or mouse input events inserted either by the user (with the keyboard or mouse) or by calls to keybd_event, mouse_event, or other calls to SendInput.
+            This function does not reset the keyboard's current state. Any keys that are already pressed when the function is called might interfere with the events that this function generates. To avoid this problem, check the keyboard's state with the GetAsyncKeyState function and correct as necessary.
+            </remarks>
+        </member>
+        <member name="M:BPO.Framework.NativeMethods.GetMessageExtraInfo">
+            <summary>
+            The GetMessageExtraInfo function retrieves the extra message information for the current thread. Extra message information is an application- or driver-defined value associated with the current thread's message queue. 
+            </summary>
+            <returns></returns>
+            <remarks>To set a thread's extra message information, use the SetMessageExtraInfo function. </remarks>
+        </member>
+        <member name="T:BPO.Framework.XButton">
+            <summary>
+            XButton definitions for use in the MouseData property of the <see cref="T:BPO.Framework.MOUSEINPUT"/> structure. (See: http://msdn.microsoft.com/en-us/library/ms646273(VS.85).aspx)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.XButton.XButton1">
+            <summary>
+            Set if the first X button is pressed or released.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.XButton.XButton2">
+            <summary>
+            Set if the second X button is pressed or released.
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.BPOEncryption.BPOEncrypt">
+            <summary>
+            Objeto de encriptação de valores
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOEncryption.BPOEncrypt.#ctor(System.String,System.String)">
+            <summary>
+            Contrutor da classe de encriptação
+            </summary>
+            <param name="key">Chave de encriptação</param>
+            <param name="hash_IV">Hash de encriptação</param>
+        </member>
+        <member name="M:BPO.Framework.BPOEncryption.BPOEncrypt.VerificaKeys">
+            <summary>
+            Verifica se as chaves de criptografia estão corretas
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOEncryption.BPOEncrypt.Encript(System.String)">
+            <summary>
+            Processo de encriptação de um valor em texto
+            </summary>
+            <param name="ValorParaEncriptar">Valor em texto</param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOEncryption.BPOEncrypt.Decript(System.Byte[])">
+            <summary>
+            Processo de encriptação de um valor em bytes
+            </summary>
+            <param name="ValorParaDesencriptar">Valor em bytes</param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOEncryption.BPOEncrypt.ConvertListToBulkCopy``1(System.String,System.String,System.Collections.Generic.IList{``0},System.Int32,System.Collections.Generic.List{System.Data.SqlClient.SqlBulkCopyColumnMapping})">
+            <summary>
+            Prepara BulkCopy a partir de uma lista de uma entidade que representa a tabela da base de dados
+            </summary>
+            <typeparam name="T">Tipo da entidade que representa a tabela da base</typeparam>
+            <param name="strConexao">Conexão com a base de dados</param>
+            <param name="nomeTabela">Nome da tabela de execução do BulkCopy</param>
+            <param name="listEntidade">Lista de itens que serão inseridos na tabela</param>
+            <param name="mappingCollumns">Mapeamento das colunas a serem inseridas</param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOEncryption.BPOEncrypt.ObjectToByteArray(System.Object)">
+            <summary>
+            Convert um objeto em um array de bytes
+            </summary>
+            <param name="obj">Object de entrada</param>
+            <returns>Array de bytes retornado</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOEncryption.BPOEncrypt.ByteArrayToObject(System.Byte[])">
+            <summary>
+            Convert um array de bytes em um objeto
+            </summary>
+            <param name="arrBytes">array de entrada</param>
+            <returns>Object retornado</returns>
+        </member>
+        <member name="T:BPO.Framework.BPODataAccess.ColunaAttribute">
+            <summary>
+            Atributo usado pelo Framework de acesso a dados para determinar
+            o mapeamento entre o campo e a propriedade.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPODataAccess.ColunaAttribute.ColunaOriginal">
+            <summary>
+            Representa o nome original da coluna no banco de dados.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPODataAccess.ColunaAttribute.ColunaAlias">
+            <summary>
+            Representa o nome de Alias da coluna, no caso de uma consulta
+            com INNER JOINs onde há repetição de nomes de colunas.
+            Se preenchida, tem precedência sobre a propriedade ColunaOriginal.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPODataAccess.ColunaAttribute.IsEntidade">
+            <summary>
+            Indica se a propriedade é uma entidade. Neste caso, o tipo da mesma
+            será criado em tempo de execução e populado de acordo com as configurações
+            de mapeamento da entidade.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.ColunaAttribute.#ctor">
+            <summary>
+            Construtor.
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.BPODataAccess.DataManager`1">
+            <summary>
+            Classe responsável por todo o acesso a dados.
+            </summary>
+            <typeparam name="T">Tipo de Objeto que será retornado por padrão.</typeparam>
+        </member>
+        <member name="P:BPO.Framework.BPODataAccess.DataManager`1.CurrentFactory">
+            <summary>
+            Representa o provider de objetos atual.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPODataAccess.DataManager`1.CurrentConnection">
+            <summary>
+            Representa a conexão de banco atual.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPODataAccess.DataManager`1.CurrentTransaction">
+            <summary>
+            Representa a transação de banco atual.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPODataAccess.DataManager`1.CurrentCommand">
+            <summary>
+            Representa o comando de banco atual.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPODataAccess.DataManager`1.UseSettingsForConnection">
+            <summary>
+            Representa se a conexão de banco deve ser efetuada pelos dados no App.Config.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPODataAccess.DataManager`1.ConnectionStringOrConfigName">
+            <summary>
+            Representa o nome da Conexão / String de Conexão a ser usada.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPODataAccess.DataManager`1.ConnectionProviderName">
+            <summary>
+            Representa o tipo de provedor de dados a ser usado.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.#ctor(System.Boolean,System.String,System.String)">
+            <summary>
+            Construtor.
+            </summary>
+            <param name="useSettingsForConnection">Indica se a conexão de banco deve ser efetuada pelos dados no App.Config</param>
+            <param name="connectionStringOrConfigName">Nome da Conexão / String de Conexão a ser usada.</param>
+            <param name="connectionProviderName">Tipo de provedor de dados a ser usado. Se o parametro 
+            useSettingsForConnection for True, este valor deve ser nulo.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.OpenConnection(System.String,System.Boolean)">
+            <summary>
+            Abre uma conexão com os parametros informados.
+            </summary>
+            <param name="databaseFilePath">Caminho\Nome do arquivo, nos casos de conexões com Access ou Excel. 
+            A String de Conexão deve possuir o replace {0} para funcionar corretamente.</param>
+            <param name="openTransaction"></param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.OpenConnection(System.Boolean)">
+            <summary>
+            Abre uma conexão com os parametros informados.
+            </summary>
+            <param name="openTransaction">Indica se deve ou não abrir uma conexão.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.SetValueOnProperty(System.Object,System.Reflection.PropertyInfo,System.Data.DataTable,System.Data.Common.DbDataReader)">
+            <summary>
+            Método utilizado para Atribuir valor às propriedades do objeto objModel informado.
+            Quando uma propriedade é marcada como "IsEntidade", uma instancia da mesma é criada
+            e as propriedades desta são atribuídas, de forma recursiva.
+            </summary>
+            <param name="objModel">Objeto que terá a propriedade preenchida.</param>
+            <param name="prop">Informações da Propriedade a ser preenchida.</param>
+            <param name="dt">Schema do reader para identificar a existência das colunas.</param>
+            <param name="reader">DbDataReader que possui as informações.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.CloseConnection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.CreateCommand(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Constrói um Comando para ser usado nas interações com o banco de dados. 
+            Abre uma conexão e não abre transação.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.CreateCommand(System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Constrói um Comando para ser usado nas interações com o banco de dados. Não abre transação.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.CreateCommand(System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Constrói um Comando para ser usado nas interações com o banco de dados.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="openOrUseTransaction">Indica se deve-se abrir uma transação.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.CreateCommand(System.String,System.String,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Constrói um Comando com Query (não Stored Procedure) para ser usado nas 
+            interações com o banco de dados que são acessados como arquivos.
+            Ex: Excel, Acess.
+            </summary>
+            <param name="databaseFilePath">Caminho\Nome do arquivo de banco de dados.</param>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.CreateCommand(System.String,System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Constrói um Comando para ser usado nas interações com o banco de dados que são acessados como arquivos.
+            Ex: Excel, Acess.
+            </summary>
+            <param name="databaseFilePath">Caminho\Nome do arquivo de banco de dados.</param>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.CreateCommand(System.String,System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Constrói um Comando para ser usado nas interações com o banco de dados que são acessados como arquivos.
+            Ex: Excel, Acess.
+            </summary>
+            <param name="databaseFilePath">Caminho\Nome do arquivo de banco de dados.</param>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.CreateCommand(System.String,System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Constrói um Comando para ser usado nas interações com o banco de dados que são acessados como arquivos.
+            Ex: Excel, Acess.
+            </summary>
+            <param name="databaseFilePath">Caminho\Nome do arquivo de banco de dados.</param>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="openOrUseTransaction">Indica se deve-se abrir uma transação.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQuery(System.String,System.Boolean)">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de objetos do tipo informado.
+            Não passa parametros, Abre a conexão e não abre transação.
+            </summary>
+            <param name="queryOrProcedureName"></param>
+            <param name="isProcedure"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQuery(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de objetos do tipo informado.
+            Abre a conexão e não abre transação.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>List(Of T)</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQuery(System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de objetos do tipo informado.
+            Não abre transação.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>List(Of T)</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQuery(System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de objetos do tipo informado.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="openOrUseTransaction">Indica se deve-se abrir uma transação.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>List(Of T)</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryDictionary(System.String,System.String,System.Boolean)">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de dicionários(Chave/Valor).
+            </summary>
+            <param name="databaseFilePath">Caminho\Nome do arquivo de banco de dados.</param>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <returns>List(Of Dictionary(Of string, object))</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryDictionary(System.String,System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de dicionários(Chave/Valor).
+            </summary>
+            <param name="databaseFilePath">Caminho\Nome do arquivo de banco de dados.</param>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>List(Of Dictionary(Of string, object))</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryDictionary(System.String,System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de dicionários(Chave/Valor).
+            </summary>
+            <param name="databaseFilePath">Caminho\Nome do arquivo de banco de dados.</param>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>List(Of Dictionary(Of string, object))</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryDictionary(System.String,System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de dicionários(Chave/Valor).
+            </summary>
+            <param name="databaseFilePath">Caminho\Nome do arquivo de banco de dados.</param>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="openOrUseTransaction">Indica se deve-se abrir uma transação.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>List(Of Dictionary(Of string, object))</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryDictionary(System.String,System.Boolean)">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de dicionários(Chave/Valor).
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <returns>List(Of Dictionary(Of string, object))</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryDictionary(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de dicionários(Chave/Valor).
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>List(Of Dictionary(Of string, object))</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryDictionary(System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de dicionários(Chave/Valor).
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>List(Of Dictionary(Of string, object))</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryDictionary(System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de dicionários(Chave/Valor).
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="openOrUseTransaction">Indica se deve-se abrir uma transação.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>List(Of Dictionary(Of string, object))</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryDataTable(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="query"></param>
+            <param name="isProcedure"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryDataTable(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            
+            </summary>
+            <param name="query"></param>
+            <param name="isProcedure"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQuery``1(System.String,System.Boolean)">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de objetos do tipo informado.
+            Não passa parametros, abre a conexão e não abre Transação.
+            </summary>
+            <typeparam name="P">Tipo de Objeto que a lista de retorno conterá.</typeparam>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <returns>List(Of P)</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQuery``1(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de objetos do tipo informado.
+            Abre a conexão e não abre Transação.
+            </summary>
+            <typeparam name="P">Tipo de Objeto que a lista de retorno conterá.</typeparam>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="queryParameters"></param>
+            <returns>List(Of P)</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQuery``1(System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de objetos do tipo informado.
+            Não abre Transação.
+            </summary>
+            <typeparam name="P">Tipo de Objeto que a lista de retorno conterá.</typeparam>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>List(Of P)</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQuery``1(System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna uma lista de objetos do tipo informado.
+            </summary>
+            <typeparam name="P">Tipo de Objeto que a lista de retorno conterá.</typeparam>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="openOrUseTransaction">Indica se deve-se abrir uma transação.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>List(Of P)</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryOne(System.String,System.Boolean)">
+            <summary>
+            Executa uma Consulta na base de dados e retorna um objeto do tipo informado.
+            Não passa parametros, abre a conexão e não abre transação.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <returns>P</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryOne(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna um objeto do tipo informado.
+            Abre conexão e não abre transação.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>P</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryOne(System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna um objeto do tipo informado.
+            Não abre transação.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>P</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryOne(System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna um objeto do tipo informado.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="openOrUseTransaction">Indica se deve-se abrir uma transação.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>P</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryOne``1(System.String,System.Boolean)">
+            <summary>
+            Executa uma Consulta na base de dados e retorna um objeto do tipo informado.
+            Não passa parametros, abre a conexão e não abre transação.
+            </summary>
+            <typeparam name="P">Tipo de Objeto que a lista de retorno conterá.</typeparam>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <returns>P</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryOne``1(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna um objeto do tipo informado.
+            Abre conexão e não abre transação.
+            </summary>
+            <typeparam name="P">Tipo de Objeto que a lista de retorno conterá.</typeparam>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>P</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryOne``1(System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna um objeto do tipo informado.
+            Não abre transação.
+            </summary>
+            <typeparam name="P">Tipo de Objeto que a lista de retorno conterá.</typeparam>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>P</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.GetQueryOne``1(System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Executa uma Consulta na base de dados e retorna um objeto do tipo informado.
+            </summary>
+            <typeparam name="P">Tipo de Objeto que a lista de retorno conterá.</typeparam>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="openOrUseTransaction">Indica se deve-se abrir uma transação.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>P</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.ExecuteNonQuery(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Efetua uma Execução no banco de dados (Normalmente um INSERT) e retorna o valor
+            da execução, normalmente 1 para sucesso.
+            Abre a Conexão e não abre transação.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>int</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.ExecuteNonQuery(System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Efetua uma Execução no banco de dados (Normalmente um INSERT) e retorna o valor
+            da execução, normalmente 1 para sucesso.
+            Não abre transação.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>int</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.ExecuteNonQuery(System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Efetua uma Execução no banco de dados (Normalmente um INSERT) e retorna o valor
+            da execução, normalmente 1 para sucesso.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="openOrUseTransaction">Indica se deve-se abrir uma transação.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>int</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.ExecuteScalar(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Efetua uma Execução no banco de dados (Normalmente um INSERT) e retorna o valor
+            da primeira linha / primeira coluna do resultado.
+            Abre a Conexão e não abre transação.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>object</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.ExecuteScalar(System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Efetua uma Execução no banco de dados (Normalmente um INSERT) e retorna o valor
+            da primeira linha / primeira coluna do resultado.
+            Não abre transação.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>object</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.ExecuteScalar(System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Efetua uma Execução no banco de dados (Normalmente um INSERT) e retorna o valor
+            da primeira linha / primeira coluna do resultado.
+            </summary>
+            <param name="queryOrProcedureName">Query ou o nome da Stored Procedure a ser executada.</param>
+            <param name="isProcedure">Indica se a execução é uma Stored Procedure ou uma Query.</param>
+            <param name="openConnection">Indica se deve-se abrir a conexão.</param>
+            <param name="openOrUseTransaction">Indica se deve-se abrir uma transação.</param>
+            <param name="queryParameters">Coleção de parametros a adicionar. Pode ser nulo.</param>
+            <returns>object</returns>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.ExecuteBulkCopy(System.Data.DataTable)">
+            <summary>
+            Execução de BulkCopy. Válido apenas para conexões com SQL Server.
+            </summary>
+            <param name="tabelaBulk">DataTable nomeado com os dados do Bulk.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataManager`1.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.BPODataAccess.DataParameter">
+            <summary>
+            Classe especializada de DbParameter para facilitar a construção
+            de parametros.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataParameter.#ctor(System.String,System.Object)">
+            <summary>
+            Construtor.
+            </summary>
+            <param name="ParameterName">Nome do Parametro, comumente iniciado com @.</param>
+            <param name="ParameterValue">Valor do Parametro, pode ser DBNull.Value.</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataParameter.#ctor(System.String,System.Object,System.Data.DbType)">
+            <summary>
+            Construtor.
+            </summary>
+            <param name="ParameterName">Nome do Parametro, comumente iniciado com @.</param>
+            <param name="ParameterValue">Valor do Parametro, pode ser DBNull.Value.</param>
+            <param name="TypeParameter">Tipo do parametro DbType, definir este caso tipo for Binary e o valor for NULL</param>
+        </member>
+        <member name="M:BPO.Framework.BPODataAccess.DataParameter.SetInstance(System.Data.Common.DbParameter)">
+            <summary>
+            
+            </summary>
+            <param name="internalInstance"></param>
+        </member>
+        <member name="T:BPO.Framework.ENBPOLog">
+            <summary>
+            Entidade usada para efetuar Log em banco de dados.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.ENBPOLog.DataHora">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.ENBPOLog.NomeMaquina">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.ENBPOLog.NomeAplicacao">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.ENBPOLog.TipoLog">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.ENBPOLog.NomeMetodoLinha">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.ENBPOLog.Descricao">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.DataManagerLog">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.DataManagerLog.LogTableName">
+            <summary>
+            Representa o nome da tabela de log a ser utilizado.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.DataManagerLog.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Construtor.
+            </summary>
+            <param name="connectionString"></param>
+            <param name="connectionProvider"></param>
+            <param name="databaseTableName"></param>
+        </member>
+        <member name="M:BPO.Framework.DataManagerLog.VerifyOrCreateTable">
+            <summary>
+            Verifica se a tabela de Log existe e se não, cria a mesma.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.DataManagerLog.WriteLog(BPO.Framework.ENBPOLog)">
+            <summary>
+            
+            </summary>
+            <param name="entidadeDados"></param>
+        </member>
+        <member name="T:BPO.Framework.Helper.ControlHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.ConfigureDropDownList``2(System.Web.UI.WebControls.DropDownList,System.Collections.Generic.IEnumerable{``0},System.String,System.String,``1)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="P"></typeparam>
+            <param name="Control"></param>
+            <param name="Datasource"></param>
+            <param name="DisplayMember"></param>
+            <param name="ValueMember"></param>
+            <param name="ValueToApply"></param>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.ConfigureDropDownList``1(System.Web.UI.WebControls.DropDownList,System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,System.Object,System.String)">
+            <summary>
+            Método padrão para configuração de DropDownlists.
+            </summary>
+            <typeparam name="T">Tipo do objeto de Dados.</typeparam>
+            <param name="Control">Controle DropDownlist que será configurado e carregado.</param>
+            <param name="Datasource">Fonte de dados que alimentará o controle.</param>
+            <param name="DisplayMember">Nome do atributo que será exibido pelo controle.</param>
+            <param name="ValueMember">Nome do atributo que será recuperado pela propriedade 'SelectedValue' do controle.</param>
+            <param name="ValueToDisplay">Item de Exibição que será atribuído ao item vazio que é adicionado ao controle.</param>
+            <param name="ValueToApply">Valor que será atribuído ao item vazio que é adicionado ao controle.</param>
+            <param name="ActiveFieldName">Nome da coluna que contém o valor que simboliza se o registro está ativo ou não.</param>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.ProcessActiveValue(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="ActiveValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.ConfigureDropDownList``1(System.Web.UI.WebControls.DropDownList,System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,System.Object)">
+            <summary>
+            Método padrão para configuração de DropDownlists.
+            </summary>
+            <typeparam name="T">Tipo do objeto de Dados.</typeparam>
+            <param name="Control">Controle DropDownlist que será configurado e carregado.</param>
+            <param name="Datasource">Fonte de dados que alimentará o controle.</param>
+            <param name="DisplayMember">Nome do atributo que será exibido pelo controle.</param>
+            <param name="ValueMember">Nome do atributo que será recuperado pela propriedade 'SelectedValue' do controle.</param>
+            <param name="ValueToDisplay">Item de Exibição que será atribuído ao item vazio que é adicionado ao controle.</param>
+            <param name="ValueToApply">Valor que será atribuído ao item vazio que é adicionado ao controle.</param>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.ConfigureDropDownList``1(System.Web.UI.WebControls.DropDownList,System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.Object)">
+            <summary>
+            Método padrão para configuração de DropDownlists.
+            </summary>
+            <typeparam name="T">Tipo do objeto de Dados.</typeparam>
+            <param name="Control">Controle DropDownlist que será configurado e carregado.</param>
+            <param name="Datasource">Fonte de dados que alimentará o controle.</param>
+            <param name="DisplayMember">Nome do atributo que será exibido pelo controle.</param>
+            <param name="ValueMember">Nome do atributo que será recuperado pela propriedade 'SelectedValue' do controle.</param>
+            <param name="ValueToApply">Valor que será atribuído ao item vazio que é adicionado ao controle.</param>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.ConfigureDropDownList``1(System.Web.UI.WebControls.DropDownList,System.Collections.Generic.IEnumerable{``0},System.String,System.String)">
+            <summary>
+            Método padrão para configuração de DropDownlists.
+            </summary>
+            <typeparam name="T">Tipo do objeto de Dados.</typeparam>
+            <param name="Control">Controle DropDownlist que será configurado e carregado.</param>
+            <param name="Datasource">Fonte de dados que alimentará o controle.</param>
+            <param name="DisplayMember">Nome do atributo que será exibido pelo controle.</param>
+            <param name="ValueMember">Nome do atributo que será recuperado pela propriedade 'SelectedValue' do controle.</param>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.ConfigureDropDownList``1(System.Web.UI.WebControls.DropDownList,System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String)">
+            <summary>
+            Método padrão para configuração de DropDownlists.
+            </summary>
+            <typeparam name="T">Tipo do objeto de Dados.</typeparam>
+            <param name="Control">Controle DropDownlist que será configurado e carregado.</param>
+            <param name="Datasource">Fonte de dados que alimentará o controle.</param>
+            <param name="DisplayMember">Nome do atributo que será exibido pelo controle.</param>
+            <param name="ValueMember">Nome do atributo que será recuperado pela propriedade 'SelectedValue' do controle.</param>
+            <param name="ActiveFieldName">Nome da coluna que contém o valor que simboliza se o registro está ativo ou não.</param>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.GetValueFromProperty``1(``0,System.String)">
+            <summary>
+            Retorna o valor da propriedade que possui o nome informado.
+            </summary>
+            <typeparam name="T">Tipo do objeto.</typeparam>
+            <param name="objToGet">objeto que possui a propriedade.</param>
+            <param name="PropertyName">Nome da propriedade que vai devolver o valor.</param>
+            <returns>object</returns>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.GetValueFromProperty(System.Object,System.String,System.Boolean)">
+            <summary>
+            Retorna o valor da propriedade que possui o nome informado.
+            </summary>
+            <param name="objToGet">objeto que possui a propriedade.</param>
+            <param name="PropertyName">Nome da propriedade que vai devolver o valor.</param>
+            <param name="returnNull"></param>
+            <returns>object</returns>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.GetValueFromProperty(System.Object,System.String)">
+            <summary>
+            Retorna o valor da propriedade que possui o nome informado.
+            </summary>
+            <param name="objToGet">objeto que possui a propriedade.</param>
+            <param name="PropertyName">Nome da propriedade que vai devolver o valor.</param>
+            <returns>object</returns>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.ApplyValueOnProperty``1(``0,System.String,System.Object)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="objToApply"></param>
+            <param name="PropertyName"></param>
+            <param name="Value"></param>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.TryConvert(System.Type,System.Object)">
+            <summary>
+            Efetua a conversão de tipo baseado no tipo informado.
+            </summary>
+            <param name="type"></param>
+            <param name="Value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.Helper.ControlHelper.AddTooltip(System.Web.UI.WebControls.ListControl)">
+            <summary>
+            Método padrão para adicionar um tooltip a um controle de Lista, como um Listbox ou DropdownList.
+            </summary>
+            <param name="list"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOHelper.DataManagerHelper.GetValueFromProperty``1(``0,System.String)">
+            <summary>
+            Retorna o valor da propriedade que possui o nome informado.
+            </summary>
+            <typeparam name="T">Tipo do objeto.</typeparam>
+            <param name="objToGet">objeto que possui a propriedade.</param>
+            <param name="PropertyName">Nome da propriedade que vai devolver o valor.</param>
+            <returns>object</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOHelper.DataManagerHelper.ApplyValueOnProperty``1(``0,System.String,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="objToApply"></param>
+            <param name="PropertyName"></param>
+            <param name="Value"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOHelper.DataManagerHelper.TryConvert(System.Type,System.Object)">
+            <summary>
+             Efetua a conversão de tipo baseado no tipo informado.
+            </summary>
+            <param name="type">Tipo a ser forçado.</param>
+            <param name="Value">Valor a ser convertido.</param>
+            <returns>object</returns>
+        </member>
+        <member name="T:BPO.Framework.BPOLogConfigurationCollection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationCollection.CollectionType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationCollection.ElementName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOLogConfigurationCollection.IsElementName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="elementName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOLogConfigurationCollection.CreateNewElement">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOLogConfigurationCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            
+            </summary>
+            <param name="element"></param>
+            <returns></returns>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationCollection.Item(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BPO.Framework.BPOLogConfigurationElement">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationElement.ContextName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationElement.LoggerType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationElement.DatabaseConnectionString">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationElement.DatabaseProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationElement.DatabaseTableName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationElement.LocalFilePath">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationElement.EnableLog">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationElement.WriteMethodName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.BPOLogConfigurationSection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfigurationSection.Configurations">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOLogConfigurationSection.FindConfiguration(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="contextName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BPO.Framework.BPOLogConfiguration">
+            <summary>
+            Classe responsável pela configuração de log da aplicação.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfiguration.LoggerType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfiguration.DatabaseConnectionString">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfiguration.DatabaseProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfiguration.DatabaseTableName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfiguration.LocalFilePath">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfiguration.EnableLog">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLogConfiguration.WriteMethodName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.EnumDescription">
+            <summary>
+            Classe utilizada para retornar a descrição do Enumerador.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.EnumDescription.Description">
+            <summary>
+            Descrição que será adicionada ao Enumerador.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.EnumDescription.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.EnumDescription.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Description"></param>
+        </member>
+        <member name="M:BPO.Framework.EnumDescription.GetAll(System.Type)">
+            <summary>
+            Retorna todas as descrições disponíveis no enumerador informado.
+            </summary>
+            <param name="tp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.EnumDescription.Get(System.Type,System.String)">
+            <summary>
+            Recupera a descrição adicionada ao enumerador informado, com o nome informado.
+            </summary>
+            <param name="tp"></param>
+            <param name="name"></param>
+            <returns>string</returns>
+        </member>
+        <member name="M:BPO.Framework.EnumDescription.Get(System.Object)">
+            <summary>
+            Recupera a descrição adicionada ao enumerador informado, passado como parametro.
+            </summary>
+            <param name="enm"></param>
+            <returns>string</returns>
+        </member>
+        <member name="T:BPO.Framework.BPOLog">
+            <summary>
+            Helper para gravação de Logs de aplicação.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOLog.#ctor">
+            <summary>
+            Construtor.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOLog.AcessoDados">
+            <summary>
+            Classe base de acesso a dados do Log.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOLog.MODELO_STR_LOG">
+            <summary>
+            DataHora Máquina TipoDeLog Metodo:Linha - Descrição
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLog.LogContext">
+            <summary>
+            Representa o contexto de Log a ser utilizado.
+            </summary>
+        </member>
+        <member name="P:BPO.Framework.BPOLog.Config">
+            <summary>
+            Representa as configurações de Log.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOLog.LogInfoStartMethod">
+            <summary>
+            Facilitador de log que grava: "INFO : Início do Método".
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOLog.LogInfoEndMethod">
+            <summary>
+            Facilitador de log que grava: "INFO : Fim do Método".
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOLog.LogError(System.Exception)">
+            <summary>
+            Efetua a gravação de Log de Exceção.
+            </summary>
+            <param name="ex">Exception com informações para o Log.</param>
+            <example>
+            Exemplo de Utilização deste método:
+            <code>
+            try {
+                ...
+            } catch(Exception ex) {
+                BPO.Framework.BPOLog.LogError(ex);
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:BPO.Framework.BPOLog.FormatLogLine(BPO.Framework.Logger,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="logType"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOLog.Log(BPO.Framework.Logger,System.String,System.String,System.String)">
+            <summary>
+            Efetua a gravação do Log de acordo com as configurações efetuadas e os parametros informados.
+            </summary>
+            <param name="logType">Tipo de Log.</param>
+            <param name="application">Namespace da Aplicação em questão.</param>
+            <param name="LogLine">Mensagem de Log que será gravada.</param>
+            <param name="messageLine">Descrição da Mensagem de Log, usado na chamada de gravação de Log em banco.</param>
+        </member>
+        <member name="M:BPO.Framework.BPOLog.Log(BPO.Framework.Logger,System.String)">
+            <summary>
+            Efetua a gravação de Log.
+            </summary>
+            <param name="logType">Tipo de Log.</param>
+            <param name="logMessage">Mensagem de Log que será gravada.</param>
+            <example>
+            <code>
+            //Efetuando um Log de Execução:
+            public void TesteMethod(){
+                BPO.Framework.BPOLog.Log(BPO.Framework.Logger.INFO, "Início do Método");
+                ...
+                BPO.Framework.BPOLog.Log(BPO.Framework.Logger.INFO, "Fim do Método");
+            }
+            </code>
+            <code>
+            //Efetuando um Log de Alerta:
+            bool valor = false;
+            ...
+            if(!valor){
+                BPO.Framework.BPOLog.Log(BPO.Framework.Logger.WARN, "O Valor não foi preenchido.");
+            }
+            </code>
+            <code>
+            //Efetuando um Log de Erro tratado:
+            if(!valor){
+                BPO.Framework.BPOLog.Log(BPO.Framework.Logger.ERROR, "O Valor não foi preenchido corretamente.");
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:BPO.Framework.BPOLog.LogAsDatabase(BPO.Framework.Logger,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="logType"></param>
+            <param name="application"></param>
+            <param name="messageLine"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOLog.LogAsFile(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="application"></param>
+            <param name="LogLine"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOLog.LogAsEventViewer(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="application"></param>
+            <param name="LogLine"></param>
+        </member>
+        <member name="T:BPO.Framework.BPOUtil">
+            <summary>
+            Classe utilitária com funções comuns.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.TryConvert(System.Type,System.Object)">
+            <summary>
+             Efetua a conversão de tipo baseado no tipo informado.
+            </summary>
+            <param name="type">Tipo a ser forçado.</param>
+            <param name="Value">Valor a ser convertido.</param>
+            <returns>object</returns>
+        </member>
+        <member name="P:BPO.Framework.BPOUtil.GetGUID">
+            <summary>
+            Recupera um novo GUID formatado corretamente.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.GetKeyFromConfig(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Encrypt(System.String,System.Boolean)">
+            <summary>
+            Descriptografa uma string. 
+            Exige uma chave 'cryptoKey' na configuração
+            </summary>
+            <param name="toEncrypt">valor descriptografado</param>
+            <param name="useHashing"></param>
+            <returns>valor criptografado</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Decrypt(System.String,System.Boolean)">
+            <summary>
+            Descriptografa uma string. 
+            Exige uma chave 'cryptoKey' na configuração
+            </summary>
+            <param name="cipherString">valor criptografado</param>
+            <param name="useHashing"></param>
+            <returns>valor descriptografado</returns>
+        </member>
+        <member name="T:BPO.Framework.BPOUtil.Image">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Image.PreparaFormato(System.Drawing.Bitmap,System.Drawing.Imaging.PixelFormat)">
+            <summary>
+            Cria uma nova imagem com o formato informado.
+            </summary>
+            <param name="imagemBase"></param>
+            <param name="formato"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BPO.Framework.BPOUtil.Serialization">
+            <summary>
+            Classe utilitária para Serialização / Desserialização / Clone de objetos.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Serialization.SerializeExcelToCSV(System.String,System.String,System.String[])">
+            <summary>
+            Transforma um arquivo de Excel em um arquivo CSV, adicionando as colunas informadas.
+            </summary>
+            <param name="excelFileName">Arquivo Excel(XLS, XLSX) a ser transformado.</param>
+            <param name="csvFileName">Nome do arquivo </param>
+            <param name="complementValues"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Serialization.WriteToFile(System.Collections.Generic.List{System.Collections.Generic.List{System.String}},System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="records"></param>
+            <param name="path"></param>
+            <param name="separator"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Serialization.SerializeToJson(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="objData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Serialization.DeserializeFromJson``1(System.String)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="strData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Serialization.SerializeObject(System.Object,System.String)">
+            <summary>
+            Efetua a serialização do objeto informado e grava a mesma no arquivo informado.
+            </summary>
+            <param name="objToSerialize">Objeto a ser serializado.</param>
+            <param name="fileName">Caminho\Nome do arquivo onde o objeto será serializado.</param>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Serialization.DeserializeObject``1(System.String)">
+            <summary>
+            Efetua a Desserialização do arquivo informado para o tipo de objeto informado.
+            </summary>
+            <typeparam name="T">Tipo de objeto que será retornado.</typeparam>
+            <param name="fileName">Caminho\Nome do arquivo que será desserializado.</param>
+            <returns>T</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Serialization.SerializeToXML``1(``0,System.String)">
+            <summary>
+            Efetua a serialização do objeto informado para XML e grava a mesma no arquivo informado.
+            </summary>
+            <typeparam name="T">Tipo do objeto que será serializado.</typeparam>
+            <param name="objData">Objeto a ser serializado.</param>
+            <param name="fileName">Caminho\Nome do arquivo onde o objeto será serializado.</param>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Serialization.SerializeToXML``1(``0,System.String,System.Xml.Serialization.XmlAttributeOverrides)">
+            <summary>
+            Efetua a serialização do objeto informado para XML e grava a mesma no arquivo informado.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="objData"></param>
+            <param name="fileName"></param>
+            <param name="overrides"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Serialization.SerializeToString``1(``0)">
+            <summary>
+            Efetua a serialização do objeto informado para xml e retorna a string
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="toSerialize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Serialization.DeserialzeFromXML``1(System.String)">
+            <summary>
+            Efetua a Desserialização do arquivo XML informado para o tipo de objeto informado.
+            </summary>
+            <typeparam name="T">Tipo de objeto que será retornado.</typeparam>
+            <param name="fileName">Caminho\Nome do arquivo que será desserializado.</param>
+            <returns>T</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Serialization.DeepCopy``1(``0)">
+            <summary>
+            Efetua um "Clone" do objeto informado.
+            </summary>
+            <typeparam name="T">Tipo de objeto a ser clonado.</typeparam>
+            <param name="objSource">Objeto a ser clonado.</param>
+            <returns>T</returns>
+        </member>
+        <member name="T:BPO.Framework.BPOUtil.GZIP">
+            <summary>
+            Classe utilitária para Compressão e Descompressão  de arquivos GZIP.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.GZIP.Decompress(System.IO.FileInfo,System.Boolean)">
+            <summary>
+            Efetua a Descompactação do arquivo informado .ext.gz para .ext.
+            </summary>
+            <param name="file"></param>
+            <param name="useUTF8"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.GZIP.CopyTo(System.IO.Stream,System.IO.Stream)">
+            <summary>
+            
+            </summary>
+            <param name="input"></param>
+            <param name="output"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.GZIP.Compress(System.IO.FileInfo)">
+            <summary>
+            Efetua a compressão do arquivo informado .ext para .ext.gz.
+            </summary>
+            <param name="fileToCompress"></param>
+        </member>
+        <member name="T:BPO.Framework.BPOUtil.Network">
+            <summary>
+            Classe utilitária de processos de rede.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Network.PingAddress(System.String)">
+            <summary>
+            Efetua um "Ping" no endereço informado e retorna se houve sucesso.
+            </summary>
+            <param name="ipAddress">IP a ser "pingado".</param>
+            <returns>bool</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Network.PingAddress(System.String,System.Int32)">
+            <summary>
+            Efetua um "Ping" no endereço informado e retorna se houve sucesso.
+            </summary>
+            <param name="ipAddress">IP a ser "pingado".</param>
+            <param name="timeOut">Tempo de espera em milisegundos.</param>
+            <returns>bool</returns>
+        </member>
+        <member name="T:BPO.Framework.BPOUtil.Network.RequestState">
+            <summary>
+            Utilizado pelo método BPO.Framework.Network.DownloadFileFromFTP
+            para a exclusão de arquivos no FTP.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOUtil.Network.RequestState.BufferSize">
+            <summary>
+            Tamanho do Buffer.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOUtil.Network.RequestState.RequestData">
+            <summary>
+            Uso Interno.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOUtil.Network.RequestState.BufferRead">
+            <summary>
+            Uso Interno.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOUtil.Network.RequestState.Request">
+            <summary>
+            Uso Interno.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOUtil.Network.RequestState.ResponseStream">
+            <summary>
+            Uso Interno.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOUtil.Network.RequestState.StreamDecode">
+            <summary>
+            Decoder Default.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Network.RequestState.#ctor">
+            <summary>
+            Construtor.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Network.UploadFileToFTP(System.String,System.String,System.String,System.String)">
+            <summary>
+            Efetua o upload do arquivo informado para o FTP informado.
+            </summary>
+            <param name="ftpServer">Servidor FTP no formato "ftp://(URL ou IP):Porta/"</param>
+            <param name="ftpUser">Usuário de Login</param>
+            <param name="ftpPassword">Senha de Login</param>
+            <param name="arquivoLocal">Arquivo que será enviado.</param>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Network.DownloadFileFromFTP(System.String,System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Efetua o Download do arquivo informado do FTP informado para o caminho informado.
+            </summary>
+            <param name="ftpServer">Servidor FTP no formato "ftp://(URL ou IP):Porta/"</param>
+            <param name="ftpUser">Usuário de Login</param>
+            <param name="ftpPassword">Senha de Login</param>
+            <param name="nomeArquivoFTP">Caminho/Nome do arquivo no FTP.</param>
+            <param name="nomeArquivoLocal">Diretório local onde o arquivo será gravado.</param>
+            <param name="deleteFile">Deve-se excluir o arquivo no FTP?</param>
+        </member>
+        <member name="T:BPO.Framework.BPOUtil.Impersonation">
+            <summary>
+            Classe utilitária para a utilização de Impersonalização.
+            (Logar com outro usuário em uma máquina da rede, por exemplo)
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.BPOUtil.Impersonation.impersonationContext">
+            <summary>
+            Contexto de Impersonalização.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Impersonation.LogonUser(System.String,System.String,System.String,System.Int32,System.Int32,System.IntPtr@)">
+            <summary>
+            Pinvoke do método LogonUser da dll advapi32.dll.
+            </summary>
+            <param name="lpszUsername"></param>
+            <param name="lpszDomain"></param>
+            <param name="lpszPassword"></param>
+            <param name="dwLogonType"></param>
+            <param name="dwLogonProvider"></param>
+            <param name="phToken"></param>
+            <returns>bool</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Impersonation.DuplicateToken(System.IntPtr,System.Int32,System.IntPtr@)">
+            <summary>
+            Pinvoke do método DuplicateToken da dll advapi32.dll.
+            </summary>
+            <param name="ExistingTokenHandle"></param>
+            <param name="ImpersonationLevel"></param>
+            <param name="DuplicateTokenHandle"></param>
+            <returns>int</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Impersonation.RevertToSelf">
+            <summary>
+            Pinvoke do método RevertToSelf da dll advapi32.dll.
+            </summary>
+            <returns>long</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Impersonation.CloseHandle(System.IntPtr)">
+            <summary>
+            Pinvoke do método CloseHandle da dll advapi32.dll.
+            </summary>
+            <param name="handle"></param>
+            <returns>long</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Impersonation.ImpersonateUser(System.String,System.String,System.String,System.String)">
+            <summary>
+            Inicia a Impersonalização no domínio informado.
+            </summary>
+            <param name="userName">Usuário a ser utilizado na impersonalização.</param>
+            <param name="domain">Domínio a ser utilizado na impersonalização.</param>
+            <param name="password">Senha a ser utilizado na impersonalização.</param>
+            <param name="authenticationType">Tipo de Autenticação. O valor padrão é 'domain'</param>
+            <returns>Retorna True se a Impersonalização for bem sucedida.</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Impersonation.UndoImpersonateUser">
+            <summary>
+            Desfaz a Impersonalização feita anteriormente com o método ImpersonateUser.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Impersonation.impersonateValidUser(System.String,System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="userName"></param>
+            <param name="domain"></param>
+            <param name="password"></param>
+            <param name="authenticationType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BPO.Framework.BPOUtil.ExtrairImagensPDF">
+            <summary>
+            Classe utilitária para processamento de pdf/imagens.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.ExtrairImagensPDF.SaveImageAsThumbnail(System.String,System.String,System.Drawing.Imaging.ImageFormat,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="imagem"></param>
+            <param name="thumbnail"></param>
+            <param name="formatoThumb"></param>
+            <param name="width"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.ExtrairImagensPDF.MyThumbnailCallback">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.ExtrairImagensPDF.ConvertePDFemImagens(System.String,System.Drawing.Imaging.ImageFormat,System.Int32)">
+            <summary>
+            Converte um pdf em um array de imagens por pagina
+            </summary>
+            <param name="arquivoPDF">caminho do arquivo PDF de origem</param>
+            <param name="formatoImagemSaida">formato da imagem</param>
+            <param name="dpi">qualidade da imagens</param>
+            <returns>ArrayList</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.ExtrairImagensPDF.ConvertePDFemImagens(System.String,System.String,System.String,System.Drawing.Imaging.ImageFormat,System.Int32)">
+            <summary>
+            Converte um pdf em imagens por pagina
+            </summary>
+            <param name="arquivoPDF">caminho do arquivo PDF de origem</param>
+            <param name="caminhoSaida">caminho de saida</param>
+            <param name="nomeSaida">nome das imagens sem a extencao</param>
+            <param name="formatoImagemSaida">fomato da imagem</param>
+            <param name="dpi">dpi</param>
+            <returns>numero de paginas</returns>
+        </member>
+        <member name="T:BPO.Framework.BPOUtil.Email">
+            <summary>
+            Classe utilitária para envio de email
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOUtil.Email.Enviar(BPO.Framework.BPOUtil.ENParamentroEmail,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="parametros"></param>
+            <param name="assunto"></param>
+            <param name="mensagem"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BPO.Framework.BPOUtil.ENParamentroEmail">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.BPOWinInterface">
+            <summary>
+            Classe Base para interação com a Interface Windows, 
+            como Instanciar Aplicações, Mudar a janela ativa,
+            Mover/Clicar com o Mouse, Enviar HotKeys, etc.
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOWinInterface.SendText(System.String)">
+            <summary>
+            Envia texto para a janela ativa.
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOWinInterface.SendKey(BPO.Framework.WinKeys)">
+            <summary>
+            Envia uma tecla de ação para a janela ativa.
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOWinInterface.SendCombinedKeys(BPO.Framework.WinCombinedKeys,BPO.Framework.WinKeys)">
+            <summary>
+            Envia uma tecla de ação combinada com um comando (Ctrl, Alt ou Shift) para a janela ativa.
+            </summary>
+            <param name="combination"></param>
+            <param name="key"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOWinInterface.SetCursorPosition(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="X"></param>
+            <param name="Y"></param>
+        </member>
+        <member name="M:BPO.Framework.BPOWinInterface.BringWindowToTop(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="windowName"></param>
+            <param name="wait"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.BPOWinInterface.FindWindow(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="windowName"></param>
+            <param name="wait"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BPO.Framework.BPOSelenium.WaitForItem">
+            <summary>
+            Classe de manipulação de espera de itens dinâmicos
+            Efetua a espera da crição do objeto HTML conforme definição
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.BPOSelenium.WaitForItem.WaitForObject(OpenQA.Selenium.IWebDriver,System.Object,System.Int32)">
+            <summary>
+            Efetua a espera da criação de um Objeto (object) dinâmico
+            </summary>
+            <param name="driver">Objeto tipo IWebDrive, de controle da página Web/Selenium</param>
+            <param name="descItemWeb">Objeto do tipo int/IWebElement ou string para identificação do elemento Html </param>
+            <param name="timeout">Tempo de espera para a geração do objeto</param>
+            <returns>Retorna True/False conforme a criação do Objeto</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOSelenium.WaitForItem.FindElementUtil(OpenQA.Selenium.IWebDriver,OpenQA.Selenium.By,System.Int32)">
+            <summary>
+            Efetua a procura de um objeto Html, durante um tempo definido até que objeto dinâmico seja criado
+            ou até que o tempo termine
+            </summary>
+            <param name="driver">Objeto tipo IWebDrive, de controle da página Web/Selenium</param>
+            <param name="by">Tipo da pesquisa conforme orientação By do Selenium</param>
+            <param name="timeoutInSeconds">Tempo de procura/espera</param>
+            <returns>Retorna um objeto do tipo IWebElement representando o elemento Html</returns>
+        </member>
+        <member name="M:BPO.Framework.BPOSelenium.WaitForItem.FindElementstUtil(OpenQA.Selenium.IWebDriver,OpenQA.Selenium.By,System.Int32)">
+            <summary>
+            Efetua a procura de uma lista de objetos Html, durante um tempo definido até que esta lista esteja criada
+            ou até que o tempo termine 
+            </summary>
+            <param name="driver">Objeto tipo IWebDrive, de controle da página Web/Selenium</param>
+            <param name="by">Tipo da pesquisa conforme orientação By do Selenium</param>
+            <param name="timeoutInSeconds">Tempo de procura/espera</param>
+            <returns>Retorna uma lista de objetos do tipo IWebElement representando a lista de objetos Html</returns>
+        </member>
+        <member name="T:BPO.Framework.Logger">
+            <summary>
+            Representa os tipos de Log que podem ser efetuados.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.Logger.FATAL">
+            <summary>
+            Um Log Fatal é quando o mesmo causa Crash na aplicação.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.Logger.ERROR">
+            <summary>
+            Um Log de erro é quando uma exception é levantada, mas não causa Crash na aplicação.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.Logger.WARN">
+            <summary>
+            Um Log de aviso é quando por exemplo, um passo deveria ser executado e não executou.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.Logger.INFO">
+            <summary>
+            Um Log de informação é para informar casos de execução correta.
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.LoggerType">
+            <summary>
+            Representa os tipos de gravação de Logs que serão efetuados.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.LoggerType.File">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.LoggerType.Database">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.LoggerType.EventViewer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.LoggerType.FileAndDatabase">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.LoggerType.FileAndEventViewer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.LoggerType.All">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.DataProvider">
+            <summary>
+            Representa o tipo de provedor que será usado para o acesso a dados.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.DataProvider.SQLServer">
+            <summary>
+            Provedor do tipo SQL Server.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.DataProvider.Access">
+            <summary>
+            Provedor do tipo Access.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.DataProvider.Excel">
+            <summary>
+            Provedor do tipo Excel.
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.CriticalErrorType">
+            <summary>
+            Tipos de erros críticos usados no EXTRA.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.CriticalErrorType.NullPointer">
+            <summary>
+            Erros de NullPointer.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.CriticalErrorType.Common">
+            <summary>
+            Erros comuns, sem tratativa.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.CriticalErrorType.DataBase">
+            <summary>
+            Erros de Acesso a dados.
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.StatusExecucao">
+            <summary>
+            Representa os Status usados nas execuções de Robôs.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.StatusExecucao.Pendente">
+            <summary>
+            Status Pendente.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.StatusExecucao.EmProcesso">
+            <summary>
+            Status Em Processo.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.StatusExecucao.ProcessadoComSucesso">
+            <summary>
+            Status Processado com sucesso.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.StatusExecucao.ProcessadoComErro">
+            <summary>
+            Status Processado com erro.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.StatusExecucao.Erro">
+            <summary>
+            Status com erro.
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.StatusExecucao.CanceladoManual">
+            <summary>
+            Cancelamento da execução.
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.AgendadorTarefa">
+            <summary>
+            Cria uma classe do tipo tarefa
+            </summary>
+        </member>
+        <member name="M:BPO.Framework.AgendadorTarefa.criarTarefa(System.String,System.Int32,System.String,System.DateTime,System.String,System.String,System.DateTime,System.Int32,System.String)">
+            <summary>
+            Chamada do metodo para criar a tarefa no windowns
+            </summary>
+            <param name="Author"></param>
+            <param name="Id"></param>
+            <param name="nombre"></param>
+            <param name="DataIni"></param>
+            <param name="HoraIni"></param>
+            <param name="Interval"></param>
+            <param name="FechaGenerada"></param>
+            <param name="Cantidad"></param>
+            <param name="Path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.AgendadorTarefa.AtribuiDefinicaoTarefa(System.String,System.DateTime,System.String)">
+            <summary>
+            Metodo responsavel para criar a tarefa no windowns com os atributos Nome, Data e Autor da tarefa
+            </summary>
+            <param name="Description"></param>
+            <param name="FechaGenerada"></param>
+            <param name="Author"></param>
+        </member>
+        <member name="M:BPO.Framework.AgendadorTarefa.DefineInformacaoGatilho(System.Int32,System.DateTime,System.String,System.String,System.Int32)">
+            <summary>
+            Metodo que faz a configuração do gatilho da tarefa
+            </summary>
+            <param name="Id"></param>
+            <param name="DataIni"></param>
+            <param name="HoraIni"></param>
+            <param name="Interval"></param>
+            <param name="Cantidad"></param>
+        </member>
+        <member name="M:BPO.Framework.AgendadorTarefa.DefineInformacaoAcao(System.Int32,System.String)">
+            <summary>
+            Metodo que a ação a ser executa na tarefa
+            </summary>
+            <param name="Id"></param>
+            <param name="Path"></param>
+        </member>
+        <member name="M:BPO.Framework.AgendadorTarefa.deletarTarefa(System.String)">
+            <summary>
+            Metodo que exclui a tarefa no windowns
+            </summary>
+            <param name="nombre"></param>
+        </member>
+        <member name="T:BPO.Framework.WinAPI">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinAPI.WM_CLOSE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.WinAPI.EnumWindowsProc">
+            <summary>
+            Delegate usado na chamada Pinvoke EnumWindows.
+            </summary>
+            <param name="hWnd"></param>
+            <param name="lParam"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.WinAPI.EnumWindows(BPO.Framework.WinAPI.EnumWindowsProc,System.IntPtr)">
+            <summary>
+            Método externo que descobre todas as janelas abertas no Windows.
+            </summary>
+            <param name="lpEnumFunc"></param>
+            <param name="lParam"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.WinAPI.GetWindowText(System.IntPtr,System.Text.StringBuilder,System.Int32)">
+            <summary>
+            Método Externo que recupera o cabeçalho de uma janela, baseado no Handle informado.
+            </summary>
+            <param name="hWnd"></param>
+            <param name="lpString"></param>
+            <param name="nMaxCount"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.WinAPI.GetWindowThreadProcessId(System.IntPtr,System.UInt32@)">
+            <summary>
+            Método Externo que recupera o ID do processo.
+            </summary>
+            <param name="hWnd"></param>
+            <param name="lpdwProcessId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.WinAPI.SendMessage(System.IntPtr,System.UInt32,System.IntPtr,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="hWnd"></param>
+            <param name="Msg"></param>
+            <param name="wParam"></param>
+            <param name="lParam"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.WinAPI.SendMessage(System.IntPtr,System.UInt32,System.IntPtr,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="hWnd"></param>
+            <param name="Msg"></param>
+            <param name="wParam"></param>
+            <param name="lParam"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.WinAPI.FindWindowProcessID(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="windowName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BPO.Framework.WinAPI.FindWindowAndSendMessage(System.String,System.String,System.UInt32)">
+            <summary>
+            
+            </summary>
+            <param name="windowName"></param>
+            <param name="message"></param>
+            <param name="messageType"></param>
+        </member>
+        <member name="T:BPO.Framework.WinCombinedKeys">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinCombinedKeys.SHIFT">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinCombinedKeys.CTRL">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinCombinedKeys.ALT">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BPO.Framework.WinKeys">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.BACKSPACE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.BREAK">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.CAPSLOCK">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.DELETE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.DOWNARROW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.END">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.ENTER">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.ESC">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.HELP">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.HOME">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.INSERT">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.LEFTARROW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.NUMLOCK">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.PAGEDOWN">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.PAGEUP">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.PRINTSCREEN">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.RIGHTARROW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.SCROLLLOCK">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.TAB">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.UPARROW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F1">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F2">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F3">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F4">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F5">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F6">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F7">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F8">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F9">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F10">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F11">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F12">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F13">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F14">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F15">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.F16">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.KeypadAdd">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.KeypadSubtract">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.KeypadMultiply">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BPO.Framework.WinKeys.KeypadDivide">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:DataManagerDictionary">
+            <summary>
+            Classe de Auxílio a acesso a dados em objetos Excel.
+            </summary>
+        </member>
+        <member name="M:DataManagerDictionary.#ctor(System.String)">
+            <summary>
+            Construtor.
+            </summary>
+            <param name="connectionStringName">Nome da String de Conexão presente no App.Config.</param>
+        </member>
+        <member name="M:DataManagerDictionary.GetSchemaTable(System.String)">
+            <summary>
+            Devolve as "tabelas" (as planilhas ou sheets) presentes no arquivo excel.
+            </summary>
+            <param name="databaseFilePath">Caminho\Nome do arquivo a ser verificado.</param>
+            <returns>DataTable</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQueryDictionary(System.String,System.String)">
+            <summary>
+            Efetua uma Consulta e Devolve uma coleção de Dicionários(Chave/Valor).
+            </summary>
+            <param name="caminhoArquivo">Caminho do arquivo Excel a ser consultado.</param>
+            <param name="query">Query a ser aplicada ao arquivo Excel.</param>
+            <returns>List(Of Dictionary(Of string, object))</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQueryDictionary(System.String,System.String,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Efetua uma Consulta e Devolve uma coleção de Dicionários(Chave/Valor).
+            </summary>
+            <param name="caminhoArquivo">Caminho do arquivo Excel a ser consultado.</param>
+            <param name="query">Query a ser aplicada ao arquivo Excel.</param>
+            <param name="parametros">Coleção de parametros a adicionar. </param>
+            <returns>List(Of Dictionary(Of string, object))</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQueryAsDataTable(System.String,System.String)">
+            <summary>
+            Efetua uma Consulta e devolve um DataTable.
+            </summary>
+            <param name="caminhoArquivo">Caminho do arquivo Excel a ser consultado.</param>
+            <param name="query">Query a ser aplicada ao arquivo Excel.</param>
+            <returns>DataTable</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GenerateCSV(System.Collections.Generic.List{System.Collections.Generic.Dictionary{System.String,System.Object}},System.Boolean)">
+            <summary>
+            Converte a coleção de dicionários informada em um objeto string no padrão CSV, delimitado por ponto-e-vírgula.
+            </summary>
+            <param name="registros">Coleção de dicionários a ser convertida.</param>
+            <param name="addHeader">Indica se deve-se ou não adicionar cabeçalho ao arquivo.</param>
+            <returns>string</returns>
+        </member>
+        <member name="M:DataManagerDictionary.MetodoNaoPodeSerUsado">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DataManagerDictionary.GetQuery``1(System.String,System.Boolean)">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <typeparam name="P">Não utilizado.</typeparam>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQuery``1(System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <typeparam name="P">Não utilizado.</typeparam>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <param name="openConnection">Não utilizado.</param>
+            <param name="openOrUseTransaction">Não utilizado.</param>
+            <param name="queryParameters">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQuery``1(System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <typeparam name="P">Não utilizado.</typeparam>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <param name="openConnection">Não utilizado.</param>
+            <param name="queryParameters">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQuery``1(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <typeparam name="P">Não utilizado.</typeparam>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <param name="queryParameters">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQuery(System.String,System.Boolean)">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQuery(System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <param name="openConnection">Não utilizado.</param>
+            <param name="openOrUseTransaction">Não utilizado.</param>
+            <param name="queryParameters">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQuery(System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <param name="openConnection">Não utilizado.</param>
+            <param name="queryParameters">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQuery(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <param name="queryParameters">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQueryOne``1(System.String,System.Boolean)">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <typeparam name="P">Não utilizado.</typeparam>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQueryOne``1(System.String,System.Boolean,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <typeparam name="P">Não utilizado.</typeparam>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <param name="openConnection">Não utilizado.</param>
+            <param name="openOrUseTransaction">Não utilizado.</param>
+            <param name="queryParameters">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQueryOne``1(System.String,System.Boolean,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <typeparam name="P">Não utilizado.</typeparam>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <param name="openConnection">Não utilizado.</param>
+            <param name="queryParameters">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="M:DataManagerDictionary.GetQueryOne``1(System.String,System.Boolean,BPO.Framework.BPODataAccess.DataParameter[])">
+            <summary>
+            Não utilize este método.
+            </summary>
+            <typeparam name="P">Não utilizado.</typeparam>
+            <param name="queryOrProcedureName">Não utilizado.</param>
+            <param name="isProcedure">Não utilizado.</param>
+            <param name="queryParameters">Não utilizado.</param>
+            <returns>NotSupportedException</returns>
+        </member>
+        <member name="T:ILogable">
+            <summary>
+            Interface que permite ler configurações específicas de Log de uma classe
+            </summary>
+        </member>
+        <member name="P:ILogable.LogConfigurationName">
+            <summary>
+            Representa o nome do objeto de Log.
+            </summary>
+        </member>
+        <member name="P:ILogable.LogFileName">
+            <summary>
+            Representa o nome do arquivo de Log que será gerado.
+            </summary>
+        </member>
+        <member name="T:PC3270">
+            <summary>
+            Implements actions on 3270 terminal
+            </summary>
+        </member>
+        <member name="M:PC3270.#ctor">
+            <summary>
+            Concstructor
+            </summary>
+        </member>
+        <member name="M:PC3270.Login3270(System.String,System.String,System.String,System.Int32,System.Int32,System.Boolean,System.String)">
+            <summary>
+            Perform login on 3270
+            </summary>
+        </member>
+        <member name="M:PC3270.StartSession(System.String)">
+            <summary>
+            Starting terminal
+            </summary>
+            <param name="appPath">Full path of 3270</param>
+        </member>
+        <member name="M:PC3270.killYourSession(System.String)">
+            <summary>
+            /// Fecha a sessao vinculada que é passada no parametro sessionProc
+            </summary>
+            <param name="sessionProc">Sessao para encerrar</param>
+        </member>
+        <member name="M:PC3270.killYourProcess(System.Int32)">
+            <summary>
+            Fecha o processo conforme o Id passado no parametro
+            </summary>
+            <param name="idProcess">id processo à ser encerrado</param>
+        </member>
+        <member name="M:PC3270.killActiveSessionByWindow">
+            <summary>
+            Mata a sessão que foi capturada no logiin
+            </summary>
+        </member>
+        <member name="M:PC3270.SetCursorPosition(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Set Cursor Position on screen
+            </summary>
+            <param name="rowPos">row position</param>
+            <param name="colPos">column position</param>
+            <param name="colNumber">number of screen columns</param>
+        </member>
+        <member name="M:PC3270.SendKeys(System.String)">
+            <summary>
+            Send text value on cursor position
+            </summary>
+            <param name="value">value</param>
+        </member>
+        <member name="M:PC3270.SendKeys(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Send text value on specific position
+            </summary>
+            <param name="value">value</param>
+            <param name="rowPos">row position</param>
+            <param name="colPos">column position</param>
+            <param name="colNumber">number of screen columns</param>
+        </member>
+        <member name="M:PC3270.ReadScreen(System.Int32,System.Int32)">
+            <summary>
+            Read a text on the screen
+            </summary>
+            <param name="posIni">Initial position</param>
+            <param name="len">Length</param>
+            <returns>text value</returns>
+        </member>
+        <member name="M:PC3270.ReadScreen(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Read a text on the screen
+            </summary>
+            <param name="rowPos">row position</param>
+            <param name="colPos">column position</param>
+            <param name="len">length</param>
+            <param name="colNumber">number of screen columns</param>    
+            <returns>text value</returns>
+        </member>
+        <member name="M:PC3270.WaitForScreen(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Identify a screen by a text value
+            </summary>
+            <param name="value">text value on the screen</param>
+            <param name="timeout">time to wait (seconds)</param>
+            <param name="rowPos">row position of text begining</param>
+            <param name="colPos">column position of text begining</param>
+            <param name="len">length of text</param>
+            <param name="colNumber">number of screen columns</param>
+            <returns></returns>
+        </member>
+        <member name="M:PC3270.getSession">
+            <summary>
+            Retorna a session que foi criada no login
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PC3270.getProcessFromSession">
+            <summary>
+            Retorna o processo default capturado no login
+            </summary>
+            <param name="sessionProcess"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PC3270.getProcessFromSession(System.String)">
+            <summary>
+            Retorna o processo que tem a letra da session do processo
+            </summary>
+            <param name="sessionProcess"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
