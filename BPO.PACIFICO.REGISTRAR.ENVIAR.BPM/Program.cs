@@ -155,7 +155,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 _oDriver.FindElement(By.Id("producto_input")).Click();
                 Repeticiones(11, "producto_input", Keys.Down);
                 _oDriver.FindElement(By.Id("producto_input")).SendKeys(Keys.Enter);
-                _Funciones.Pausa(3);
+                _Funciones.Esperar(3);
 
 
                 string cContratante = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value;
