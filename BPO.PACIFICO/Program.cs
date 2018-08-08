@@ -23,6 +23,7 @@ namespace GmailQuickstart
 {
     class Program : IRobot
     {
+        #region Paremetros
         static BaseRobot<Program> _robot = null;
         // If modifying these scopes, delete your previously saved credentials
         // at ~/.credentials/gmail-dotnet-quickstart.json
@@ -30,10 +31,13 @@ namespace GmailQuickstart
         static string[] _palabras = new string[2];
         static string[] _valores = new string[6];
         static string _userId = "bponaa@gmail.com";
+        static List<string> _adjuntos = null;
         static int[] _fields = { eesFields.Default.cuerpo_de_email, eesFields.Default.asunto_de_email, eesFields.Default.estado_error, eesFields.Default.estado_hijo, eesFields.Default.estado_padre, eesFields.Default.fields };
         static string ApplicationName = "Gmail API .NET Quickstart";
-        static List<DomainValue> _listado = listadoValoresDominios();
+        static List<DomainValue> _listado = null;
         static List<Puntuacion> puntos = new List<Puntuacion>();
+        static string _diretorio = String.Empty;
+        #endregion
         static void Main(string[] args)
         {
             _robot = new BaseRobot<Program>(args);
@@ -53,6 +57,7 @@ namespace GmailQuickstart
             _valores[3] = _robot.GetValueParamRobot("EstadoHijo").ValueParam;
             _valores[4] = _robot.GetValueParamRobot("EstadoPadre").ValueParam;
             _valores[5] = _robot.GetValueParamRobot("Fields").ValueParam;
+            _diretorio = _robot.GetValueParamRobot("Diretorio").ValueParam;
         }
 
         public void Email()
@@ -85,16 +90,18 @@ namespace GmailQuickstart
             request.IncludeSpamTrash = false;
             request.Q = "is:unread";
             
+            _listado = listadoValoresDominios();
 
             // List Messages.
             IList<Message> messages = request.Execute().Messages;
-            Console.WriteLine("Messages:");
+          
             if (messages != null && messages.Count > 0)
             {
                 foreach (Message message in messages)
                 {
                     Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
-                    AcionRequest(infoResponse, service, message.Id);
+                    AcionRequest(infoResponse, service);
+                    _listado.Clear();
                 }
             }
             else
@@ -104,7 +111,8 @@ namespace GmailQuickstart
 
             
         }
-        public void AcionRequest(Message infoResponse, GmailService service, string messageId)
+        //cada message tiene una acion de requerimento
+        public void AcionRequest(Message infoResponse, GmailService service)
         {
 
             if (infoResponse != null)
@@ -139,11 +147,9 @@ namespace GmailQuickstart
                         {
                             body = getNestedParts(infoResponse.Payload.Parts, "");
                         }
-                        if (!String.IsNullOrEmpty(infoResponse.Payload.Filename))
+                        if (!String.IsNullOrEmpty(infoResponse.Payload.Parts.FirstOrDefault(o=> o.Filename != "").Filename))
                         {
-                            List<string> adjuntos = GetFiles(service, infoResponse.Payload.Parts, messageId);
-                            
-
+                           _adjuntos = GetFiles(service, infoResponse.Payload.Parts, infoResponse.Id);
                         }
 
                         _valores[0] = decodeBase64(body);
@@ -160,20 +166,24 @@ namespace GmailQuickstart
             }
 
         }
+        // cada acion de requerimento pueede tener o no Adjuntos e hacer lo getfiles
         private List<string> GetFiles(GmailService service, IList<MessagePart> parts, string messageId)
         {
             List<string> files = new List<string>();
             foreach (MessagePart part in parts)
             {
-                String attId = part.Body.AttachmentId;
-                
-                MessagePartBody attachPart = service.Users.Messages.Attachments.Get(_userId, messageId, attId).Execute();
-                String attachData = Regex.Replace(attachPart.Data, "-", "+");
-                attachData = Regex.Replace(attachData ,"_", "/");
-                attachData = Regex.Replace(attachData, "=", "/");
-                byte[] data = Convert.FromBase64String(attachData);
-                File.WriteAllBytes(Path.Combine(@"\\udi-6q4mc72\12-06-2018_16-49-29\teste", part.Filename), data);
-                files.Add(Path.Combine(@"\\udi-6q4mc72\12-06-2018_16-49-29\teste", part.Filename));
+                if (!String.IsNullOrEmpty(part.Filename))
+                {
+                    String attId = part.Body.AttachmentId;
+
+                    MessagePartBody attachPart = service.Users.Messages.Attachments.Get(_userId, messageId, attId).Execute();
+                    String attachData = Regex.Replace(attachPart.Data, "-", "+");
+                    attachData = Regex.Replace(attachData, "_", "/");
+                    attachData = Regex.Replace(attachData, "=", "/");
+                    byte[] data = Convert.FromBase64String(attachData);
+                    File.WriteAllBytes(Path.Combine(_diretorio, part.Filename), data);
+                    files.Add(Path.Combine(_diretorio, part.Filename));
+                }
             }
             return files;
 
@@ -217,11 +227,12 @@ namespace GmailQuickstart
 
         }
 
-        public static List<DomainValue> listadoValoresDominios()
+        public  List<DomainValue> listadoValoresDominios()
         {
             var container = ODataContextWrapper.GetContainer();
-
+          
             return container.DomainValues.Where(a => a.DomainId == 1009).ToList();
+       
         }
 
 
@@ -233,7 +244,7 @@ namespace GmailQuickstart
             return Encoding.UTF8.GetString(data);
         }
 
-
+        // cada acion de erquerimento tiene una evaluacion de puentos 
         public void EvaluarPuntuacion(string texto, Ticket ticket)
         {
 
@@ -269,6 +280,7 @@ namespace GmailQuickstart
         {
             AdicionarNumeroPoliza(ticketPadre, texto);
             AdicionarValues(ticketPadre);
+            AdicionarAdjuntos(ticketPadre);
 
             if (flag)
                 ticketPadre.StateId = 4;
@@ -277,6 +289,15 @@ namespace GmailQuickstart
 
             _robot.SaveNewTicket(ticketPadre);
 
+        }
+        public void AdicionarAdjuntos(Ticket ticket)
+        {
+            string value = String.Empty;
+
+            foreach (string doc in _adjuntos)
+                value = String.Concat(doc, ",");
+
+                ticket.TicketValues.Add(new TicketValue { Value = value, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.documentos });
         }
 
         public void AdicionarValues(Ticket ticket)
