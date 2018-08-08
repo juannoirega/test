@@ -79,3 +79,5 @@ C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.CAPTURAR.EM
 C:\Users\clazarom\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\BPO.PACIFICO.exe.config
 C:\Users\clazarom\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.exe
 C:\Users\clazarom\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.pdb
+C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.CAPTURAR.EMAIL.csprojAssemblyReference.cache
+C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.CAPTURAR.EMAIL.csproj.CoreCompileInputs.cache
