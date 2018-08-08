@@ -32,12 +32,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BPO.Framework">
-      <HintPath>..\..\ANINAMAC\Capacitacion\Sikuli\BPO.Framework.dll</HintPath>
+    <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.2.2.5\lib\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Imaging, Version=2.2.5.0, Culture=neutral, PublicKeyToken=ba8ddea9676ca48b, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.Imaging.2.2.5\lib\AForge.Imaging.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Math, Version=2.2.5.0, Culture=neutral, PublicKeyToken=abba2e25397ee8c9, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.Math.2.2.5\lib\AForge.Math.dll</HintPath>
+    </Reference>
+    <Reference Include="BPO.Framework, Version=2.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BPO.Framework.2.0.2.1\lib\net462\BPO.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="clsEHLLAPI, Version=1.0.5640.21455, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BPO.Framework.2.0.2.1\lib\net462\clsEHLLAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.1.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.1\lib\net40\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="everis.Ees.Proxy, Version=2018.1.0.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.4\lib\net462\everis.Ees.Proxy.dll</HintPath>
@@ -66,6 +81,12 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SautinSoft.PdfFocus, Version=6.7.12.11, Culture=neutral, PublicKeyToken=0b79b934109b3e9e, processorArchitecture=MSIL">
+      <HintPath>..\packages\sautinsoft.pdffocus.6.7.12.11\lib\net461\SautinSoft.PdfFocus.dll</HintPath>
+    </Reference>
+    <Reference Include="SautinSoft.PdfVision, Version=5.0.11.22, Culture=neutral, PublicKeyToken=9c847e093dd15dbf, processorArchitecture=MSIL">
+      <HintPath>..\packages\SautinSoft.PdfVision.5.0.13.10\lib\net45\SautinSoft.PdfVision.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -89,6 +110,9 @@
     </Reference>
     <Reference Include="WebDriver">
       <HintPath>..\packages\Selenium.WebDriver.3.14.0\lib\net45\WebDriver.dll</HintPath>
+    </Reference>
+    <Reference Include="WebDriver.Support, Version=3.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Selenium.Support.3.11.0\lib\net45\WebDriver.Support.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
