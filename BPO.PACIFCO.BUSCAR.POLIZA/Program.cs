@@ -159,6 +159,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             {
                 //obtener el numero  de Poliza
                 _numeroPoliza = ticket.TicketValues.Where(np => np.FieldId == 5).ToString();
+                _Funciones.BuscarPoliza(_numeroAgente);
 
                 ObtenerDatos(ticket);
             }
