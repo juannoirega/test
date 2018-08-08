@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenQA.Selenium.IE;
 using System.Threading;
 
 namespace Robot.Util.Nacar
@@ -30,6 +31,37 @@ namespace Robot.Util.Nacar
             alert.Accept();
         }
 
+        public void AbrirSelenium()
+        {
+            _oDriver = new InternetExplorerDriver();
+            _oDriver.Manage().Window.Maximize();
+        }
+
+        public void NavegarUrl(string url)
+        {
+            _oDriver.Url = url;
+            _oDriver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
+            _oDriver.Manage().Window.Maximize();
+        }
+
+        public void Login(string usuario, string contraseña)
+        {
+            _oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("top_frame")));
+
+            _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
+            _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
+            _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
+            Thread.Sleep(300);
+        }
+
+        public void BuscarPoliza(string numeroPoliza)
+        {
+            _oDriver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
+            _oDriver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
+            _oDriver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
+        }
+
+        //Método para hacer pausa en segundos:
         public void Esperar(double nTiempo = 1)
         {
             Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
