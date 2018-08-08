@@ -43,7 +43,7 @@ namespace GmailQuickstart
 
         protected override void Start()
         {
-            GetRobotParam();
+        //    GetRobotParam();
             Email();
         }
 
@@ -172,8 +172,8 @@ namespace GmailQuickstart
                 attachData = Regex.Replace(attachData ,"_", "/");
                 attachData = Regex.Replace(attachData, "=", "/");
                 byte[] data = Convert.FromBase64String(attachData);
-                File.WriteAllBytes(Path.Combine("C:\\", part.Filename), data);
-                files.Add(part.Filename);
+                File.WriteAllBytes(Path.Combine(@"\\udi-6q4mc72\12-06-2018_16-49-29\teste", part.Filename), data);
+                files.Add(Path.Combine(@"\\udi-6q4mc72\12-06-2018_16-49-29\teste", part.Filename));
             }
             return files;
 
@@ -251,7 +251,7 @@ namespace GmailQuickstart
 
             int[] valores = MaioresValores();
 
-            //isto sera hecho depues de validar lo cuerpo tambien
+           
             if (((valores[0] * 100) / (valores[0] + valores[1])) >= 70)
             {
                
