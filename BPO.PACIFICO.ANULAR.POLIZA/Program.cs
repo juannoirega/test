@@ -96,6 +96,17 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             NavegarUrl();
             Login();
             BuscarPoliza(ticket);
+            Anular();
+        }
+        private void Anular() {
+            //Menu Cancelar Poliza
+            _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
+            _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
+            Thread.Sleep(5000);
+
+            //Iniciar Cancelación de Póliza - Solicitante, Motivo, Descripcion del motio, Forma de reembolso
+
+
         }
         private void AbrirSelenium()
         {
