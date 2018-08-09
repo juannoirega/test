@@ -1,7 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Chrome;
-using BPO.Framework.BPOCitrix;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,35 +29,43 @@ namespace Robot.Util.Nacar
             alert.SetAuthenticationCredentials(Usuario, Contraseña);
             alert.Accept();
         }
-
-        public void AbrirSelenium()
+        public static void AbrirSelenium(ref IWebDriver _driver)
         {
-            _oDriver = new InternetExplorerDriver();
-            _oDriver.Manage().Window.Maximize();
+            _driver = new InternetExplorerDriver();
+            _driver.Manage().Window.Maximize();
         }
 
-        public void NavegarUrl(string url)
+        public static void NavegarUrl(IWebDriver _driver, string url)
         {
-            _oDriver.Url = url;
-            _oDriver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
-            _oDriver.Manage().Window.Maximize();
+            _driver.Url = url;
+            _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
+            _driver.Manage().Window.Maximize();
+            Thread.Sleep(1000);
         }
 
-        public void Login(string usuario, string contraseña)
+        public static void Login(IWebDriver _driver, string usuario, string contraseña)
         {
-            _oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("top_frame")));
+            _driver.SwitchTo().Frame(_driver.FindElement(By.Id("top_frame")));
 
-            _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
-            _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
-            _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
-            Thread.Sleep(300);
+            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
+            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
+            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
+            Thread.Sleep(1000);
         }
 
-        public void BuscarPoliza(string numeroPoliza)
+        public static void BuscarPoliza(IWebDriver _driver, string numeroPoliza)
         {
-            _oDriver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
-            _oDriver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
-            _oDriver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
+            _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
+            _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
+            _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
+            Thread.Sleep(5000);
+        }
+
+        public static string ObtenerValorElemento(IWebDriver _driver, string idElemento)
+        {
+            IWebElement element = _driver.FindElement(By.Id(idElemento));
+            string valorElemento = element.Text;
+            return valorElemento;
         }
 
         //Método para hacer pausa en segundos:
@@ -68,3 +75,5 @@ namespace Robot.Util.Nacar
         }
     }
 }
+
+
