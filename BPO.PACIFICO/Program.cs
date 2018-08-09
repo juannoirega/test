@@ -125,8 +125,6 @@ namespace GmailQuickstart
                 String body = String.Empty;
                 try
                 {
-                    
-
                     _valores[6] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Date").Value;
 
                     _valores[7] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "From").Value;
