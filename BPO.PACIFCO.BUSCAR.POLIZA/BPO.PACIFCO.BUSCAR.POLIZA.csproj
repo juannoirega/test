@@ -39,7 +39,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="everis.Ees.Proxy, Version=2018.1.0.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.4\lib\net462\everis.Ees.Proxy.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Desktop\everis.Ees.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.OData.Client, Version=6.19.0.11114, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.OData.Client.6.19.0\lib\net40\Microsoft.OData.Client.dll</HintPath>
