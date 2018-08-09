@@ -59,7 +59,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                 catch (Exception Ex)
                 {
                     LogFailStep(12, Ex);
-                }  
+                }
             }
             Environment.Exit(0);
         }
@@ -102,12 +102,12 @@ namespace BPO.PACIFICO.ProcesarDatos
                     {
                         //Enviar a notificación de correo:
                         CambiarEstadoTicket(oTicketDatos, _oNotificacion);
-                    }  
+                    }
                 }
                 else
                 {
                     //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos,_oMesaControl);
+                    CambiarEstadoTicket(oTicketDatos, _oMesaControl);
                 }
             }
             catch (Exception Ex)
@@ -119,13 +119,13 @@ namespace BPO.PACIFICO.ProcesarDatos
         //Valida que los campos del TicketValues no estén vacíos:
         private bool ValidarVacios(Ticket oTicketDatos)
         {
-            int [] oCampos = new int [] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
+            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
                                         eesFields.Default.tipo,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
                                         eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
 
             foreach (int campo in oCampos)
                 if (String.IsNullOrWhiteSpace(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == campo).Value))
-                    return false;         
+                    return false;
             return true;
         }
 
@@ -140,7 +140,7 @@ namespace BPO.PACIFICO.ProcesarDatos
             else
             {
                 //Enviar a notificación de correo:
-                CambiarEstadoTicket(oTicketDatos,_oNotificacion);
+                CambiarEstadoTicket(oTicketDatos, _oNotificacion);
             }
         }
 
