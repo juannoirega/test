@@ -26,21 +26,9 @@ namespace Robot.Util.Nacar
             _oDriver.Url = Url;
             Esperar(2);
             VentanaWindows(Usuario, Contraseña);
-            //_oDriver.Manage().Window.Maximize();
-            //_oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("NavPanelIFrame")));
             var alert = _oDriver.SwitchTo().Alert();
             alert.SetAuthenticationCredentials(Usuario, Contraseña);
             alert.Accept();
-        }
-
-        public void VentanaWindows(string cUsuario, string cContraseña)
-        {
-            Keyboard.KeyPress(VirtualKeyCode.SUBTRACT);
-            Keyboard.KeyPress(cUsuario);
-            Keyboard.KeyPress(VirtualKeyCode.TAB);
-            Keyboard.KeyPress(cContraseña);
-            Keyboard.KeyPress(VirtualKeyCode.RETURN);
-            Esperar(2);
         }
 
         public static void AbrirSelenium(ref IWebDriver _driver)
@@ -86,6 +74,17 @@ namespace Robot.Util.Nacar
         public void Esperar(double nTiempo = 1)
         {
             Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
+        }
+        
+        //Ingresar usuario y contraseña en ventana windows:
+        public void VentanaWindows(string cUsuario, string cContraseña)
+        {
+            Keyboard.KeyPress(VirtualKeyCode.SUBTRACT);
+            Keyboard.KeyPress(cUsuario);
+            Keyboard.KeyPress(VirtualKeyCode.TAB);
+            Keyboard.KeyPress(cContraseña);
+            Keyboard.KeyPress(VirtualKeyCode.RETURN);
+            Esperar(2);
         }
     }
 }
