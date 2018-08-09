@@ -72,7 +72,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             {
                 try
                 {
-                   // ProcesarTicket(ticket);
+                   AnularPoliza(ticket);
                 }
                 catch (Exception ex)
                 {
@@ -88,6 +88,14 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                     LogEndStep(Constants.MSG_PROCESS_ENDED_KEY);
                 }
             }
+        }
+
+        private void AnularPoliza(Ticket ticket)
+        {
+            AbrirSelenium();
+            NavegarUrl();
+            Login();
+            BuscarPoliza(ticket);
         }
         private void AbrirSelenium()
         {
