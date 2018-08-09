@@ -62,72 +62,80 @@ namespace GmailQuickstart
 
         public void Email()
         {
-            UserCredential credential;
+           
+                UserCredential credential;
 
-            using (var stream =
-                new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
-            {
-                string credPath = "token.json";
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    Scopes,
-                    "user",
-                    CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-            }
-
-            // Create Gmail API service.
-            GmailService service = new GmailService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
-            });
-
-            // Define parameters of request.
-            UsersResource.MessagesResource.ListRequest request = service.Users.Messages.List(_userId);
-            request.MaxResults = 5;
-            request.LabelIds = "INBOX";
-            request.IncludeSpamTrash = false;
-            request.Q = "is:unread";
-
-            _listado = listadoValoresDominios();
-
-            // List Messages.
-            IList<Message> messages = request.Execute().Messages;
-
-            if (messages != null && messages.Count > 0)
-            {
-                foreach (Message message in messages)
+                using (var stream =
+                    new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
                 {
-                    Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
-                    AcionRequest(infoResponse, service);
-                    _listado.Clear();
+                    string credPath = "token.json";
+                    credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                        GoogleClientSecrets.Load(stream).Secrets,
+                        Scopes,
+                        "user",
+                        CancellationToken.None,
+                        new FileDataStore(credPath, true)).Result;
                 }
-            }
-            else
-            {
-                Console.WriteLine("No messages found.");
-            }
+
+                // Create Gmail API service.
+                GmailService service = new GmailService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = ApplicationName,
+                });
+
+                // Define parameters of request.
+                UsersResource.MessagesResource.ListRequest request = service.Users.Messages.List(_userId);
+                request.MaxResults = 5;
+                request.LabelIds = "INBOX";
+                request.IncludeSpamTrash = false;
+                request.Q = "is:unread";
+                try
+                {
+                    _listado = listadoValoresDominios();
+                }
+                catch(Exception ex){ throw new Exception(); }
+                // List Messages.
+                IList<Message> messages = request.Execute().Messages;
+
+                if (messages != null && messages.Count > 0)
+                {
+                    foreach (Message message in messages)
+                    {
+                        Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
+                        AcionRequest(infoResponse, service);
+                        _listado.Clear();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No messages found.");
+                }
+            
 
 
         }
         //cada message tiene una acion de requerimento
         public void AcionRequest(Message infoResponse, GmailService service)
         {
+            
 
             if (infoResponse != null)
             {
-
                 String body = String.Empty;
-            
-                        _valores[6] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Date").Value;
+                try
+                {
+                    
 
-                        _valores[7] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "From").Value;
-                
-                        _valores[1] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Subject").Value;
-                  
-                        _valores[8] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Cc").Value;
-                
+                    _valores[6] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Date").Value;
+
+                    _valores[7] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "From").Value;
+
+                    _valores[1] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Subject").Value;
+
+                    _valores[8] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Cc").Value;
+
+                }catch(Exception ex) { }
 
                     if (_valores[6] != "" && _valores[7] != "")
                     {
@@ -139,10 +147,13 @@ namespace GmailQuickstart
                         {
                             body = getNestedParts(infoResponse.Payload.Parts, "");
                         }
-                        if (!String.IsNullOrEmpty(infoResponse.Payload.Parts.FirstOrDefault(o => o.Filename != "").Filename))
+                  
+                        if (infoResponse.Payload.Parts.FirstOrDefault(o => o.Filename != "")!=null)
                         {
                             _adjuntos = GetFiles(service, infoResponse.Payload.Parts, infoResponse.Id);
                         }
+                   
+                 
 
                         _valores[0] = decodeBase64(body);
 
@@ -160,61 +171,70 @@ namespace GmailQuickstart
         // cada acion de requerimento pueede tener o no Adjuntos e hacer lo getfiles
         private List<string> GetFiles(GmailService service, IList<MessagePart> parts, string messageId)
         {
-            List<string> files = new List<string>();
-            foreach (MessagePart part in parts)
+            try
             {
-                if (!String.IsNullOrEmpty(part.Filename))
+                List<string> files = new List<string>();
+                foreach (MessagePart part in parts)
                 {
-                    String attId = part.Body.AttachmentId;
+                    if (!String.IsNullOrEmpty(part.Filename))
+                    {
+                        String attId = part.Body.AttachmentId;
 
-                    MessagePartBody attachPart = service.Users.Messages.Attachments.Get(_userId, messageId, attId).Execute();
-                    String attachData = Regex.Replace(attachPart.Data, "-", "+");
-                    attachData = Regex.Replace(attachData, "_", "/");
-                    attachData = Regex.Replace(attachData, "=", "/");
-                    byte[] data = Convert.FromBase64String(attachData);
-                    File.WriteAllBytes(Path.Combine(_diretorio, part.Filename), data);
-                    files.Add(Path.Combine(_diretorio, part.Filename));
+                        MessagePartBody attachPart = service.Users.Messages.Attachments.Get(_userId, messageId, attId).Execute();
+                        String attachData = Regex.Replace(attachPart.Data, "-", "+");
+                        attachData = Regex.Replace(attachData, "_", "/");
+                        attachData = Regex.Replace(attachData, "=", "/");
+                        byte[] data = Convert.FromBase64String(attachData);
+                        File.WriteAllBytes(Path.Combine(_diretorio, part.Filename), data);
+                        files.Add(Path.Combine(_diretorio, part.Filename));
+                    }
                 }
-            }
-            return files;
+                return files;
+            }catch(Exception ex) { throw new Exception(); }
 
 
         }
 
         static String getNestedParts(IList<MessagePart> part, string curr)
         {
-            string str = curr;
-            if (part == null)
+            try
             {
-                return str;
-            }
-            else
-            {
-                foreach (var parts in part)
+                string str = curr;
+                if (part == null)
                 {
-                    if (parts.Parts == null)
+                    return str;
+                }
+                else
+                {
+                    foreach (var parts in part)
                     {
-                        if (parts.Body != null && parts.Body.Data != null)
+                        if (parts.Parts == null)
                         {
-                            str += parts.Body.Data;
+                            if (parts.Body != null && parts.Body.Data != null)
+                            {
+                                str += parts.Body.Data;
+                            }
+                        }
+                        else
+                        {
+                            return getNestedParts(parts.Parts, str);
                         }
                     }
-                    else
-                    {
-                        return getNestedParts(parts.Parts, str);
-                    }
-                }
 
-                return str;
-            }
+                    return str;
+                }
+            }catch(Exception ex) { throw new Exception(); }
 
         }
 
         public int buscarPalabrasClaves(string DigitarTexto, string palabras)
         {
-            palabras = String.Format(palabras, "{0:D15}");
+            try
+            {
+                palabras = String.Format(palabras, "{0:D15}");
 
-            return new Regex(String.Concat(@"(?:", palabras, " )")).Matches(DigitarTexto).Count;
+                return new Regex(String.Concat(@"(?:", palabras, " )")).Matches(DigitarTexto).Count;
+            }catch(Exception ex) { throw new Exception(); }
 
         }
 
@@ -229,57 +249,70 @@ namespace GmailQuickstart
 
         static string decodeBase64(string sInput)
         {
-            String codedBody = Regex.Replace(sInput, "([-])", "+");
-            codedBody = Regex.Replace(codedBody, "([_])", "+");
-            byte[] data = Convert.FromBase64String(Regex.Replace(codedBody, "=", "/"));
-            return Encoding.UTF8.GetString(data);
+            try
+            {
+                String codedBody = Regex.Replace(sInput, "([-])", "+");
+                codedBody = Regex.Replace(codedBody, "([_])", "+");
+                byte[] data = Convert.FromBase64String(Regex.Replace(codedBody, "=", "/"));
+                return Encoding.UTF8.GetString(data);
+            }catch(Exception ex) { throw new Exception(); }
         }
 
         // cada acion de erquerimento tiene una evaluacion de puentos 
         public void EvaluarPuntuacion(string texto, Ticket ticket)
         {
-
-            string palabraClave = String.Empty;
-
-            foreach (DomainValue b in _listado)
-            {
-                palabraClave = b.Value.ToString();
-                int contador = buscarPalabrasClaves(texto, palabraClave);
-
-
-                if (contador > 0)
-                    puntos.Add(new Puntuacion() { contador = contador, palabra = palabraClave });
-            }
-
-            int[] valores = MaioresValores();
-
-
-            if (((valores[0] * 100) / (valores[0] + valores[1])) >= 70)
+            try
             {
 
-                CreacionTicket(texto, ticket, true);
-            }
-            else
-            {
 
-                CreacionTicket(texto, ticket, false);
-            }
+                string palabraClave = String.Empty;
+
+                foreach (DomainValue b in _listado)
+                {
+                    palabraClave = b.Value.ToString();
+                    int contador = buscarPalabrasClaves(texto, palabraClave);
+
+
+                    if (contador > 0)
+                        puntos.Add(new Puntuacion() { contador = contador, palabra = palabraClave });
+                }
+
+                int[] valores = MaioresValores();
+
+
+                if (((valores[0] * 100) / (valores[0] + valores[1])) >= 70)
+                {
+
+                    CreacionTicket(texto, ticket, true);
+                }
+                else
+                {
+
+                    CreacionTicket(texto, ticket, false);
+                }
+            }catch(Exception ex) { }
         }
 
 
         public void CreacionTicket(string texto, Ticket ticketPadre, bool flag)
         {
-            DatosFields();
-            AdicionarNumeroPoliza(ticketPadre, texto);
-            AdicionarValues(ticketPadre);
-            AdicionarAdjuntos(ticketPadre);
+            try
+            {
+                DatosFields();
+                AdicionarNumeroPoliza(ticketPadre, texto);
+                AdicionarValues(ticketPadre);
 
-            if (flag)
-                ticketPadre.StateId = 4;
-            else
-                ticketPadre.StateId = 3;
+                if (_adjuntos != null)
+                    AdicionarAdjuntos(ticketPadre);
 
-            _robot.SaveNewTicket(ticketPadre);
+                if (flag)
+                    ticketPadre.StateId = 4;
+                else
+                    ticketPadre.StateId = 3;
+
+                _robot.SaveNewTicket(ticketPadre);
+            }
+            catch(Exception ex) { throw new Exception(); }
 
         }
         public void DatosFields()
