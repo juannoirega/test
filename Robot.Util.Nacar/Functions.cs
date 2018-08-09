@@ -51,7 +51,7 @@ namespace Robot.Util.Nacar
             _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
             _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
             _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
-            Thread.Sleep(300);
+            Esperar(0.3);
         }
 
         public void BuscarPoliza(string numeroPoliza)
