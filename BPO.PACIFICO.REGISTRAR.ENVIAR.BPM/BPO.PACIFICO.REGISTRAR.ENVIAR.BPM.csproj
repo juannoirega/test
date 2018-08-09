@@ -35,20 +35,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BPO.Framework">
-      <HintPath>..\..\ANINAMAC\Installers\BPO.Framework.dll</HintPath>
+    <Reference Include="Microsoft.OData.Client, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.OData.Client.6.18.0\lib\net40\Microsoft.OData.Client.dll</HintPath>
     </Reference>
-    <Reference Include="everis.Ees.Proxy">
-      <HintPath>..\..\Users\aninamac\Documents\Visual Studio 2015\Projects\BPO.v3.Robot1\everis.Ees.Proxy.dll</HintPath>
+    <Reference Include="Microsoft.OData.Core, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.OData.Core.6.18.0\lib\portable-net45+win+wpa81\Microsoft.OData.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.OData.Client">
-      <HintPath>..\..\ANINAMAC\Installers\OData.Client\Microsoft.OData.Client.dll</HintPath>
+    <Reference Include="Microsoft.OData.Edm, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.OData.Edm.6.18.0\lib\portable-net45+win+wpa81\Microsoft.OData.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.OData.Core">
-      <HintPath>..\..\ANINAMAC\Installers\OData.Client\Microsoft.OData.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.OData.Edm">
-      <HintPath>..\..\ANINAMAC\Installers\OData.Client\Microsoft.OData.Edm.dll</HintPath>
+    <Reference Include="Microsoft.Spatial, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Spatial.6.18.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

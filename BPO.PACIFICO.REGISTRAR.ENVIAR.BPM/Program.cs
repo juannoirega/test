@@ -109,7 +109,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         //Valida que no tenga campos vacíos:
         private bool ValidarVacios(Ticket oTicketDatos)
         {
-            int[] oCampos = new int[] { eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado};
+            int[] oCampos = new int[] { eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado };
             return true;
         }
 
@@ -141,7 +141,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 _oDriver.FindElement(By.Id("tipodesolicitud_input")).Click();
                 _oDriver.FindElement(By.Id("tipodesolicitud_input")).SendKeys(_cTipoSolicitud2); //EN DURO SE ESTÁ ENVIANDO "ENDOSO".
                 Repeticiones(1, "tipodesolicitud_input", Keys.Down);
-                _oDriver.FindElement(By.Id("tipodesolicitud_input")).SendKeys(Keys.Enter);                
+                _oDriver.FindElement(By.Id("tipodesolicitud_input")).SendKeys(Keys.Enter);
 
                 //Ingresa fecha hora de email:
                 _oDriver.FindElement(By.Id("fechayhoraderecepción_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_hora_de_email).Value);
@@ -160,7 +160,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
                 string cContratante = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value;
                 string cAsegurado = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_asegurado).Value;
-                     
+
             }
             catch (Exception Ex)
             {

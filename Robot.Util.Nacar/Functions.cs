@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium.IE;
 using System.Threading;
+using BPO.Framework.BPOCitrix;
 
 namespace Robot.Util.Nacar
 {
@@ -18,9 +19,11 @@ namespace Robot.Util.Nacar
         private static IWebElement _oElement = null;
         #endregion
 
+
         //Registro en BPM:
         public void IngresarBPM(string Url, string Usuario, string Contraseña)
         {
+            
             _oDriver = new FirefoxDriver();
             _oDriver.Url = Url;
             _oDriver.Manage().Window.Maximize();
@@ -60,7 +63,7 @@ namespace Robot.Util.Nacar
             _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
             _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
             _oDriver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
-            Esperar(0.3);
+            Esperar(3);
         }
 
         public static string ObtenerValorElemento(IWebDriver _driver, string idElemento)
@@ -71,7 +74,7 @@ namespace Robot.Util.Nacar
         }
 
         //Método para hacer pausa en segundos:
-        public void Esperar(double nTiempo = 1)
+        public static void Esperar(double nTiempo = 1)
         {
             Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
         }
