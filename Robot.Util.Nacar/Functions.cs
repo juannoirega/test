@@ -24,11 +24,29 @@ namespace Robot.Util.Nacar
         {
             _oDriver = new FirefoxDriver();
             _oDriver.Url = Url;
-            _oDriver.Manage().Window.Maximize();
-            _oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("NavPanelIFrame")));
+            Esperar(2);
+            VentanaWindows(Usuario, Contraseña);
+            //_oDriver.Manage().Window.Maximize();
+            //_oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("NavPanelIFrame")));
             var alert = _oDriver.SwitchTo().Alert();
             alert.SetAuthenticationCredentials(Usuario, Contraseña);
             alert.Accept();
+        }
+
+        public void VentanaWindows(string cUsuario, string cContraseña)
+        {
+            Keyboard.KeyPress(VirtualKeyCode.SUBTRACT);
+            Keyboard.KeyPress(cUsuario);
+            Keyboard.KeyPress(VirtualKeyCode.TAB);
+            Keyboard.KeyPress(cContraseña);
+            Keyboard.KeyPress(VirtualKeyCode.RETURN);
+
+
+            //Citrix.Keyboard.KeyPress(user);
+            //PauseDb(pauseKeys);
+            //Citrix.Keyboard.KeyPress(VirtualKeyCode.TAB);
+            //PauseDb(pauseKeys);
+            //Citrix.Keyboard.KeyPress(password);
         }
 
         public void AbrirSelenium()
