@@ -56,7 +56,7 @@ namespace GmailQuickstart
             _valores[2] = _robot.GetValueParamRobot("EstadoError").ValueParam;
             _valores[3] = _robot.GetValueParamRobot("EstadoHijo").ValueParam;
             _valores[4] = _robot.GetValueParamRobot("EstadoPadre").ValueParam;
-           
+
             _diretorio = _robot.GetValueParamRobot("Diretorio").ValueParam;
         }
 
@@ -117,29 +117,17 @@ namespace GmailQuickstart
 
             if (infoResponse != null)
             {
-               
+
                 String body = String.Empty;
-             
+            
+                        _valores[6] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Date").Value;
 
-
-                foreach (var mParts in infoResponse.Payload.Headers)
-                {
-                    if (mParts.Name == "Date")
-                    {
-                       _valores[6] = mParts.Value;
-                    }
-                    else if (mParts.Name == "From")
-                    {
-                        _valores[7] = mParts.Value;
-                    }
-                    else if (mParts.Name == "Subject")
-                    {
-                        _valores[1] = mParts.Value;
-                    }
-                    else if (mParts.Name == "Cc")
-                    {
-                        _valores[8] = mParts.Value;
-                    }
+                        _valores[7] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "From").Value;
+                
+                        _valores[1] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Subject").Value;
+                  
+                        _valores[8] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Cc").Value;
+                
 
                     if (_valores[6] != "" && _valores[7] != "")
                     {
@@ -157,16 +145,15 @@ namespace GmailQuickstart
                         }
 
                         _valores[0] = decodeBase64(body);
-                       
+
 
                         EvaluarPuntuacion(String.Concat(decodeBase64(body), " ", _valores[1]), new Ticket { Priority = PriorityType.Media, RobotVirtualMachineId = null, StateId = null });
 
                         Array.Clear(_valores, 0, _valores.Length);
 
-                        break;
                     }
 
-                }
+                
             }
 
         }
