@@ -117,11 +117,9 @@ namespace GmailQuickstart
 
             if (infoResponse != null)
             {
-                String from = String.Empty;
-                String date = String.Empty;
-                String subject = String.Empty;
+               
                 String body = String.Empty;
-                String origem = String.Empty;
+             
 
 
                 foreach (var mParts in infoResponse.Payload.Headers)
@@ -143,7 +141,7 @@ namespace GmailQuickstart
                         _valores[8] = mParts.Value;
                     }
 
-                    if (date != "" && from != "")
+                    if (_valores[6] != "" && _valores[7] != "")
                     {
                         if (infoResponse.Payload.Parts == null && infoResponse.Payload.Body != null)
                         {
@@ -159,12 +157,12 @@ namespace GmailQuickstart
                         }
 
                         _valores[0] = decodeBase64(body);
-                        _valores[1] = subject;
+                       
 
                         EvaluarPuntuacion(String.Concat(decodeBase64(body), " ", _valores[1]), new Ticket { Priority = PriorityType.Media, RobotVirtualMachineId = null, StateId = null });
 
-                        date = String.Empty;
-                        from = String.Empty;
+                        Array.Clear(_valores, 0, _valores.Length);
+
                         break;
                     }
 
