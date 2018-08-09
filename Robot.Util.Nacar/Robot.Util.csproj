@@ -61,19 +61,6 @@
       <HintPath>..\packages\Microsoft.Data.Edm.5.8.3\lib\net40\Microsoft.Data.Edm.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Data.OData">
-      <HintPath>..\packages\Microsoft.Data.OData.5.8.3\lib\net40\Microsoft.Data.OData.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.OData.Client, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.OData.Client.6.18.0\lib\net40\Microsoft.OData.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.OData.Core, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.OData.Core.6.18.0\lib\portable-net45+win+wpa81\Microsoft.OData.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.OData.Edm, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.OData.Edm.6.18.0\lib\portable-net45+win+wpa81\Microsoft.OData.Edm.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Spatial, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Spatial.6.18.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
     </Reference>

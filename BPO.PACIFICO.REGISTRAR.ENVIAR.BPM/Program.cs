@@ -3,7 +3,7 @@ using everis.Ees.Proxy.Services.Interfaces;
 using Everis.Ees.Entities;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using Robot.Util.Nacar;
 using System;
 using System.Collections.Generic;
@@ -30,6 +30,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         private static StateAction _oRegistro;
         private static List<StateAction> _oAcciones;
         private static Functions _Funciones;
+        private string cContratante;
         #endregion
 
         static void Main(string[] args)
@@ -109,7 +110,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         //Valida que no tenga campos vacíos:
         private bool ValidarVacios(Ticket oTicketDatos)
         {
-            int[] oCampos = new int[] { eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado};
+            int[] oCampos = new int[] { eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado };
             return true;
         }
 
@@ -138,29 +139,55 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 _oDriver.FindElement(By.ClassName("formName"));
 
                 //Selecciona tipo de solicitud:
+                SelectElement _oTipoSolicitud = new SelectElement(_oDriver.FindElement(By.ClassName("ui-corner-all")));
+                _oTipoSolicitud.SelectByText(_cTipoSolicitud2);
+
+                //--- otra forma:
                 _oDriver.FindElement(By.Id("tipodesolicitud_input")).Click();
                 _oDriver.FindElement(By.Id("tipodesolicitud_input")).SendKeys(_cTipoSolicitud2); //EN DURO SE ESTÁ ENVIANDO "ENDOSO".
                 Repeticiones(1, "tipodesolicitud_input", Keys.Down);
-                _oDriver.FindElement(By.Id("tipodesolicitud_input")).SendKeys(Keys.Enter);                
+                _oDriver.FindElement(By.Id("tipodesolicitud_input")).SendKeys(Keys.Enter);
 
                 //Ingresa fecha hora de email:
                 _oDriver.FindElement(By.Id("fechayhoraderecepción_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_hora_de_email).Value);
 
                 //Selecciona Línea de Negocio:
+                //necesario validar por el tipo de línea:
+                SelectElement _oLineaNegocio = new SelectElement(_oDriver.FindElement(By.ClassName("ui-corner-all")));
+                _oLineaNegocio.SelectByText("LINEAS PERSONALES");
+
+                //---> otra forma:
                 _oDriver.FindElement(By.Id("linea_negocio_input")).Click();
                 Repeticiones(2, "linea_negocio_input", Keys.Down);
                 _oDriver.FindElement(By.Id("linea_negocio_input")).SendKeys(Keys.Enter);
 
                 //Selecciona Producto:
+                SelectElement _oProducto = new SelectElement(_oDriver.FindElement(By.ClassName("ui-corner-all")));
+                _oProducto.SelectByText("ACCIDENTES INDIVIDUALES");
+
+                //---> otra forma.
                 _oDriver.FindElement(By.Id("producto_input")).Click();
                 Repeticiones(11, "producto_input", Keys.Down);
                 _oDriver.FindElement(By.Id("producto_input")).SendKeys(Keys.Enter);
                 _Funciones.Esperar(3);
 
+                //Seleccionar Tipo de endoso: Necesario validar por el endoso en curso
+                //_oDriver.FindElement(By.Id("ui-active-menuitem")).Click();
+                SelectElement _oTipoEndoso = new SelectElement(_oDriver.FindElement(By.ClassName("ui-corner-all")));
+                _oTipoEndoso.SelectByText("ANULACIÓN DE PÓLIZA");
+                _Funciones.Esperar();
+
+                //Seleccionar Motivo de Anulación:
+                string cMotivo = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == 1).Value; //falta ID del motivo.
+                SelectElement _oMotivoAnulacion = new SelectElement(_oDriver.FindElement(By.ClassName("ui-corner-all")));
+                _oMotivoAnulacion.SelectByText("ANULACIÓN MASIVA POR TRAMA");
+
+                //Ingresar número de asegurados:
+                _oDriver.FindElement(By.Id("nrounidnroasegnrocertinrobienes_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == 2).Value); //falta ID de nro asegurados/vehiculos/bienes
 
                 string cContratante = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value;
                 string cAsegurado = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_asegurado).Value;
-                     
+
             }
             catch (Exception Ex)
             {

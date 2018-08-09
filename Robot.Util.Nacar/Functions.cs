@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Chrome;
+using BPO.Framework.BPOCitrix;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +24,13 @@ namespace Robot.Util.Nacar
         {
             _oDriver = new FirefoxDriver();
             _oDriver.Url = Url;
-            _oDriver.Manage().Window.Maximize();
-            _oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("NavPanelIFrame")));
+            Esperar(2);
+            VentanaWindows(Usuario, Contraseña);
             var alert = _oDriver.SwitchTo().Alert();
             alert.SetAuthenticationCredentials(Usuario, Contraseña);
             alert.Accept();
         }
+
         public static void AbrirSelenium(ref IWebDriver _driver)
         {
             _driver = new InternetExplorerDriver();
@@ -73,7 +75,16 @@ namespace Robot.Util.Nacar
         {
             Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
         }
+        
+        //Ingresar usuario y contraseña en ventana windows:
+        public void VentanaWindows(string cUsuario, string cContraseña)
+        {
+            Keyboard.KeyPress(VirtualKeyCode.SUBTRACT);
+            Keyboard.KeyPress(cUsuario);
+            Keyboard.KeyPress(VirtualKeyCode.TAB);
+            Keyboard.KeyPress(cContraseña);
+            Keyboard.KeyPress(VirtualKeyCode.RETURN);
+            Esperar(2);
+        }
     }
 }
-
-
