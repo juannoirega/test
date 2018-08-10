@@ -32,7 +32,7 @@ namespace GmailQuickstart
         static string[] _valores = new string[10];
         static string _userId = "bponaa@gmail.com";
         static List<string> _adjuntos = null;
-        static int[] _fields = { eesFields.Default.cuerpo_de_email, eesFields.Default.asunto_de_email, eesFields.Default.estado_error, eesFields.Default.estado_hijo, eesFields.Default.estado_padre, eesFields.Default.fields, eesFields.Default.fecha_hora_de_email };
+        static int[] _fields = { eesFields.Default.cuerpo_de_email, eesFields.Default.asunto_de_email, eesFields.Default.estado_error, eesFields.Default.estado_hijo, eesFields.Default.estado_padre, eesFields.Default.fields, eesFields.Default.fecha_hora_de_email, eesFields.Default.email_solicitante, eesFields.Default.email_en_copia };
         static string ApplicationName = "Gmail API .NET Quickstart";
         static List<DomainValue> _listado = null;
         static List<Puntuacion> puntos = new List<Puntuacion>();
@@ -40,7 +40,7 @@ namespace GmailQuickstart
         #endregion
         static void Main(string[] args)
         {
-           
+
             _robot = new BaseRobot<Program>(args);
             _robot.Start();
 
@@ -63,63 +63,64 @@ namespace GmailQuickstart
 
         public void Email()
         {
-           
-                UserCredential credential;
 
-                using (var stream =
-                    new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
-                {
-                    string credPath = "token.json";
-                    credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                        GoogleClientSecrets.Load(stream).Secrets,
-                        Scopes,
-                        "user",
-                        CancellationToken.None,
-                        new FileDataStore(credPath, true)).Result;
-                }
+            UserCredential credential;
 
-                // Create Gmail API service.
-                GmailService service = new GmailService(new BaseClientService.Initializer()
-                {
-                    HttpClientInitializer = credential,
-                    ApplicationName = ApplicationName,
-                });
+            using (var stream =
+                new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+            {
+                string credPath = "token.json";
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    GoogleClientSecrets.Load(stream).Secrets,
+                    Scopes,
+                    "user",
+                    CancellationToken.None,
+                    new FileDataStore(credPath, true)).Result;
+            }
 
-                // Define parameters of request.
-                UsersResource.MessagesResource.ListRequest request = service.Users.Messages.List(_userId);
-                request.MaxResults = 5;
-                request.LabelIds = "INBOX";
-                request.IncludeSpamTrash = false;
-                request.Q = "is:unread";
-                try
-                {
-                    _listado = listadoValoresDominios();
-                }
-                catch(Exception ex){ throw new Exception(); }
-                // List Messages.
-                IList<Message> messages = request.Execute().Messages;
+            // Create Gmail API service.
+            GmailService service = new GmailService(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = ApplicationName,
+            });
 
-                if (messages != null && messages.Count > 0)
+            // Define parameters of request.
+            UsersResource.MessagesResource.ListRequest request = service.Users.Messages.List(_userId);
+            request.MaxResults = 5;
+            request.LabelIds = "INBOX";
+            request.IncludeSpamTrash = false;
+            request.Q = "is:unread";
+            try
+            {
+                _listado = listadoValoresDominios();
+            }
+            catch (Exception ex) { throw new Exception(); }
+            // List Messages.
+            IList<Message> messages = request.Execute().Messages;
+
+            if (messages != null && messages.Count > 0)
+            {
+                foreach (Message message in messages)
                 {
-                    foreach (Message message in messages)
-                    {
-                        Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
-                        AcionRequest(infoResponse, service);
-                        _listado.Clear();
-                    }
+                    List<Ticket> ti = _robot.GetDataQueryTicket().Expand(t => t.TicketValues).Where(o => o.StateId == 3).ToList();
+                    Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
+                    AcionRequest(infoResponse, service);
+                    _listado.Clear();
                 }
-                else
-                {
-                    Console.WriteLine("No messages found.");
-                }
-            
+            }
+            else
+            {
+                Console.WriteLine("No messages found.");
+            }
+
 
 
         }
         //cada message tiene una acion de requerimento
         public void AcionRequest(Message infoResponse, GmailService service)
         {
-            
+
 
             if (infoResponse != null)
             {
@@ -132,38 +133,41 @@ namespace GmailQuickstart
 
                     _valores[1] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Subject").Value;
 
-                    _valores[8] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Cc").Value;
+                    if (infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Cc") != null)
+                        _valores[8] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Cc").Value;
 
-                }catch(Exception ex) { }
+                }
+                catch (Exception ex) { }
 
-                    if (_valores[6] != "" && _valores[7] != "")
+                if (_valores[6] != "" && _valores[7] != "")
+                {
+                    if (infoResponse.Payload.Parts == null && infoResponse.Payload.Body != null)
                     {
-                        if (infoResponse.Payload.Parts == null && infoResponse.Payload.Body != null)
-                        {
-                            body = infoResponse.Payload.Body.Data;
-                        }
-                        else
-                        {
-                            body = getNestedParts(infoResponse.Payload.Parts, "");
-                        }
-                  
-                        if (infoResponse.Payload.Parts.FirstOrDefault(o => o.Filename != "")!=null)
+                        body = infoResponse.Payload.Body.Data;
+                    }
+                    else
+                    {
+                        body = getNestedParts(infoResponse.Payload.Parts, "");
+                    }
+
+                    if (infoResponse.Payload.Parts != null)
+                        if (infoResponse.Payload.Parts.FirstOrDefault(o => o.Filename != "") != null)
                         {
                             _adjuntos = GetFiles(service, infoResponse.Payload.Parts, infoResponse.Id);
                         }
-                   
-                 
-
-                        _valores[0] = decodeBase64(body);
 
 
-                        EvaluarPuntuacion(String.Concat(decodeBase64(body), " ", _valores[1]), new Ticket { Priority = PriorityType.Media, RobotVirtualMachineId = null, StateId = null });
 
-                        Array.Clear(_valores, 0, _valores.Length);
+                    _valores[0] = decodeBase64(body);
 
-                    }
 
-                
+                    EvaluarPuntuacion(String.Concat(decodeBase64(body), " ", _valores[1]), new Ticket { Priority = PriorityType.Media, RobotVirtualMachineId = null, StateId = null });
+
+                    Array.Clear(_valores, 0, _valores.Length);
+
+                }
+
+
             }
 
         }
@@ -189,7 +193,8 @@ namespace GmailQuickstart
                     }
                 }
                 return files;
-            }catch(Exception ex) { throw new Exception(); }
+            }
+            catch (Exception ex) { throw new Exception(); }
 
 
         }
@@ -222,7 +227,8 @@ namespace GmailQuickstart
 
                     return str;
                 }
-            }catch(Exception ex) { throw new Exception(); }
+            }
+            catch (Exception ex) { throw new Exception(); }
 
         }
 
@@ -233,7 +239,8 @@ namespace GmailQuickstart
                 palabras = String.Format(palabras, "{0:D15}");
 
                 return new Regex(String.Concat(@"(?:", palabras, " )")).Matches(DigitarTexto).Count;
-            }catch(Exception ex) { throw new Exception(); }
+            }
+            catch (Exception ex) { throw new Exception(); }
 
         }
 
@@ -254,7 +261,8 @@ namespace GmailQuickstart
                 codedBody = Regex.Replace(codedBody, "([_])", "+");
                 byte[] data = Convert.FromBase64String(Regex.Replace(codedBody, "=", "/"));
                 return Encoding.UTF8.GetString(data);
-            }catch(Exception ex) { throw new Exception(); }
+            }
+            catch (Exception ex) { throw new Exception(); }
         }
 
         // cada acion de erquerimento tiene una evaluacion de puentos 
@@ -279,7 +287,7 @@ namespace GmailQuickstart
                 int[] valores = MaioresValores();
 
 
-                if (((valores[0] * 100) / (valores[0] + valores[1])) >= 70)
+                if (valores[0] > 0 && ((valores[0] * 100) / (valores[0] + valores[1])) >= 70)
                 {
 
                     CreacionTicket(texto, ticket, true);
@@ -289,7 +297,8 @@ namespace GmailQuickstart
 
                     CreacionTicket(texto, ticket, false);
                 }
-            }catch(Exception ex) { }
+            }
+            catch (Exception ex) { }
         }
 
 
@@ -311,7 +320,7 @@ namespace GmailQuickstart
 
                 _robot.SaveNewTicket(ticketPadre);
             }
-            catch(Exception ex) { throw new Exception(); }
+            catch (Exception ex) { throw new Exception(); }
 
         }
         public void DatosFields()
@@ -371,4 +380,4 @@ namespace GmailQuickstart
 
 
     }
-}
+}v
