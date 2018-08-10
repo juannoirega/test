@@ -98,16 +98,31 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             BuscarPoliza(ticket);
             Anular();
         }
-        private void Anular() {
+        private void Anular()
+        {
             //Menu Cancelar Poliza
             _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
             _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
             Thread.Sleep(5000);
 
-            //Iniciar Cancelación de Póliza - Solicitante, Motivo, Descripcion del motio, Forma de reembolso
+            IWebElement _ddlSelect = _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:Source"));
+            IList<IWebElement> _option = _ddlSelect.FindElements(By.XPath("id('StartCancellation:StartCancellationScreen:CancelPolicyDV:Source')/option"));
+            string prueba = "Compañía de seguros";
 
+            for (int i = 1; i < _option.Count; i++)
+            {
+                string p = _option[i].Text;
+
+                if (p.Equals(prueba))
+                {
+                    _option[i].Click();
+                }
+            }
 
         }
+
+
+
         private void AbrirSelenium()
         {
             //LogInfoStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
@@ -161,7 +176,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             try
             {
                 //obtener el numero  de Poliza
-                _numeroPoliza = ticket.TicketValues.Where(np => np.FieldId == 5).ToString();
+                _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
 
                 Functions.BuscarPoliza(_driverGlobal, _numeroPoliza);
             }
