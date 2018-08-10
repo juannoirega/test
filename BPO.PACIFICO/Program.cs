@@ -103,7 +103,7 @@ namespace GmailQuickstart
             {
                 foreach (Message message in messages)
                 {
-                    List<Ticket> ti = _robot.GetDataQueryTicket().Expand(t => t.TicketValues).Where(o => o.StateId == 3).ToList();
+                    
                     Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
                     AcionRequest(infoResponse, service);
                     _listado.Clear();
