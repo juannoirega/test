@@ -39,10 +39,14 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private string _numeroCanal = string.Empty;
         private string _nombreContratante = string.Empty;
         private string _nombreAsegurado = string.Empty;
+        private bool _polizaNueva = true;
+        private int _estadoError;
+        private int _estadoFinal;
+
         //private static string _numeroDniContratante = string.Empty;
         //Pendiente
-        private string _numeroVehiculos = string.Empty;
-        private string _numeroAsegurados = string.Empty;
+        private string _numeroVehiculos = "1";
+        private string _numeroAsegurados = "1";
 
         #endregion
         static void Main(string[] args)
@@ -75,7 +79,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 catch (Exception ex)
                 {
                     LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
-                    //Enviar a mesa control con mmensaje
+                    MesaDeControl(ticket, ex.Message);
                     //capturar imagen
                 }
                 finally
@@ -164,6 +168,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
         private void ObtenerDatos(Ticket ticket)
         {
+            string _idDesplegable = string.Empty;
             try
             {
                 _producto = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
@@ -174,33 +179,36 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 _tipoVigencia = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:validityType");
                 _nombreContratante = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:AccountName");
                 _nombreAsegurado = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Name");
-                //FALTA NUMERO DE ASEGURADOS Y NUMERO DE VEHICULOS(CONFIRMAR COMO SE TRABAJARA)
-                //POR AHORA SE VA A DEJAR EL TEMA DE LOS NUMEROS DE VEHICULOS Y NUMERO ASEGURADOS MANEJARLO COMO DATA ESTATICA POR MIENTRAS// CODEJAR COMENTADO CODIGO
-                //VER TXT LOGICA PARA IMPLEMENTAR 
-                if (_producto.Contains("Auto"))
+
+                try
                 {
-                    _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileAcceleratedMenuActions:PolicyMenuItemSet:PolicyMenuItemSet_Vehicles")).Click();
+                    _idDesplegable = Functions.ObtenerValorElemento(_driverGlobal, "FALTA ID DEL COMBOBOX");
+                }
+                catch
+                {
+                    _idDesplegable = string.Empty;
+                }
 
-                    IWebElement table = _driverGlobal.FindElement(By.Id("PolicyFile_PersonalAuto_Vehicles:PolicyFile_PersonalAuto_VehiclesScreen:PAVehiclesPanelSet:VehiclesListDetailPanel:VehiclesLV"));
-
-                    IList<IWebElement> tr_colencion = table.FindElements(By.XPath("id('PolicyFile_PersonalAuto_Vehicles:PolicyFile_PersonalAuto_VehiclesScreen:PAVehiclesPanelSet:VehiclesListDetailPanel:VehiclesLV')/tbody/tr"));
-
-                    int count = 0;
-                    foreach (IWebElement item in tr_colencion)
+                if (!string.IsNullOrEmpty(_idDesplegable))
+                {
+                    IWebElement _ddlPaginacion = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX"));
+                    IList<IWebElement> _option = _ddlPaginacion.FindElements(By.XPath("//option"));
+                    int _listcount = _option.Count;
+                    for (int h = 1; h < _listcount; h++)
                     {
-                        IList<IWebElement> td = item.FindElements(By.XPath("td"));
+                        RecorrerGrilla();
 
+                        if (!_polizaNueva)
+                            break;
 
-                        foreach (IWebElement tr in td)
-                        {
-                            if (count >= 2)
-                            {
-                                var dato = tr.Text;
-                            }
-                            count++;
-                        }
-                        count = 0;
+                        IWebElement _ddlPaginacion2 = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX"));
+                        IList<IWebElement> _option2 = _ddlPaginacion2.FindElements(By.XPath("//option"));
+                        _option2[h].Click();
                     }
+                }
+                else
+                {
+                    RecorrerGrilla();
                 }
 
                 //Numero Canal y Nombre
@@ -235,16 +243,17 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
         }
 
+
         private void GrabarInformacion(Ticket ticket)
         {
             try
             {
                 string[] ValorCampos = { _producto, _inicioVigencia, _finVigencia, _agente, _numeroAgente, _tipo, _tipoVigencia, _estado, _numeroCanal,_numeroAsegurados,
-                _numeroVehiculos,_nombreContratante,_nombreAsegurado};
+                _numeroVehiculos,_nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva)};
 
                 int[] IdCampos = { eesFields.Default.producto, eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia, eesFields.Default.agente,
                 eesFields.Default.num_agente,eesFields.Default.tipo,eesFields.Default.tipo_vigencia,eesFields.Default.estado_poliza,eesFields.Default.canal,eesFields.Default.num_asegurados,
-                eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado};
+                eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado,eesFields.Default.poliza_nueva};
 
                 for (int i = 0; i < ValorCampos.Length; i++)
                 {
@@ -259,14 +268,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-
-                List<StateAction> stateAction = _robot.GetNextStateAction(_robot.Tickets.FirstOrDefault());
-                StateAction nextState = stateAction.Where(sa => sa.ActionDescription == "Datos Poliza").SingleOrDefault();
-
-                if (_robot.SaveTicketNextState(ticket, nextState.Id))
-                {
-                    Console.WriteLine("El Ticket cambio al estado: {0}", nextState.ActionDescription);
-                }
+                _robot.SaveTicketNextState(ticket,_estadoFinal);
             }
             catch (Exception ex)
             {
@@ -282,11 +284,70 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
                 _usuario = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
                 _contraseña = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
+                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
+                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
             }
             catch (Exception ex)
             {
                 throw new Exception("Error al Obtener los parametros del robot", ex);
             }
         }
+        private void MesaDeControl(Ticket ticket, string motivo)
+        {
+            var fieldError = (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_error));
+            if (fieldError == null)
+            {
+                ticket.TicketValues.Add(new TicketValue
+                {
+                    FieldId = eesFields.Default.estado_error,
+                    TicketId = ticket.Id,
+                    Value = string.Empty,
+                    CreationDate = DateTime.Now,
+                    ClonedValueOrder = null
+                });
+            }
+            ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_error).Value += motivo;
+            var actions = _robot.GetNextStateAction(ticket);
+            _robot.SaveTicketNextState(ticket, actions.First(o => o.DestinationStateId == _estadoError).Id);
+        }
+
+        private void RecorrerGrilla()
+        {
+            //tabla
+            IWebElement _tabla = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV"));
+            IList<IWebElement> _trColeccion = _tabla.FindElements(By.XPath("id('PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV')/tbody/tr"));
+
+            int _posicionTd = 0;
+            foreach (IWebElement item in _trColeccion)
+            {
+
+                IList<IWebElement> _td = item.FindElements(By.XPath("td"));
+
+
+                for (int j = 0; j < _td.Count; j++)
+                {
+                    string _tipoCabecera = _td[j].Text;
+                    if (_tipoCabecera.Equals("Tipo"))//reemplazar por "Tipo"
+                    {
+                        _posicionTd = j;
+                        break;
+                    }
+                    if (_posicionTd > 0)
+                    {
+                        string _tipoValor = _td[_posicionTd].Text;
+
+                        if (_tipoValor.Equals("Renovación"))//en este caso en vez de 2014 seria "Renovacion"
+                        {
+                            _polizaNueva = false;
+                            break;
+                        }
+                        break;
+                    }
+                }
+                if (!_polizaNueva)
+                    break;
+            }
+        }
+
     }
 }
