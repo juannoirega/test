@@ -40,6 +40,7 @@ namespace GmailQuickstart
         #endregion
         static void Main(string[] args)
         {
+            _robot.GetDataQueryTicket().FirstOrDefault(o => o.StateId == 2);
             _robot = new BaseRobot<Program>(args);
             _robot.Start();
 
