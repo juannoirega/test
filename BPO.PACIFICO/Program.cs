@@ -48,8 +48,20 @@ namespace GmailQuickstart
 
         protected override void Start()
         {
-            //    GetRobotParam();
-            Email();
+            try
+            {
+                LogStartStep(2);
+                GetRobotParam();
+                Email();
+            }
+            catch (Exception ex)
+            {
+                LogFailStep(30, ex);
+            }
+            finally
+            {
+                Environment.Exit(0);
+            }
         }
 
         public void GetRobotParam()
@@ -59,6 +71,7 @@ namespace GmailQuickstart
             _valores[4] = _robot.GetValueParamRobot("EstadoPadre").ValueParam;
 
             _diretorio = _robot.GetValueParamRobot("Diretorio").ValueParam;
+            LogEndStep(4);
         }
 
         public void Email()
@@ -93,9 +106,9 @@ namespace GmailQuickstart
             request.Q = "is:unread";
             try
             {
-                _listado = listadoValoresDominios();
+                _listado = ListadoValoresDominios();
             }
-            catch (Exception ex) { throw new Exception(); }
+            catch (Exception ex) { throw new Exception("No se pudo buscar los dominos funcionales" + ex.Message); }
             // List Messages.
             IList<Message> messages = request.Execute().Messages;
 
@@ -103,7 +116,7 @@ namespace GmailQuickstart
             {
                 foreach (Message message in messages)
                 {
-                    
+
                     Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
                     AcionRequest(infoResponse, service);
                     _listado.Clear();
@@ -111,7 +124,7 @@ namespace GmailQuickstart
             }
             else
             {
-                Console.WriteLine("No messages found.");
+                LogInfoStep(44);
             }
 
 
@@ -120,7 +133,7 @@ namespace GmailQuickstart
         //cada message tiene una acion de requerimento
         public void AcionRequest(Message infoResponse, GmailService service)
         {
-
+            LogStartStep(50);
 
             if (infoResponse != null)
             {
@@ -137,7 +150,7 @@ namespace GmailQuickstart
                         _valores[8] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Cc").Value;
 
                 }
-                catch (Exception ex) { }
+                catch (Exception ex) { throw new Exception("No se pudo guardar el encabezado de correo electrónico" + ex.Message); }
 
                 if (_valores[6] != "" && _valores[7] != "")
                 {
@@ -147,7 +160,8 @@ namespace GmailQuickstart
                     }
                     else
                     {
-                        body = getNestedParts(infoResponse.Payload.Parts, "");
+                        LogStartStep(52);
+                        body = GetNestedParts(infoResponse.Payload.Parts, "");
                     }
 
                     if (infoResponse.Payload.Parts != null)
@@ -158,10 +172,10 @@ namespace GmailQuickstart
 
 
 
-                    _valores[0] = decodeBase64(body);
+                    _valores[0] = DecodeBase64(body);
 
 
-                    EvaluarPuntuacion(String.Concat(decodeBase64(body), " ", _valores[1]), new Ticket { Priority = PriorityType.Media, RobotVirtualMachineId = null, StateId = null });
+                    EvaluarPuntuacion(String.Concat(DecodeBase64(body), " ", _valores[1]), new Ticket { Priority = PriorityType.Media, RobotVirtualMachineId = null, StateId = null });
 
                     Array.Clear(_valores, 0, _valores.Length);
 
@@ -174,6 +188,7 @@ namespace GmailQuickstart
         // cada acion de requerimento pueede tener o no Adjuntos e hacer lo getfiles
         private List<string> GetFiles(GmailService service, IList<MessagePart> parts, string messageId)
         {
+            LogStartStep(51);
             try
             {
                 List<string> files = new List<string>();
@@ -194,13 +209,14 @@ namespace GmailQuickstart
                 }
                 return files;
             }
-            catch (Exception ex) { throw new Exception(); }
+            catch (Exception ex) { throw new Exception("No fue posible guardar los adjuntos" + ex.Message); }
 
 
         }
 
-        static String getNestedParts(IList<MessagePart> part, string curr)
+        static String GetNestedParts(IList<MessagePart> part, string curr)
         {
+           
             try
             {
                 string str = curr;
@@ -221,30 +237,31 @@ namespace GmailQuickstart
                         }
                         else
                         {
-                            return getNestedParts(parts.Parts, str);
+                            return GetNestedParts(parts.Parts, str);
                         }
                     }
 
                     return str;
                 }
             }
-            catch (Exception ex) { throw new Exception(); }
+            catch (Exception ex) { throw new Exception("No se pudo guardar el cuerpo del email" + ex.Message); }
 
         }
 
-        public int buscarPalabrasClaves(string DigitarTexto, string palabras)
+        public int BuscarPalabrasClaves(string DigitarTexto, string palabras)
         {
+            LogStartStep(54);
             try
             {
                 palabras = String.Format(palabras, "{0:D15}");
 
                 return new Regex(String.Concat(@"(?:", palabras, " )")).Matches(DigitarTexto).Count;
             }
-            catch (Exception ex) { throw new Exception(); }
+            catch (Exception ex) { throw new Exception("No se pudo encontrar las palabras clave" + ex.Message); }
 
         }
 
-        public List<DomainValue> listadoValoresDominios()
+        public List<DomainValue> ListadoValoresDominios()
         {
             var container = ODataContextWrapper.GetContainer();
 
@@ -253,7 +270,7 @@ namespace GmailQuickstart
         }
 
 
-        static string decodeBase64(string sInput)
+        static string DecodeBase64(string sInput)
         {
             try
             {
@@ -262,12 +279,13 @@ namespace GmailQuickstart
                 byte[] data = Convert.FromBase64String(Regex.Replace(codedBody, "=", "/"));
                 return Encoding.UTF8.GetString(data);
             }
-            catch (Exception ex) { throw new Exception(); }
+            catch (Exception ex) { throw new Exception("No se pudo convertir la Base64" + ex.Message); }
         }
 
         // cada acion de erquerimento tiene una evaluacion de puentos 
         public void EvaluarPuntuacion(string texto, Ticket ticket)
         {
+            LogStartStep(53);
             try
             {
 
@@ -277,7 +295,7 @@ namespace GmailQuickstart
                 foreach (DomainValue b in _listado)
                 {
                     palabraClave = b.Value.ToString();
-                    int contador = buscarPalabrasClaves(texto, palabraClave);
+                    int contador = BuscarPalabrasClaves(texto, palabraClave);
 
 
                     if (contador > 0)
@@ -298,12 +316,13 @@ namespace GmailQuickstart
                     CreacionTicket(texto, ticket, false);
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { throw new Exception("No fue posible analizar la puntuación" + ex.Message); }
         }
 
 
         public void CreacionTicket(string texto, Ticket ticketPadre, bool flag)
         {
+            LogStartStep(55);
             try
             {
                 DatosFields();
@@ -320,7 +339,7 @@ namespace GmailQuickstart
 
                 _robot.SaveNewTicket(ticketPadre);
             }
-            catch (Exception ex) { throw new Exception(); }
+            catch (Exception ex) { throw new Exception("No se pudo crear el Ticket" + ex.Message); }
 
         }
         public void DatosFields()
