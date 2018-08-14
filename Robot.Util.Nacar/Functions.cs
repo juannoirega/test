@@ -95,14 +95,11 @@ namespace Robot.Util.Nacar
         public void SeleccionarCombo(IWebDriver _driver, string idElement, string valorComparar)
         {
             //id Compañia seguros
-            IWebElement _ddlSelects = _driver.FindElement(By.Id(idElement));
-            IList<IWebElement> _option = _ddlSelects.FindElements(By.XPath("id('" + idElement + "')/option"));
+            IList<IWebElement> _option = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
 
             for (int i = 0; i < _option.Count; i++)
             {
-                string _valorCombo = _option[i].Text.ToUpperInvariant();
-
-                if (_valorCombo.Equals(valorComparar))
+                if (_option[i].Text.ToUpperInvariant().Equals(valorComparar))
                 {
                     _option[i].Click();
                 }
@@ -111,21 +108,19 @@ namespace Robot.Util.Nacar
 
         public string ObtenerValorDominio(Ticket ticket, int idCampoDominio)
         {
-            string descripcion = string.Empty;
+            
             var container = ODataContextWrapper.GetContainer();
             try
             {
-                string valor = string.Empty;
                 if (ticket != null)
-                {
-                    DomainValue valorField = container.DomainValues.Where(p => p.Id == idCampoDominio).FirstOrDefault();
-                    descripcion = valorField.Value.Trim().ToUpperInvariant();
-                }
+                     return container.DomainValues.FirstOrDefault(p => p.Id == idCampoDominio).Value.Trim().ToUpperInvariant();
             }
             catch
             {
-            } 
-            return descripcion;
+                return null;
+            }
+            return null;
+
         }
     }
 }
