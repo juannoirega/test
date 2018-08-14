@@ -20,6 +20,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private static BaseRobot<Program> _robot = null;
         private static IWebDriver _driverGlobal = null;
         private static IWebElement element;
+        private static Functions _Funciones;
         //private static Functions _Funciones;
         #region ParametrosRobot
         private string _url = string.Empty;
@@ -51,6 +52,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         #endregion
         static void Main(string[] args)
         {
+            _Funciones = new Functions();
             _robot = new BaseRobot<Program>(args);
             _robot.Start();
         }
@@ -106,7 +108,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             //LogInfoStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
             try
             {
-                Functions.AbrirSelenium(ref _driverGlobal);
+                _Funciones.AbrirSelenium(ref _driverGlobal);
             }
             catch (Exception ex)
             {
@@ -121,7 +123,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-                Functions.NavegarUrl(_driverGlobal, _url);
+                _Funciones.NavegarUrl(_driverGlobal, _url);
             }
             catch (Exception ex)
             {
@@ -137,7 +139,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-                Functions.Login(_driverGlobal, _usuario, _contraseña);
+                _Funciones.Login(_driverGlobal, _usuario, _contraseña);
             }
             catch (Exception ex)
             {
@@ -156,7 +158,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 //obtener el numero  de Poliza
                 _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
 
-                Functions.BuscarPoliza(_driverGlobal, _numeroPoliza);
+                _Funciones.BuscarPoliza(_driverGlobal, _numeroPoliza);
             }
             catch (Exception ex)
             {
@@ -171,18 +173,18 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             string _idDesplegable = string.Empty;
             try
             {
-                _producto = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
-                _inicioVigencia = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerEffDate_date");
-                _finVigencia = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerExpirDate_date");
-                _tipo = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:Type");
-                _estado = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:state");
-                _tipoVigencia = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:validityType");
-                _nombreContratante = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:AccountName");
-                _nombreAsegurado = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Name");
+                _producto = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
+                _inicioVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerEffDate_date");
+                _finVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerExpirDate_date");
+                _tipo = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:Type");
+                _estado = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:state");
+                _tipoVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:validityType");
+                _nombreContratante = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:AccountName");
+                _nombreAsegurado = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Name");
 
                 try
                 {
-                    _idDesplegable = Functions.ObtenerValorElemento(_driverGlobal, "FALTA ID DEL COMBOBOX");
+                    _idDesplegable = _Funciones.ObtenerValorElemento(_driverGlobal, "FALTA ID DEL COMBOBOX");
                 }
                 catch
                 {
@@ -268,7 +270,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-                _robot.SaveTicketNextState(ticket,_estadoFinal);
+                _robot.SaveTicketNextState(ticket, _estadoFinal);
             }
             catch (Exception ex)
             {
