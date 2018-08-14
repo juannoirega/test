@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using OpenQA.Selenium.IE;
 using System.Threading;
 using Everis.Ees.Entities;
+using everis.Ees.Proxy.Services;
 
 namespace Robot.Util.Nacar
 {
@@ -105,16 +106,17 @@ namespace Robot.Util.Nacar
             }
         }
 
-        public string ObtenerValorDominio(Ticket ticket, int field)
+        public string ObtenerValorDominio(Ticket ticket, int idCampoDominio)
         {
             string descripcion = string.Empty;
+            var container = ODataContextWrapper.GetContainer();
             try
             {
                 string valor = string.Empty;
                 if (ticket != null)
                 {
-                    //DomainValue valorField = container.DomainValues.Where(p => p.Id == field).FirstOrDefault();
-                    //descripcion = valorField.Value.Trim().ToUpperInvariant();
+                    DomainValue valorField = container.DomainValues.Where(p => p.Id == idCampoDominio).FirstOrDefault();
+                    descripcion = valorField.Value.Trim().ToUpperInvariant();
                 }
             }
             catch
