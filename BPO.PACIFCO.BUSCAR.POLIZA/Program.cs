@@ -315,7 +315,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 for (int j = 0; j < _td.Count; j++)
                 {
                     string _tipoCabecera = _td[j].Text;
-                    if (_tipoCabecera.Equals("Tipo"))//reemplazar por "Tipo"
+                    if (_tipoCabecera.Equals("Tipo"))
                     {
                         _posicionTd = j;
                         break;
@@ -324,7 +324,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                     {
                         string _tipoValor = _td[_posicionTd].Text;
 
-                        if (_tipoValor.Equals("Renovación"))//en este caso en vez de 2014 seria "Renovacion"
+                        if (_tipoValor.Equals("Renovación"))
                         {
                             _polizaNueva = false;
                             break;
