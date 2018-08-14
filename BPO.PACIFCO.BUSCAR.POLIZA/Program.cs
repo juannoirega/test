@@ -193,18 +193,16 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
                 if (!string.IsNullOrEmpty(_idDesplegable))
                 {
-                    IWebElement _ddlPaginacion = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX"));
-                    IList<IWebElement> _option = _ddlPaginacion.FindElements(By.XPath("//option"));
-                    int _listcount = _option.Count;
-                    for (int h = 1; h < _listcount; h++)
+                    IList<IWebElement> _option = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX")).FindElements(By.XPath("//option"));
+                   
+                    for (int h = 1; h < _option.Count; h++)
                     {
                         RecorrerGrilla();
 
                         if (!_polizaNueva)
                             break;
 
-                        IWebElement _ddlPaginacion2 = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX"));
-                        IList<IWebElement> _option2 = _ddlPaginacion2.FindElements(By.XPath("//option"));
+                        IList<IWebElement> _option2 = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX")).FindElements(By.XPath("//option"));
                         _option2[h].Click();
                     }
                 }
@@ -214,26 +212,14 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 }
 
                 //Numero Canal y Nombre
-                element = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:SecondaryProducerCode"));
-                string _canalCadenaCompleta = element.GetAttribute("value");
-                string[] ArrayCanal = _canalCadenaCompleta.Split(' ');
-
-                int c = 0;
-                foreach (string item in ArrayCanal)
-                {
-                    if (c == 0) { _numeroCanal = item; c++; }
-                }
+                _numeroCanal = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:SecondaryProducerCode").Split(' ').FirstOrDefault();
 
                 //Agente Numero y Nombre
-                element = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:ProducerCodeOfRecord"));
-                string _agenteCadenaCompleta = element.GetAttribute("value");
-                string[] ArrayAgente = _agenteCadenaCompleta.Split(' ');
-                int i = 0;
+                string[] ArrayAgente = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:ProducerCodeOfRecord").Split(' ');
+                _numeroAgente = ArrayAgente[0];
+
                 foreach (string item in ArrayAgente)
-                {
-                    if (i == 0) { _numeroAgente = item; i++; }
-                    else { _agente = string.Concat(_agente, item, " "); }
-                }
+                    _agente = string.Concat(_agente, item, " ");
             }
             catch (Exception ex)
             {
