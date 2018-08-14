@@ -244,9 +244,8 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado,eesFields.Default.poliza_nueva};
 
                 for (int i = 0; i < ValorCampos.Length; i++)
-                {
                     ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = IdCampos[i], Value = ValorCampos[i] });
-                }
+                
 
             }
             catch (Exception ex)
@@ -282,28 +281,28 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         }
         private void MesaDeControl(Ticket ticket, string motivo)
         {
-            var fieldError = (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_error));
-            if (fieldError == null)
+            if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_error) == null)
             {
                 ticket.TicketValues.Add(new TicketValue
                 {
                     FieldId = eesFields.Default.estado_error,
                     TicketId = ticket.Id,
-                    Value = string.Empty,
+                    Value = motivo,
                     CreationDate = DateTime.Now,
                     ClonedValueOrder = null
                 });
             }
-            ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_error).Value += motivo;
-            var actions = _robot.GetNextStateAction(ticket);
-            _robot.SaveTicketNextState(ticket, actions.First(o => o.DestinationStateId == _estadoError).Id);
+            else
+                ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_error).Value = motivo;
+            
+            _robot.SaveTicketNextState(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
         }
 
         private void RecorrerGrilla()
         {
             //tabla
-            IWebElement _tabla = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV"));
-            IList<IWebElement> _trColeccion = _tabla.FindElements(By.XPath("id('PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV')/tbody/tr"));
+      
+            IList<IWebElement> _trColeccion = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV")).FindElements(By.XPath("id('PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV')/tbody/tr"));
 
             int _posicionTd = 0;
             foreach (IWebElement item in _trColeccion)
