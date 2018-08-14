@@ -42,7 +42,7 @@ namespace Robot.Util.Nacar
             _driver.Url = url;
             _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
             _driver.Manage().Window.Maximize();
-            Thread.Sleep(1000);
+            Esperar(1);
         }
 
         public static void Login(IWebDriver _driver, string usuario, string contraseña)
@@ -52,26 +52,25 @@ namespace Robot.Util.Nacar
             _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
             _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
             _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
-            Thread.Sleep(1000);
+            Esperar(1);
         }
 
         public static void BuscarPoliza(IWebDriver _driver, string numeroPoliza)
         {
             _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
             _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
+            Esperar(1);
             _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
-            Thread.Sleep(5000);
+            Esperar(5);
         }
 
         public static string ObtenerValorElemento(IWebDriver _driver, string idElemento)
         {
-            IWebElement element = _driver.FindElement(By.Id(idElemento));
-            string valorElemento = element.Text;
-            return valorElemento;
+            return _driver.FindElement(By.Id(idElemento)).Text;
         }
 
         //Método para hacer pausa en segundos:
-        public void Esperar(double nTiempo = 1)
+        public static void Esperar(double nTiempo = 1)
         {
             Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
         }
@@ -80,9 +79,13 @@ namespace Robot.Util.Nacar
         public void VentanaWindows(string cUsuario, string cContraseña)
         {
             Keyboard.KeyPress(VirtualKeyCode.SUBTRACT);
+            Esperar(1);
             Keyboard.KeyPress(cUsuario);
+            Esperar(1);
             Keyboard.KeyPress(VirtualKeyCode.TAB);
+            Esperar(1);
             Keyboard.KeyPress(cContraseña);
+            Esperar(1);
             Keyboard.KeyPress(VirtualKeyCode.RETURN);
             Esperar(2);
         }
