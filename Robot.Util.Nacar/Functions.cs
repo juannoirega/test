@@ -19,6 +19,7 @@ namespace Robot.Util.Nacar
         #region "Parámetros"
         private static IWebDriver _oDriver = null;
         private static IWebElement _oElement = null;
+      
         #endregion
 
         //Registro en BPM:
@@ -66,9 +67,27 @@ namespace Robot.Util.Nacar
             Esperar(5);
         }
 
-        public string ObtenerValorElemento(IWebDriver _driver, string idElemento)
+        public string ObtenerValorElemento(IWebDriver _driver, string idElemento, string type="id")
         {
-            return _driver.FindElement(By.Id(idElemento)).Text;
+            switch (type.ToLower())
+            {
+                case "id":
+                    return _driver.FindElement(By.Id(idElemento)).Text;
+                case "xpath":
+                    return _driver.FindElement(By.XPath(idElemento)).Text;
+                case "linktext":
+                    return _driver.FindElement(By.LinkText(idElemento)).Text;
+                case "name":
+                    return _driver.FindElement(By.Name(idElemento)).Text;
+                case "tagname":
+                    return _driver.FindElement(By.TagName(idElemento)).Text;
+                case "classname":
+                    return _driver.FindElement(By.ClassName(idElemento)).Text;
+                case "partiallinktext":
+                    return _driver.FindElement(By.PartialLinkText(idElemento)).Text;
+                default:
+                    return null;
+            }
         }
 
         //Método para hacer pausa en segundos:
