@@ -72,7 +72,7 @@ namespace Robot.Util.Nacar
         }
 
         //Método para hacer pausa en segundos:
-        public static void Esperar(double nTiempo = 1)
+        public void Esperar(double nTiempo = 1)
         {
             Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
         }
