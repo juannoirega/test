@@ -16,12 +16,12 @@ using System.Threading.Tasks;
 
 namespace BPO.PACIFICO.ANULAR.POLIZA
 {
-    class Program : IRobot
+    class Program: IRobot
     {
         private static BaseRobot<Program> _robot = null;
         private static IWebDriver _driverGlobal = null;
         private static IWebElement element;
-        private static Functions _Funciones;
+
         #region ParametrosRobot
         private string _url = string.Empty;
         private string _usuario = string.Empty;
@@ -49,7 +49,6 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
 
         static void Main(string[] args)
         {
-            _Funciones = new Functions();
             _robot = new BaseRobot<Program>(args);
             _robot.Start();
         }
@@ -73,7 +72,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             {
                 try
                 {
-                    ProcesarTicket(ticket);
+                   AnularPoliza(ticket);
                 }
                 catch (Exception ex)
                 {
@@ -91,72 +90,30 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             }
         }
 
-        private void ProcesarTicket(Ticket ticket)
+        private void AnularPoliza(Ticket ticket)
         {
             AbrirSelenium();
             NavegarUrl();
             Login();
             BuscarPoliza(ticket);
-            AnularPoliza(ticket);
+            Anular();
         }
-        private void AnularPoliza(Ticket ticket)
-        {
-            try
-            {
-                _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
-                _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
-                _Funciones.Esperar(5);
+        private void Anular() {
+            //Menu Cancelar Poliza
+            _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
+            _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
+            Thread.Sleep(5000);
 
-                string _solicitanteIdElement = "StartCancellation:StartCancellationScreen:CancelPolicyDV:Source";
-                string _motivoIdElement = "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2";
-                string _reembolsoIdElement = "StartCancellation:StartCancellationScreen:CancelPolicyDV:CalcMethod";
-                string _descripcionMotivo = "SE DEJA CONSTANCIA POR EL PRESENTE ENDOSO QUE, LA POLIZA DEL RUBRO QUEDA CANCELADA, NULA Y SIN VALOR PARA TODOS SUS EFECTOS A PARTIR DEL";
+            //Iniciar Cancelación de Póliza - Solicitante, Motivo, Descripcion del motio, Forma de reembolso
 
-                int _idCampoDominioSolicitante = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 1051).Value.ToString());
-                int _idCampoDominioMotivo = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 11).Value.ToString());
-                int _idCampoDominioReembolso = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 16).Value.ToString());
-
-                string _textoDominioSolicitante = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioSolicitante);
-                _Funciones.SeleccionarCombo(_driverGlobal, _solicitanteIdElement, _textoDominioSolicitante);
-                _Funciones.Esperar(2);
-
-                string _textoDominioMotivo = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioMotivo);
-                _Funciones.SeleccionarCombo(_driverGlobal, _motivoIdElement, _textoDominioMotivo);
-                _Funciones.Esperar(2);
-
-                string _fechaEfectivaCancelacion = _Funciones.ObtenerValorElemento(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date");
-
-                _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo, " ", _fechaEfectivaCancelacion));
-                _Funciones.Esperar(2);
-
-                string _textoDominioReembolso = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioReembolso);
-                _Funciones.SeleccionarCombo(_driverGlobal, _reembolsoIdElement, _textoDominioReembolso);
-                _Funciones.Esperar(2);
-
-                _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:NewCancellation")).Click();
-                _Funciones.Esperar(1);
-
-                _driverGlobal.FindElement(By.Id("CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions_arrow")).Click();
-                _driverGlobal.FindElement(By.Id("CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions:CancelNow")).Click();
-                _Funciones.Esperar(1);
-
-                _driverGlobal.SwitchTo().Alert().Accept();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Anular la Poliza", ex);
-            }
 
         }
-
-
-
         private void AbrirSelenium()
         {
             //LogInfoStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
             try
             {
-                _Funciones.AbrirSelenium(ref _driverGlobal);
+                Functions.AbrirSelenium(ref _driverGlobal);
             }
             catch (Exception ex)
             {
@@ -171,7 +128,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
 
             try
             {
-                _Funciones.NavegarUrl(_driverGlobal, _url);
+                Functions.NavegarUrl(_driverGlobal, _url);
             }
             catch (Exception ex)
             {
@@ -187,7 +144,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
 
             try
             {
-                _Funciones.Login(_driverGlobal, _usuario, _contraseña);
+                Functions.Login(_driverGlobal, _usuario, _contraseña);
             }
             catch (Exception ex)
             {
@@ -204,9 +161,9 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             try
             {
                 //obtener el numero  de Poliza
-                _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
+                _numeroPoliza = ticket.TicketValues.Where(np => np.FieldId == 5).ToString();
 
-                _Funciones.BuscarPoliza(_driverGlobal, _numeroPoliza);
+                Functions.BuscarPoliza(_driverGlobal, _numeroPoliza);
             }
             catch (Exception ex)
             {

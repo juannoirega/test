@@ -9,8 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium.IE;
 using System.Threading;
-using Everis.Ees.Entities;
-using everis.Ees.Proxy.Services;
 
 namespace Robot.Util.Nacar
 {
@@ -19,7 +17,6 @@ namespace Robot.Util.Nacar
         #region "Parámetros"
         private static IWebDriver _oDriver = null;
         private static IWebElement _oElement = null;
-      
         #endregion
 
         //Registro en BPM:
@@ -34,60 +31,43 @@ namespace Robot.Util.Nacar
             alert.Accept();
         }
 
-        public void AbrirSelenium(ref IWebDriver _driver)
+        public static void AbrirSelenium(ref IWebDriver _driver)
         {
             _driver = new InternetExplorerDriver();
             _driver.Manage().Window.Maximize();
         }
 
-        public void NavegarUrl(IWebDriver _driver, string url)
+        public static void NavegarUrl(IWebDriver _driver, string url)
         {
             _driver.Url = url;
             _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
             _driver.Manage().Window.Maximize();
-            Esperar(1);
+            Thread.Sleep(1000);
         }
 
-        public void Login(IWebDriver _driver, string usuario, string contraseña)
+        public static void Login(IWebDriver _driver, string usuario, string contraseña)
         {
             _driver.SwitchTo().Frame(_driver.FindElement(By.Id("top_frame")));
 
             _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
             _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
             _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
-            Esperar(1);
+            Thread.Sleep(1000);
         }
 
-        public void BuscarPoliza(IWebDriver _driver, string numeroPoliza)
+        public static void BuscarPoliza(IWebDriver _driver, string numeroPoliza)
         {
             _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
             _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
-            Esperar(1);
             _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
-            Esperar(5);
+            Thread.Sleep(5000);
         }
 
-        public string ObtenerValorElemento(IWebDriver _driver, string idElemento, string type="id")
+        public static string ObtenerValorElemento(IWebDriver _driver, string idElemento)
         {
-            switch (type.ToLower())
-            {
-                case "id":
-                    return _driver.FindElement(By.Id(idElemento)).Text;
-                case "xpath":
-                    return _driver.FindElement(By.XPath(idElemento)).Text;
-                case "linktext":
-                    return _driver.FindElement(By.LinkText(idElemento)).Text;
-                case "name":
-                    return _driver.FindElement(By.Name(idElemento)).Text;
-                case "tagname":
-                    return _driver.FindElement(By.TagName(idElemento)).Text;
-                case "classname":
-                    return _driver.FindElement(By.ClassName(idElemento)).Text;
-                case "partiallinktext":
-                    return _driver.FindElement(By.PartialLinkText(idElemento)).Text;
-                default:
-                    return null;
-            }
+            IWebElement element = _driver.FindElement(By.Id(idElemento));
+            string valorElemento = element.Text;
+            return valorElemento;
         }
 
         //Método para hacer pausa en segundos:
@@ -100,46 +80,11 @@ namespace Robot.Util.Nacar
         public void VentanaWindows(string cUsuario, string cContraseña)
         {
             Keyboard.KeyPress(VirtualKeyCode.SUBTRACT);
-            Esperar(1);
             Keyboard.KeyPress(cUsuario);
-            Esperar(1);
             Keyboard.KeyPress(VirtualKeyCode.TAB);
-            Esperar(1);
             Keyboard.KeyPress(cContraseña);
-            Esperar(1);
             Keyboard.KeyPress(VirtualKeyCode.RETURN);
             Esperar(2);
-        }
-
-        public void SeleccionarCombo(IWebDriver _driver, string idElement, string valorComparar)
-        {
-            //id Compañia seguros
-            IList<IWebElement> _option = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
-
-            for (int i = 0; i < _option.Count; i++)
-            {
-                if (_option[i].Text.ToUpperInvariant().Equals(valorComparar))
-                {
-                    _option[i].Click();
-                }
-            }
-        }
-
-        public string ObtenerValorDominio(Ticket ticket, int idCampoDominio)
-        {
-            
-            var container = ODataContextWrapper.GetContainer();
-            try
-            {
-                if (ticket != null)
-                     return container.DomainValues.FirstOrDefault(p => p.Id == idCampoDominio).Value.Trim().ToUpperInvariant();
-            }
-            catch
-            {
-                return null;
-            }
-            return null;
-
         }
     }
 }

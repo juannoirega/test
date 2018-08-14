@@ -2,38 +2,14 @@ $(document).ready(function(){
 
     alterarLayout();
     validacionCampos();
-    alterarClickSubmit();
 
 });
 let valoresEmail = [];
 
 function validacionCampos(){
-}
     
-function alterarClickSubmit() {
-    $('.box_actions').on('click', function (event) {  
-        let btn_selecionado = $(this).text();
-        if(btn_selecionado == 'Crear Ticket'){
-            if($('[name=numero_de_poliza]').val()==''||$('[name=tipo_de_linea]').val()=='0'||$('[name=tipo_proceso]').val()=='0'){
-            event.preventDefault();
-            BlockScreen.close();
-            return;
-            }
-        }
-        else if(btn_selecionado == 'Descartar Email'){
-            if($('[name=observacion]').val()==''){
-                $('[name=observacion]').css('border','1px solid red');
-                event.preventDefault();
-                BlockScreen.close();
-            return;
-            }
-
-        }
-     });
 
 }
-
-
 
 function alterarLayout(){
 
