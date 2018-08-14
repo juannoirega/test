@@ -310,5 +310,32 @@ namespace Robot.Util.Nacar {
                 return ((int)(this["tipo_proceso"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("13")]
+        public int email_solicitante {
+            get {
+                return ((int)(this["email_solicitante"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public int email_en_copia {
+            get {
+                return ((int)(this["email_en_copia"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1053")]
+        public int notificacion {
+            get {
+                return ((int)(this["notificacion"]));
+            }
+        }
     }
 }
