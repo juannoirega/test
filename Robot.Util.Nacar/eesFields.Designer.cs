@@ -277,7 +277,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int documentos {
             get {
                 return ((int)(this["documentos"]));
@@ -290,6 +290,24 @@ namespace Robot.Util.Nacar {
         public int poliza_nueva {
             get {
                 return ((int)(this["poliza_nueva"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("27")]
+        public int tipo_de_linea {
+            get {
+                return ((int)(this["tipo_de_linea"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1031")]
+        public int tipo_proceso {
+            get {
+                return ((int)(this["tipo_proceso"]));
             }
         }
     }
