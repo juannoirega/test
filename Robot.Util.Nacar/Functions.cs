@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium.IE;
 using System.Threading;
+using Everis.Ees.Entities;
 
 namespace Robot.Util.Nacar
 {
@@ -31,39 +32,39 @@ namespace Robot.Util.Nacar
             alert.Accept();
         }
 
-        public static void AbrirSelenium(ref IWebDriver _driver)
+        public void AbrirSelenium(ref IWebDriver _driver)
         {
             _driver = new InternetExplorerDriver();
             _driver.Manage().Window.Maximize();
         }
 
-        public static void NavegarUrl(IWebDriver _driver, string url)
+        public void NavegarUrl(IWebDriver _driver, string url)
         {
             _driver.Url = url;
             _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
             _driver.Manage().Window.Maximize();
-            Thread.Sleep(1000);
+            Esperar(1);
         }
 
-        public static void Login(IWebDriver _driver, string usuario, string contraseña)
+        public void Login(IWebDriver _driver, string usuario, string contraseña)
         {
             _driver.SwitchTo().Frame(_driver.FindElement(By.Id("top_frame")));
 
             _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
             _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
             _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
-            Thread.Sleep(1000);
+            Esperar(1);
         }
 
-        public static void BuscarPoliza(IWebDriver _driver, string numeroPoliza)
+        public void BuscarPoliza(IWebDriver _driver, string numeroPoliza)
         {
             _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
             _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
             _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
-            Thread.Sleep(5000);
+            Esperar(5);
         }
 
-        public static string ObtenerValorElemento(IWebDriver _driver, string idElemento)
+        public string ObtenerValorElemento(IWebDriver _driver, string idElemento)
         {
             IWebElement element = _driver.FindElement(By.Id(idElemento));
             string valorElemento = element.Text;
@@ -85,6 +86,41 @@ namespace Robot.Util.Nacar
             Keyboard.KeyPress(cContraseña);
             Keyboard.KeyPress(VirtualKeyCode.RETURN);
             Esperar(2);
+        }
+
+        public void SeleccionarCombo(IWebDriver _driver, string idElement, string valorComparar)
+        {
+            //id Compañia seguros
+            IWebElement _ddlSelects = _driver.FindElement(By.Id(idElement));
+            IList<IWebElement> _option = _ddlSelects.FindElements(By.XPath("id('" + idElement + "')/option"));
+
+            for (int i = 0; i < _option.Count; i++)
+            {
+                string _valorCombo = _option[i].Text.ToUpperInvariant();
+
+                if (_valorCombo.Equals(valorComparar))
+                {
+                    _option[i].Click();
+                }
+            }
+        }
+
+        public string ObtenerValorDominio(Ticket ticket, int field)
+        {
+            string descripcion = string.Empty;
+            try
+            {
+                string valor = string.Empty;
+                if (ticket != null)
+                {
+                    //DomainValue valorField = container.DomainValues.Where(p => p.Id == field).FirstOrDefault();
+                    //descripcion = valorField.Value.Trim().ToUpperInvariant();
+                }
+            }
+            catch
+            {
+            } 
+            return descripcion;
         }
     }
 }
