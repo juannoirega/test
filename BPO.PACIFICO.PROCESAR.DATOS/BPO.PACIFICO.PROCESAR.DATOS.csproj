@@ -33,20 +33,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="everis.Ees.Proxy">
-      <HintPath>..\resorces\everis.Ees.Proxy.dll</HintPath>
+    <Reference Include="everis.Ees.Proxy, Version=2018.1.0.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\everis.Ees.Proxy.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.OData.Client, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.OData.Client.6.18.0\lib\net40\Microsoft.OData.Client.dll</HintPath>
+      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\Microsoft.OData.Client.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.OData.Core, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.OData.Core.6.18.0\lib\portable-net45+win+wpa81\Microsoft.OData.Core.dll</HintPath>
+      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\Microsoft.OData.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.OData.Edm, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.OData.Edm.6.18.0\lib\portable-net45+win+wpa81\Microsoft.OData.Edm.dll</HintPath>
+      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\Microsoft.OData.Edm.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Spatial, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Spatial.6.18.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
+      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\Microsoft.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
