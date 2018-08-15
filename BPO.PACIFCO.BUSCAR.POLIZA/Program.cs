@@ -20,6 +20,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private static BaseRobot<Program> _robot = null;
         private static IWebDriver _driverGlobal = null;
         private static IWebElement element;
+        private static Functions _Funciones;
         //private static Functions _Funciones;
         #region ParametrosRobot
         private string _url = string.Empty;
@@ -51,6 +52,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         #endregion
         static void Main(string[] args)
         {
+            _Funciones = new Functions();
             _robot = new BaseRobot<Program>(args);
             _robot.Start();
         }
@@ -106,7 +108,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             //LogInfoStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
             try
             {
-                Functions.AbrirSelenium(ref _driverGlobal);
+                _Funciones.AbrirSelenium(ref _driverGlobal);
             }
             catch (Exception ex)
             {
@@ -121,7 +123,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-                Functions.NavegarUrl(_driverGlobal, _url);
+                _Funciones.NavegarUrl(_driverGlobal, _url);
             }
             catch (Exception ex)
             {
@@ -137,7 +139,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-                Functions.Login(_driverGlobal, _usuario, _contraseña);
+                _Funciones.Login(_driverGlobal, _usuario, _contraseña);
             }
             catch (Exception ex)
             {
@@ -154,9 +156,9 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             try
             {
                 //obtener el numero  de Poliza
-                _numeroPoliza = ticket.TicketValues.Where(np => np.FieldId == 5).ToString();
+                _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
 
-                Functions.BuscarPoliza(_driverGlobal, _numeroPoliza);
+                _Funciones.BuscarPoliza(_driverGlobal, _numeroPoliza);
             }
             catch (Exception ex)
             {
@@ -171,18 +173,18 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             string _idDesplegable = string.Empty;
             try
             {
-                _producto = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
-                _inicioVigencia = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerEffDate_date");
-                _finVigencia = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerExpirDate_date");
-                _tipo = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:Type");
-                _estado = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:state");
-                _tipoVigencia = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:validityType");
-                _nombreContratante = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:AccountName");
-                _nombreAsegurado = Functions.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Name");
+                _producto = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
+                _inicioVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerEffDate_date");
+                _finVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerExpirDate_date");
+                _tipo = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:Type");
+                _estado = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:state");
+                _tipoVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:validityType");
+                _nombreContratante = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:AccountName");
+                _nombreAsegurado = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Name");
 
                 try
                 {
-                    _idDesplegable = Functions.ObtenerValorElemento(_driverGlobal, "FALTA ID DEL COMBOBOX");
+                    _idDesplegable = _Funciones.ObtenerValorElemento(_driverGlobal, "FALTA ID DEL COMBOBOX");
                 }
                 catch
                 {
@@ -191,18 +193,16 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
                 if (!string.IsNullOrEmpty(_idDesplegable))
                 {
-                    IWebElement _ddlPaginacion = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX"));
-                    IList<IWebElement> _option = _ddlPaginacion.FindElements(By.XPath("//option"));
-                    int _listcount = _option.Count;
-                    for (int h = 1; h < _listcount; h++)
+                    IList<IWebElement> _option = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX")).FindElements(By.XPath("//option"));
+
+                    for (int h = 1; h < _option.Count; h++)
                     {
                         RecorrerGrilla();
 
                         if (!_polizaNueva)
                             break;
 
-                        IWebElement _ddlPaginacion2 = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX"));
-                        IList<IWebElement> _option2 = _ddlPaginacion2.FindElements(By.XPath("//option"));
+                        IList<IWebElement> _option2 = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX")).FindElements(By.XPath("//option"));
                         _option2[h].Click();
                     }
                 }
@@ -211,27 +211,15 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                     RecorrerGrilla();
                 }
 
-                //Numero Canal y Nombre
-                element = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:SecondaryProducerCode"));
-                string _canalCadenaCompleta = element.GetAttribute("value");
-                string[] ArrayCanal = _canalCadenaCompleta.Split(' ');
-
-                int c = 0;
-                foreach (string item in ArrayCanal)
-                {
-                    if (c == 0) { _numeroCanal = item; c++; }
-                }
+                //Numero Canal
+                _numeroCanal = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:SecondaryProducerCode").Split(' ').FirstOrDefault();
 
                 //Agente Numero y Nombre
-                element = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:ProducerCodeOfRecord"));
-                string _agenteCadenaCompleta = element.GetAttribute("value");
-                string[] ArrayAgente = _agenteCadenaCompleta.Split(' ');
-                int i = 0;
+                string[] ArrayAgente = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:ProducerCodeOfRecord").Split(' ');
+                _numeroAgente = ArrayAgente[0];
+
                 foreach (string item in ArrayAgente)
-                {
-                    if (i == 0) { _numeroAgente = item; i++; }
-                    else { _agente = string.Concat(_agente, item, " "); }
-                }
+                    _agente = string.Concat(_agente, item, " ");
             }
             catch (Exception ex)
             {
