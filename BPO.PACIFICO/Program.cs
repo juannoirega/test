@@ -325,7 +325,6 @@ namespace GmailQuickstart
             LogStartStep(55);
             try
             {
-                DatosFields();
                 AdicionarNumeroPoliza(ticketPadre, texto);
                 AdicionarValues(ticketPadre);
 
@@ -342,12 +341,7 @@ namespace GmailQuickstart
             catch (Exception ex) { throw new Exception("No se pudo crear el Ticket" + ex.Message); }
 
         }
-        public void DatosFields()
-        {
-
-            foreach (int field in _fields)
-                _valores[5] = String.Concat(field.ToString(), ",", _valores[5]);
-        }
+     
         public void AdicionarAdjuntos(Ticket ticket)
         {
             string value = String.Empty;
