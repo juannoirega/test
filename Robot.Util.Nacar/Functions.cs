@@ -53,7 +53,7 @@ namespace Robot.Util.Nacar
             List<TicketValue> values = new List<TicketValue>();
 
             if (ticket.ParentId != 0 && ticket.ParentId != null)
-                values.AddRange(ValuesPadre(container.Tickets.Expand(tv => tv.TicketValues).Expand(p => p.ParentId).FirstOrDefault(o => o.Id == ticket.ParentId), container));
+                values.AddRange(ValuesPadre(container.Tickets.Expand(tv => tv.TicketValues).Where(o => o.Id == ticket.ParentId).First(), container));
 
              values.AddRange(ticket.TicketValues);
 
