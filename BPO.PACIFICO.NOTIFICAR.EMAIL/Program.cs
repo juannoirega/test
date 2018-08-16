@@ -21,10 +21,7 @@ using System.Threading.Tasks;
 
 namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 {
-    /// <summary>
-    /// Programa base para criação de Robôs para EES v3 2017 
-    /// </summary>
-    public class Program : IRobot
+     class Program : IRobot
     {
         static BaseRobot<Program> _robot = null;
 
