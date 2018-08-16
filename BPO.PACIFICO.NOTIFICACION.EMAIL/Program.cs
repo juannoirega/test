@@ -11,6 +11,7 @@ namespace BPO.PACIFICO.NOTIFICACION.EMAIL
         static void Main(string[] args)
         {
 
+
         }
     }
 }
