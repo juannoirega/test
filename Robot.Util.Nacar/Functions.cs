@@ -22,6 +22,7 @@ namespace Robot.Util.Nacar
         private static IWebElement _oElement = null;
         #endregion
 
+
         //Registro en BPM:
         public void IngresarBPM(string Url, string Usuario, string Contraseña)
         {
