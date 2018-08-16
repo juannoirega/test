@@ -23,9 +23,9 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         private static IWebElement element;
         private static Functions _Funciones;
         #region ParametrosRobot
-        private string _url = string.Empty;
-        private string _usuario = string.Empty;
-        private string _contraseña = string.Empty;
+        private string _urlPolicyCenter = string.Empty;
+        private string _usuarioPolicyCenter = string.Empty;
+        private string _contraseñaPolicyCenter = string.Empty;
         private string _usuarioBcp = string.Empty;
         private string _contraseñaBcp = string.Empty;
         private string _urlBcp = string.Empty;
@@ -132,29 +132,102 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         }
         private void NavegarUrl()
         {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-            _Funciones.NavegarUrl(_driverGlobal, _urlBcp, _esPortalBcp);
-            //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
+            if (_esPortalBcp)
+            {
+                try
+                {
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+                    _Funciones.NavegarUrlPortalBcp(_driverGlobal, _urlBcp);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("No se puede acceder al sitio portal bcp", ex);
+                }
+                //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
+            }
+            else
+            {
+                try
+                {
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+                    _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("No se puede acceder al sitio policycenter", ex);
+                }
+                //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
+            }
+
         }
 
         private void Login()
         {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
-            _Funciones.Login(_driverGlobal, _usuarioBcp, _contraseñaBcp, true);
-            //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
+            if (_esPortalBcp)
+            {
+                try
+                {
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
+                    _Funciones.LoginPortalBcp(_driverGlobal, _usuarioBcp, _contraseñaBcp);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("No se puede acceder al sistema portal bcp", ex);
+                }
+                //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
+            }
+            else
+            {
+                try
+                {
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
+                    _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("No se puede acceder al sistema policycenter", ex);
+                }
+                //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
+            }
+
         }
         private void BuscarPoliza(Ticket ticket)
         {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
-
             _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
 
-            if (!string.IsNullOrEmpty(_numeroPoliza))
+            if (_esPortalBcp)
             {
-                _Funciones.BuscarPoliza(_driverGlobal, _numeroPoliza, _esPortalBcp);
+                try
+                {
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
+                    if (!string.IsNullOrEmpty(_numeroPoliza))
+                    {
+                        _Funciones.BuscarPolizaPortalBcp(_driverGlobal, _numeroPoliza);
+                    }
+                    //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error al buscar el numero de poliza portal bcp", ex);
+                }
+            }
+            else
+            {
+                try
+                {
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
+                    if (!string.IsNullOrEmpty(_numeroPoliza))
+                    {
+                        _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
+                    }
+                    //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error al buscar el numero de poliza policycenter", ex);
+                }
             }
 
-            //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
         }
 
         private void AnularPolizaPortalBcp()
@@ -227,9 +300,9 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         {
             try
             {
-                _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
-                _usuario = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
-                _contraseña = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
+                _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
+                _usuarioPolicyCenter = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
+                _contraseñaPolicyCenter = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
                 _usuarioBcp = _robot.GetValueParamRobot("UsuarioBcp").ValueParam;
                 _contraseñaBcp = _robot.GetValueParamRobot("PasswordBcp").ValueParam;
                 _urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;

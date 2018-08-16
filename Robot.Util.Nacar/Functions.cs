@@ -22,6 +22,7 @@ namespace Robot.Util.Nacar
         private static IWebElement _oElement = null;
         #endregion
 
+
         //Registro en BPM:
         public void IngresarBPM(string Url, string Usuario, string Contraseña)
         {
@@ -40,114 +41,57 @@ namespace Robot.Util.Nacar
             _driver.Manage().Window.Maximize();
         }
 
-        public void NavegarUrl(IWebDriver _driver, string url, bool esPortalBcp)
+        public void NavegarUrlPolicyCenter(IWebDriver _driver, string url)
         {
-            switch (esPortalBcp)
-            {
-                case true:
-                    try
-                    {
-                        _driver.Url = url;
-                        _driver.Manage().Window.Maximize();
-                        Esperar(1);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("No se puede acceder al sitio portal bcp", ex);
-                    }
-                    break;
-                case false:
-                    try
-                    {
-                        _driver.Url = url;
-                        _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
-                        _driver.Manage().Window.Maximize();
-                        Esperar(1);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("No se puede acceder al sitio policycenter", ex);
-                    }
-                    break;
-            }
+            _driver.Url = url;
+            _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
+            _driver.Manage().Window.Maximize();
+            Esperar(1);
         }
 
-        public void Login(IWebDriver _driver, string usuario, string contraseña, bool esPortalbcp)
+        public void NavegarUrlPortalBcp(IWebDriver _driver, string url)
         {
-            switch (esPortalbcp)
-            {
-                case true:
-                    try
-                    {
-                        _driver.FindElement(By.Id("ctl00_MainContent_txtUsuario")).SendKeys(usuario);
-                        _driver.FindElement(By.Id("ctl00_MainContent_txtPassword")).SendKeys(contraseña);
-                        //Para pruebas colocar punto interrupcion para ingresar captcha manualmente
-                        //FALTA IMPLEMENTAR EL CAPTCHA
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("No se pudo acceder al sistema portal bcp", ex);
-                    }
-                    break;
-                case false:
-                    try
-                    {
-                        _driver.SwitchTo().Frame(_driver.FindElement(By.Id("top_frame")));
-
-                        _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
-                        _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
-                        _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
-                        Esperar(1);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("No se pudo acceder al sistema policycenter", ex);
-                    }
-                    break;
-            }
-
+            _driver.Url = url;
+            _driver.Manage().Window.Maximize();
+            Esperar(1);
         }
 
-
-        public void BuscarPoliza(IWebDriver _driver, string numeroPoliza, bool esPortalBcp)
+        public void LoginPolicyCenter(IWebDriver _driver, string usuario, string contraseña)
         {
-            switch (esPortalBcp)
-            {
-                case true:
-                    try
-                    {
-                        IWebElement element;
-                        Actions action = new Actions(_driver);
-                        element = _driver.FindElement(By.XPath("//span[contains(.,'Modificaciones')]"));
-                        Esperar(2);
-                        action.MoveToElement(element).MoveToElement(_driver.FindElement(By.XPath("//a[contains(.,'Registrar Modificaciones')]"))).Click().Build().Perform();
-                        Esperar(2);
-                        _driver.SwitchTo().DefaultContent();
-                        _driver.SwitchTo().Frame(_driver.FindElement(By.Id("ifrmApp")));
-                        _driver.FindElement(By.Id("ctl00_ContentPlaceHolder1_txtNroPolizaMod")).SendKeys(numeroPoliza);
-                        _driver.FindElement(By.XPath("//input[contains(@id,'ctl00_ContentPlaceHolder1_btnConsultar')]")).Click();
-                        Esperar(2);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Error al buscar el numero de poliza portal bcp", ex);
-                    }
-                    break;
-                case false:
-                    try
-                    {
-                        _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
-                        _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
-                        _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
-                        Esperar(5);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Error al buscar el numero de poliza policycenter", ex);
-                    }
-                    break;
-            }
+            _driver.SwitchTo().Frame(_driver.FindElement(By.Id("top_frame")));
 
+            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
+            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
+            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
+            Esperar(1);
+        }
+        public void LoginPortalBcp(IWebDriver _driver, string usuario, string contraseña)
+        {
+            _driver.FindElement(By.Id("ctl00_MainContent_txtUsuario")).SendKeys(usuario);
+            _driver.FindElement(By.Id("ctl00_MainContent_txtPassword")).SendKeys(contraseña);
+            //Para pruebas colocar punto interrupcion para ingresar captcha manualmente
+            //FALTA IMPLEMENTAR EL CAPTCHA
+        }
+        public void BuscarPolizaPolicyCenter(IWebDriver _driver, string numeroPoliza)
+        {
+            _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
+            _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
+            _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
+            Esperar(5);
+        }
+        public void BuscarPolizaPortalBcp(IWebDriver _driver, string numeroPoliza)
+        {
+            IWebElement element;
+            Actions action = new Actions(_driver);
+            element = _driver.FindElement(By.XPath("//span[contains(.,'Modificaciones')]"));
+            Esperar(2);
+            action.MoveToElement(element).MoveToElement(_driver.FindElement(By.XPath("//a[contains(.,'Registrar Modificaciones')]"))).Click().Build().Perform();
+            Esperar(2);
+            _driver.SwitchTo().DefaultContent();
+            _driver.SwitchTo().Frame(_driver.FindElement(By.Id("ifrmApp")));
+            _driver.FindElement(By.Id("ctl00_ContentPlaceHolder1_txtNroPolizaMod")).SendKeys(numeroPoliza);
+            _driver.FindElement(By.XPath("//input[contains(@id,'ctl00_ContentPlaceHolder1_btnConsultar')]")).Click();
+            Esperar(2);
         }
 
         public string ObtenerValorElemento(IWebDriver _driver, string idElemento, string type = "id")
