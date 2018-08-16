@@ -123,7 +123,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-                _Funciones.NavegarUrl(_driverGlobal, _url);
+                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _url);
             }
             catch (Exception ex)
             {
@@ -139,7 +139,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-                _Funciones.Login(_driverGlobal, _usuario, _contraseña);
+                _Funciones.LoginPolicyCenter(_driverGlobal, _usuario, _contraseña);
             }
             catch (Exception ex)
             {
@@ -158,7 +158,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 //obtener el numero  de Poliza
                 _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
 
-                _Funciones.BuscarPoliza(_driverGlobal, _numeroPoliza);
+                _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
             }
             catch (Exception ex)
             {
@@ -307,9 +307,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             int _posicionTd = 0;
             foreach (IWebElement item in _trColeccion)
             {
-
                 IList<IWebElement> _td = item.FindElements(By.XPath("td"));
-
 
                 for (int j = 0; j < _td.Count; j++)
                 {
