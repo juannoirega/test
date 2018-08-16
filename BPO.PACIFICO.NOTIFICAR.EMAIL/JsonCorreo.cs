@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace BPO.PACIFICO.NOTIFICAR.EMAIL
 {
-    class JsonCorreo
+    public class JsonCorreo
     {
+        public String Subject { get; set; }
+        public String Body { get; set; }
     }
 }
