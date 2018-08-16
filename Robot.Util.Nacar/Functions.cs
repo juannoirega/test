@@ -48,6 +48,25 @@ namespace Robot.Util.Nacar
             _driver.Manage().Window.Maximize();
             Esperar(1);
         }
+        public Ticket MesaDeControl(Ticket ticket, string motivo)
+        {
+            if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tranzabilidad) == null)
+            {
+                ticket.TicketValues.Add(new TicketValue
+                {
+                    FieldId = eesFields.Default.tranzabilidad,
+                    TicketId = ticket.Id,
+                    Value = motivo,
+                    CreationDate = DateTime.Now,
+                    ClonedValueOrder = null
+                });
+            }
+            else
+                ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tranzabilidad).Value = motivo;
+
+            return ticket;
+           
+        }
         public List<TicketValue> ValuesPadre(Ticket ticket, Default.Container container)
         {
             List<TicketValue> values = new List<TicketValue>();

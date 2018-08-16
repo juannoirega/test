@@ -107,5 +107,8 @@
     <Setting Name="notificacion" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1053</Value>
     </Setting>
+    <Setting Name="tranzabilidad" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1059</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
