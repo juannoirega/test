@@ -92,11 +92,20 @@
     <Setting Name="poliza_nueva" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1050</Value>
     </Setting>
+    <Setting Name="tipo_de_linea" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">27</Value>
+    </Setting>
+    <Setting Name="tipo_proceso" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1031</Value>
+    </Setting>
     <Setting Name="email_solicitante" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">13</Value>
     </Setting>
     <Setting Name="email_en_copia" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="notificacion" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1053</Value>
     </Setting>
   </Settings>
 </SettingsFile>

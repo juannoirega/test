@@ -26,6 +26,10 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         private string _url = string.Empty;
         private string _usuario = string.Empty;
         private string _contraseña = string.Empty;
+        private string _usuarioBcp = string.Empty;
+        private string _contraseñaBcp = string.Empty;
+        private string _urlBcp = string.Empty;
+
         #endregion
         #region VariablesGLoables
         private string _numeroPoliza = string.Empty;
@@ -44,6 +48,9 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         //Pendiente
         private string _numeroVehiculos = string.Empty;
         private string _numeroAsegurados = string.Empty;
+
+        //variable temporal
+        private static bool _esPortalBcp = false;
 
         #endregion
 
@@ -90,9 +97,10 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 }
             }
         }
-
         private void ProcesarTicket(Ticket ticket)
         {
+            //falta verificar cual sera el id del campo que confirmara si es portalbc o no**reemplazar por el "1"
+            _esPortalBcp = ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 1).Value.ToString() == "True" ? true : false;
             AbrirSelenium();
             NavegarUrl();
             Login();
@@ -100,6 +108,73 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             AnularPoliza(ticket);
         }
         private void AnularPoliza(Ticket ticket)
+        {
+            if (_esPortalBcp)
+                AnularPolizaPortalBcp();
+            else
+                AnularPolizaPolicyCenter(ticket);
+        }
+
+
+        private void AbrirSelenium()
+        {
+            //LogInfoStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
+            try
+            {
+                _Funciones.AbrirSelenium(ref _driverGlobal);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al Iniciar Internet Explorer", ex);
+            }
+            //LogInfoStep(6);//id referencial msje Log "Finalizando la carga Internet Explorer"
+
+        }
+        private void NavegarUrl()
+        {
+            //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+            _Funciones.NavegarUrl(_driverGlobal, _urlBcp, _esPortalBcp);
+            //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
+        }
+
+        private void Login()
+        {
+            //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
+            _Funciones.Login(_driverGlobal, _usuarioBcp, _contraseñaBcp, true);
+            //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
+        }
+        private void BuscarPoliza(Ticket ticket)
+        {
+            //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
+
+            _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
+
+            if (!string.IsNullOrEmpty(_numeroPoliza))
+            {
+                _Funciones.BuscarPoliza(_driverGlobal, _numeroPoliza, _esPortalBcp);
+            }
+
+            //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
+        }
+
+        private void AnularPolizaPortalBcp()
+        {
+            try
+            {
+                _driverGlobal.FindElement(By.XPath("//img[contains(@id,'ctl00_ContentPlaceHolder1_gvPolizas_ctl03_imgVer')]")).Click();
+                _Funciones.Esperar(2);
+                _driverGlobal.FindElement(By.XPath("//*[@id='ctl00_ContentPlaceHolder1_ddlTipoMod']/option[2]")).Click();
+                _Funciones.Esperar(3);
+                _driverGlobal.FindElement(By.XPath("//*[@id='ctl00_ContentPlaceHolder1_ddlMotivo_03']/option[2]")).Click();
+                //Falta confirmar la anulacion de poliza portal bcp
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al anular la poliza en el sistema portal bcp", ex);
+            }
+
+        }
+        private void AnularPolizaPolicyCenter(Ticket ticket)
         {
             try
             {
@@ -144,78 +219,10 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al Anular la Poliza", ex);
+                throw new Exception("Error al Anular la poliza en el sistema policycenter", ex);
             }
 
         }
-
-
-
-        private void AbrirSelenium()
-        {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
-            try
-            {
-                _Funciones.AbrirSelenium(ref _driverGlobal);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Iniciar Internet Explorer", ex);
-            }
-            //LogInfoStep(6);//id referencial msje Log "Finalizando la carga Internet Explorer"
-
-        }
-        private void NavegarUrl()
-        {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-
-            try
-            {
-                _Funciones.NavegarUrl(_driverGlobal, _url);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("No se pudo acceder al sitio policenter", ex);
-            }
-            //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
-
-
-        }
-        private void Login()
-        {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
-
-            try
-            {
-                _Funciones.Login(_driverGlobal, _usuario, _contraseña);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("No se pudo acceder al sistema policenter", ex);
-
-            }
-            //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
-
-        }
-        private void BuscarPoliza(Ticket ticket)
-        {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
-
-            try
-            {
-                //obtener el numero  de Poliza
-                _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
-
-                _Funciones.BuscarPoliza(_driverGlobal, _numeroPoliza);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al buscar el numero de poliza", ex);
-            }
-            //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
-
-        }
-
         private void GetParameterRobots()
         {
             try
@@ -223,6 +230,9 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
                 _usuario = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
                 _contraseña = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
+                _usuarioBcp = _robot.GetValueParamRobot("UsuarioBcp").ValueParam;
+                _contraseñaBcp = _robot.GetValueParamRobot("PasswordBcp").ValueParam;
+                _urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
             }
             catch (Exception ex)
             {

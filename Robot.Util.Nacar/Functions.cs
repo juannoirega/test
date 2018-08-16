@@ -11,6 +11,7 @@ using OpenQA.Selenium.IE;
 using System.Threading;
 using Everis.Ees.Entities;
 using everis.Ees.Proxy.Services;
+using OpenQA.Selenium.Interactions;
 
 namespace Robot.Util.Nacar
 {
@@ -19,7 +20,6 @@ namespace Robot.Util.Nacar
         #region "Parámetros"
         private static IWebDriver _oDriver = null;
         private static IWebElement _oElement = null;
-      
         #endregion
 
         //Registro en BPM:
@@ -40,34 +40,117 @@ namespace Robot.Util.Nacar
             _driver.Manage().Window.Maximize();
         }
 
-        public void NavegarUrl(IWebDriver _driver, string url)
+        public void NavegarUrl(IWebDriver _driver, string url, bool esPortalBcp)
         {
-            _driver.Url = url;
-            _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
-            _driver.Manage().Window.Maximize();
-            Esperar(1);
+            switch (esPortalBcp)
+            {
+                case true:
+                    try
+                    {
+                        _driver.Url = url;
+                        _driver.Manage().Window.Maximize();
+                        Esperar(1);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("No se puede acceder al sitio portal bcp", ex);
+                    }
+                    break;
+                case false:
+                    try
+                    {
+                        _driver.Url = url;
+                        _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
+                        _driver.Manage().Window.Maximize();
+                        Esperar(1);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("No se puede acceder al sitio policycenter", ex);
+                    }
+                    break;
+            }
         }
 
-        public void Login(IWebDriver _driver, string usuario, string contraseña)
+        public void Login(IWebDriver _driver, string usuario, string contraseña, bool esPortalbcp)
         {
-            _driver.SwitchTo().Frame(_driver.FindElement(By.Id("top_frame")));
+            switch (esPortalbcp)
+            {
+                case true:
+                    try
+                    {
+                        _driver.FindElement(By.Id("ctl00_MainContent_txtUsuario")).SendKeys(usuario);
+                        _driver.FindElement(By.Id("ctl00_MainContent_txtPassword")).SendKeys(contraseña);
+                        //Para pruebas colocar punto interrupcion para ingresar captcha manualmente
+                        //FALTA IMPLEMENTAR EL CAPTCHA
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("No se pudo acceder al sistema portal bcp", ex);
+                    }
+                    break;
+                case false:
+                    try
+                    {
+                        _driver.SwitchTo().Frame(_driver.FindElement(By.Id("top_frame")));
 
-            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
-            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
-            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
-            Esperar(1);
+                        _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
+                        _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
+                        _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
+                        Esperar(1);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("No se pudo acceder al sistema policycenter", ex);
+                    }
+                    break;
+            }
+
         }
 
-        public void BuscarPoliza(IWebDriver _driver, string numeroPoliza)
+
+        public void BuscarPoliza(IWebDriver _driver, string numeroPoliza, bool esPortalBcp)
         {
-            _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
-            _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
-            Esperar(1);
-            _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
-            Esperar(5);
+            switch (esPortalBcp)
+            {
+                case true:
+                    try
+                    {
+                        IWebElement element;
+                        Actions action = new Actions(_driver);
+                        element = _driver.FindElement(By.XPath("//span[contains(.,'Modificaciones')]"));
+                        Esperar(2);
+                        action.MoveToElement(element).MoveToElement(_driver.FindElement(By.XPath("//a[contains(.,'Registrar Modificaciones')]"))).Click().Build().Perform();
+                        Esperar(2);
+                        _driver.SwitchTo().DefaultContent();
+                        _driver.SwitchTo().Frame(_driver.FindElement(By.Id("ifrmApp")));
+                        _driver.FindElement(By.Id("ctl00_ContentPlaceHolder1_txtNroPolizaMod")).SendKeys(numeroPoliza);
+                        _driver.FindElement(By.XPath("//input[contains(@id,'ctl00_ContentPlaceHolder1_btnConsultar')]")).Click();
+                        Esperar(2);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error al buscar el numero de poliza portal bcp", ex);
+                    }
+                    break;
+                case false:
+                    try
+                    {
+                        _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
+                        _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
+                        _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
+                        Esperar(5);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error al buscar el numero de poliza policycenter", ex);
+                    }
+                    break;
+            }
+
         }
 
-        public string ObtenerValorElemento(IWebDriver _driver, string idElemento, string type="id")
+        public string ObtenerValorElemento(IWebDriver _driver, string idElemento, string type = "id")
         {
             switch (type.ToLower())
             {
@@ -91,29 +174,23 @@ namespace Robot.Util.Nacar
         }
 
         //Método para hacer pausa en segundos:
-        public static void Esperar(double nTiempo = 1)
+        public void Esperar(double nTiempo = 1)
         {
             Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
         }
-        
+
         //Ingresar usuario y contraseña en ventana windows:
         public void VentanaWindows(string cUsuario, string cContraseña)
         {
             Keyboard.KeyPress(VirtualKeyCode.SUBTRACT);
-            Esperar(1);
             Keyboard.KeyPress(cUsuario);
-            Esperar(1);
             Keyboard.KeyPress(VirtualKeyCode.TAB);
-            Esperar(1);
             Keyboard.KeyPress(cContraseña);
-            Esperar(1);
             Keyboard.KeyPress(VirtualKeyCode.RETURN);
             Esperar(2);
         }
-
         public void SeleccionarCombo(IWebDriver _driver, string idElement, string valorComparar)
         {
-            //id Compañia seguros
             IList<IWebElement> _option = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
 
             for (int i = 0; i < _option.Count; i++)
@@ -124,15 +201,13 @@ namespace Robot.Util.Nacar
                 }
             }
         }
-
         public string ObtenerValorDominio(Ticket ticket, int idCampoDominio)
         {
-            
             var container = ODataContextWrapper.GetContainer();
             try
             {
                 if (ticket != null)
-                     return container.DomainValues.FirstOrDefault(p => p.Id == idCampoDominio).Value.Trim().ToUpperInvariant();
+                    return container.DomainValues.FirstOrDefault(p => p.Id == idCampoDominio).Value.Trim().ToUpperInvariant();
             }
             catch
             {
