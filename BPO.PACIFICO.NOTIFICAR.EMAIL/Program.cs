@@ -80,15 +80,10 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
                 ticketValue.Add(_robot.GetDataQueryTicketValue().Where(t => t.TicketId == item.Id).OrderByDescending(t => t.Id).First());
             }
 
-            //Optener el Ultimo Tickets Adjuntar Documentos
-            var idticket = ticketValue.Where(t => t.Value == _valoresTicket[2]).OrderByDescending(t => t.Id).Select(t => new { t.TicketId }).FirstOrDefault();
-
-            //Optener la Plantilla del ticketValue
-            var valorTicket = ticketValue.Where(t => t.TicketId == Convert.ToInt32(idticket.TicketId) && t.FieldId == Convert.ToInt32(_valores[2])).OrderByDescending(t => t.Id).Select(t => new { t.Value }).FirstOrDefault();
-
             //Opteneniendo la Ruta de la Plantilla
-            _rutaPlantilla = Convert.ToString(valorTicket.Value);
+            _rutaPlantilla = ticketValue.OrderByDescending(t => t.Id).FirstOrDefault(o => o.TicketId == ticketValue.OrderByDescending(t => t.Id).FirstOrDefault(tv => tv.Value == _valoresTicket[2]).TicketId).Value;
 
+            LeerArchivo(_rutaPlantilla);
             //Metodo Email
             EnviarEmail();
 
@@ -162,11 +157,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
         private string FormatMultipleEmailAddresses(string emailAddresses)
         {
-            var delimiters = new[] { ',', ';' };
-
-            var addresses = emailAddresses.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-
-            return string.Join(",", addresses);
+            return string.Join(",", emailAddresses.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries));
         }
 
         public void AutenticacionEmail()
@@ -190,13 +181,10 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
         public void LeerArchivo(string archivo)
         {
 
-            //Accediendo al Archivo de la Plantilla en JSON
-            string fichero = @"" + _valores[4] + archivo + "";
-
             try
             {
                 //Lleyendo el JSON
-                using (StreamReader lector = new StreamReader(fichero))
+                using (StreamReader lector = new StreamReader(String.Concat(@"",_valores[4],archivo,"")))
                 {
                     while (lector.Peek() > -1)
                     {
@@ -213,18 +201,15 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
                 //Almacenando Palabras que esten entre {XXX} y asignando la palabras para reemplazar
                 foreach (Match match in Regex.Matches(JsonCorreo.Body, @"\{([^{}\]]*)\}"))
-                {
                     if (match.Value.Length >= 11)
                         palabrasClaves.Add(new PalabrasClave() { clave = match.Value, palabra = _valoresTicket[1] });
                     else
                         palabrasClaves.Add(new PalabrasClave() { clave = match.Value, palabra = _valoresTicket[0] });
-                }
+                
                 
                 //Reemplazar las palabras Claves para enviar Correos
                 foreach (PalabrasClave p in palabrasClaves)
-                {
                     JsonCorreo.Body = ReemplazarPalabras(JsonCorreo.Body, p.clave, p.palabra);
-                }
 
             }
 
