@@ -81,7 +81,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 catch (Exception ex)
                 {
                     LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
-                    MesaDeControl(ticket, ex.Message);
+                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
                     //capturar imagen
                 }
                 finally
@@ -279,24 +279,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 throw new Exception("Error al Obtener los parametros del robot", ex);
             }
         }
-        private void MesaDeControl(Ticket ticket, string motivo)
-        {
-            if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_error) == null)
-            {
-                ticket.TicketValues.Add(new TicketValue
-                {
-                    FieldId = eesFields.Default.estado_error,
-                    TicketId = ticket.Id,
-                    Value = motivo,
-                    CreationDate = DateTime.Now,
-                    ClonedValueOrder = null
-                });
-            }
-            else
-                ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_error).Value = motivo;
-            
-            _robot.SaveTicketNextState(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
-        }
+     
 
         private void RecorrerGrilla()
         {

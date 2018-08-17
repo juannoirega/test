@@ -161,7 +161,11 @@ namespace GmailQuickstart
                     else
                     {
                         LogStartStep(52);
+                        try
+                        { 
                         body = GetNestedParts(infoResponse.Payload.Parts, "");
+                        }
+                         catch (Exception ex) { throw new Exception("No se pudo guardar el cuerpo del email" + ex.Message); }
                     }
 
                     if (infoResponse.Payload.Parts != null)
@@ -216,9 +220,6 @@ namespace GmailQuickstart
 
         static String GetNestedParts(IList<MessagePart> part, string curr)
         {
-           
-            try
-            {
                 string str = curr;
                 if (part == null)
                 {
@@ -243,9 +244,7 @@ namespace GmailQuickstart
 
                     return str;
                 }
-            }
-            catch (Exception ex) { throw new Exception("No se pudo guardar el cuerpo del email" + ex.Message); }
-
+           
         }
 
         public int BuscarPalabrasClaves(string DigitarTexto, string palabras)
@@ -325,6 +324,7 @@ namespace GmailQuickstart
             LogStartStep(55);
             try
             {
+                DatosFields();
                 AdicionarNumeroPoliza(ticketPadre, texto);
                 AdicionarValues(ticketPadre);
 
@@ -341,7 +341,13 @@ namespace GmailQuickstart
             catch (Exception ex) { throw new Exception("No se pudo crear el Ticket" + ex.Message); }
 
         }
-     
+        public void DatosFields()
+        {
+
+            foreach (int field in _fields)
+                _valores[5] = String.Concat(field.ToString(), ",", _valores[5]);
+        }
+
         public void AdicionarAdjuntos(Ticket ticket)
         {
             string value = String.Empty;

@@ -37,12 +37,12 @@ namespace BPO.PACIFICO.CREAR.TICKET.HIJO
 
             GetRobotParam();
             LogStartStep(4);
-            foreach(Ticket ticket in _robot.Tickets)
+            foreach (Ticket ticket in _robot.Tickets)
                 try
                 {
                     ProcessaTicket(ticket);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     LogFailStep(42, ex);
                     EnviarPadre(ticket, true);
@@ -54,10 +54,10 @@ namespace BPO.PACIFICO.CREAR.TICKET.HIJO
 
         private void GetRobotParam()
         {
-          _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
-          _estadoHijo = Convert.ToInt32(_robot.GetValueParamRobot("EstadoHijo").ValueParam);
-          _estadoPadre = Convert.ToInt32(_robot.GetValueParamRobot("EstadoPadre").ValueParam);
-          _fields = Convert.ToInt32(_robot.GetValueParamRobot("Fields").ValueParam);
+            _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
+            _estadoHijo = Convert.ToInt32(_robot.GetValueParamRobot("EstadoHijo").ValueParam);
+            _estadoPadre = Convert.ToInt32(_robot.GetValueParamRobot("EstadoPadre").ValueParam);
+            _fields = Convert.ToInt32(_robot.GetValueParamRobot("Fields").ValueParam);
         }
 
         private void ProcessaTicket(Ticket ticketPadre)
@@ -92,14 +92,26 @@ namespace BPO.PACIFICO.CREAR.TICKET.HIJO
         }
         private void GeneraHijo(Ticket ticketPadre)
         {
-            
+
+            string[] campos = ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _fields).Value.Split(Convert.ToChar(","));
+
             Ticket nuevoTicket = new Ticket { ParentId = ticketPadre.Id, Priority = PriorityType.Media, StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoHijo).Value) };
 
 
-            _robot.SaveNewTicket(nuevoTicket);
-           
+            _robot.SaveNewTicket(GeneraValuesHijo(ticketPadre, nuevoTicket, campos));
+
         }
 
-      
+        private Ticket GeneraValuesHijo(Ticket ticketPadre, Ticket nuevoTicket, string[] campos)
+        {
+            foreach (string campo in campos)
+                if (ticketPadre.TicketValues.Where(o => o.FieldId == Convert.ToInt32(campo)).ToList().Count < 2)
+                    nuevoTicket.TicketValues.Add(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == Convert.ToInt32(campo)));
+                else
+                    foreach (TicketValue value in ticketPadre.TicketValues.Where(o => o.FieldId == Convert.ToInt32(campo)).ToList())
+                        nuevoTicket.TicketValues.Add(value);
+
+            return nuevoTicket;
+        }
     }
 }
