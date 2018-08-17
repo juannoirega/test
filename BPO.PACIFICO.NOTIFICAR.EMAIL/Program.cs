@@ -61,16 +61,13 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
             _valoresTicket[0] = "Luis Kevin Trujillo Hoyos";
             _valoresTicket[1] = "N° 12345678900";
-            //VALOR QUE DETERMINARA DEL DOMINIO FUNCIONAL Y QUE PLATILLA USAR PARA LA NOTIFICIACIÓN
+            //VALOR QUE DETERMINARA DEL DOMINIO FUNCIONAL Y QUE PLANTILLA USARA PARA LA NOTIFICIACIÓN EMAIL
             _valoresTicket[2] = "8";
             //Correos 
             _valoresTicket[3] = "luistrujilloh@hotmail.com,ltrujill@everis.com";
             //Correos Copias
-            _valoresTicket[4] = "luistrujilloh@hotmail.com,ltrujill@everis.com";
-
-
-            EnviarEmail();
-
+            _valoresTicket[4] = "deyssilavadoa@hotmail.com,bponaa@gmail.com";
+            
             GetRobotParam();
 
             //Optener todos lo Ticket del Workflow "Adjuntar Documentos"
@@ -95,7 +92,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //Metodo Email
             EnviarEmail();
 
-            if (_valoresTicket[2] == "8")
+            if (_valoresTicket[2] == _valoresTicket[2])
                 _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[0]));
 
             else
@@ -103,6 +100,15 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
         }
 
+        public void GetRobotParam()
+        {
+            _valores[0] = _robot.GetValueParamRobot("EstadoSolicitudAceptada").ValueParam;
+            _valores[1] = _robot.GetValueParamRobot("EstadoSolicitudRechazada").ValueParam;
+            _valores[2] = _robot.GetValueParamRobot("FildAdjuntarDocuementos").ValueParam;
+            _valores[3] = _robot.GetValueParamRobot("EstadoAdjuntarDocumentos").ValueParam;
+            _valores[4] = _robot.GetValueParamRobot("RutaArchivosPlantillas").ValueParam;
+
+        }
 
 
         public void EnviarEmail()
@@ -132,16 +138,17 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
             //Create Message
             MailMessage mail = new MailMessage();
-            mail.Subject = "Subject!";
-            mail.Body = "This is <b><i>body</i></b> of message";
+            mail.Subject = JsonCorreo.Subject;
+            mail.Body = JsonCorreo.Body;
             mail.From = new MailAddress(_correoRobot);
             mail.IsBodyHtml = true;
             //Adjuntar Documentos
-            string attImg = @"C:\Users\ltrujill\Documents\JSON.txt";
-            mail.Attachments.Add(new Attachment(attImg));
-            ////Un CORREO
+            //string docume = @"C:\Users\ltrujill\Documents\JSON.txt";
+            //mail.Attachments.Add(new Attachment(docume));
+            
+            ////Un Correo
             //mail.To.Add(new MailAddress(_correoRobot));
-            //Multiples Correos
+     
             mail.To.Add(FormatMultipleEmailAddresses(_valoresTicket[3]));
             mail.CC.Add(FormatMultipleEmailAddresses(_valoresTicket[4]));
             MimeKit.MimeMessage mimeMessage = MimeKit.MimeMessage.CreateFromMailMessage(mail);
@@ -179,17 +186,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
 
         }
-
-        public void GetRobotParam()
-        {
-            _valores[0] = _robot.GetValueParamRobot("EstadoSolicitudAceptada").ValueParam;
-            _valores[1] = _robot.GetValueParamRobot("EstadoSolicitudRechazada").ValueParam;
-            _valores[2] = _robot.GetValueParamRobot("FildAdjuntarDocuementos").ValueParam;
-            _valores[3] = _robot.GetValueParamRobot("EstadoAdjuntarDocumentos").ValueParam;
-            _valores[4] = _robot.GetValueParamRobot("RutaArchivosPlantillas").ValueParam;
-
-        }
-
+        
         public void LeerArchivo(string archivo)
         {
 
@@ -222,12 +219,10 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
                     else
                         palabrasClaves.Add(new PalabrasClave() { clave = match.Value, palabra = _valoresTicket[0] });
                 }
-
-
+                
                 //Reemplazar las palabras Claves para enviar Correos
                 foreach (PalabrasClave p in palabrasClaves)
                 {
-
                     JsonCorreo.Body = ReemplazarPalabras(JsonCorreo.Body, p.clave, p.palabra);
                 }
 
@@ -248,9 +243,6 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
               .Replace('/', '_')
               .Replace("=", "");
         }
-
-
-
 
         public String ReemplazarPalabras(String texto, String palabra, String reemplazar)
         {
