@@ -17,22 +17,20 @@ namespace Robot.Util.Nacar
 {
     public class Functions
     {
-        #region "Parámetros"
-        private static IWebDriver _oDriver = null;
-        private static IWebElement _oElement = null;
-        #endregion
-
-
         //Registro en BPM:
-        public void IngresarBPM(string Url, string Usuario, string Contraseña)
+        public void IngresarBPM(IWebDriver oDriver, string Url, string Usuario, string Contraseña)
         {
-            _oDriver = new FirefoxDriver();
-            _oDriver.Url = Url;
-            Esperar(2);
-            VentanaWindows(Usuario, Contraseña);
-            var alert = _oDriver.SwitchTo().Alert();
-            alert.SetAuthenticationCredentials(Usuario, Contraseña);
-            alert.Accept();
+            try
+            {
+                oDriver.Navigate().GoToUrl(Url);
+                Esperar();
+                VentanaWindows(oDriver, Usuario, Contraseña);
+                oDriver.Manage().Window.Maximize();
+            }
+            catch (Exception Ex)
+            {
+                throw new Exception("Error de acceso al sistema OnBase.", Ex);
+            }
         }
 
         public void AbrirSelenium(ref IWebDriver _driver)
@@ -147,34 +145,34 @@ namespace Robot.Util.Nacar
             }
         }
 
-        //Método para hacer pausa en segundos:
-        public void Esperar(double nTiempo = 1)
-        {
-            Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
-        }
-
-        //Ingresar usuario y contraseña en ventana windows:
-        public void VentanaWindows(string cUsuario, string cContraseña)
-        {
-            Keyboard.KeyPress(VirtualKeyCode.SUBTRACT);
-            Keyboard.KeyPress(cUsuario);
-            Keyboard.KeyPress(VirtualKeyCode.TAB);
-            Keyboard.KeyPress(cContraseña);
-            Keyboard.KeyPress(VirtualKeyCode.RETURN);
-            Esperar(2);
-        }
         public void SeleccionarCombo(IWebDriver _driver, string idElement, string valorComparar)
         {
-            IList<IWebElement> _option = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
+            //id Compañia seguros
+            //Anina: Obtiene nombre del Driver
+            IList<IWebElement> _option;
+            Type oTypeDriver = _driver.GetType();
+
+            //Obtiene lista de opciones según Webdriver:
+            if (oTypeDriver.Name == "FirefoxDriver")
+            {
+                _option = _driver.FindElements(By.XPath(idElement));
+                //_option = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("//*[@id='" + idElement + "']/tbody/tr/td"));
+            }
+            else
+            {
+                _option = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
+            }
 
             for (int i = 0; i < _option.Count; i++)
             {
                 if (_option[i].Text.ToUpperInvariant().Equals(valorComparar))
                 {
                     _option[i].Click();
+                    break;
                 }
             }
         }
+
         public string ObtenerValorDominio(Ticket ticket, int idCampoDominio)
         {
             var container = ODataContextWrapper.GetContainer();
@@ -188,6 +186,87 @@ namespace Robot.Util.Nacar
                 return null;
             }
             return null;
+        }
+
+        //Método para hacer pausa en segundos:
+        public void Esperar(double nTiempo = 1)
+        {
+            Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
+        }
+
+        //Ingresar usuario y contraseña en ventana windows:
+        //Anina: Ingresar usuario y contraseña en ventana windows.
+        public void VentanaWindows(IWebDriver oDriver, string cUsuario, string cContraseña)
+        {
+            var oAlert = oDriver.SwitchTo().Alert();
+            oAlert.SendKeys(Keys.Clear);
+            oAlert.SendKeys(cUsuario + Keys.Tab + cContraseña);
+            Esperar();
+            oAlert.Accept();
+            Esperar(10);
+        }
+
+        private static FirefoxDriver GetFirefoxDriver()
+        {
+            var oDriver = new FirefoxDriver(GetFirefoxDriverService(), GetFirefoxOptions());
+            return oDriver;
+        }
+
+        private static FirefoxDriverService GetFirefoxDriverService()
+        {
+            var service = FirefoxDriverService.CreateDefaultService(@"C:\everis.anina\geckodriver 0.16.1", "geckodriver.exe");
+            service.FirefoxBinaryPath = @"C:\Program Files\Mozilla Firefox\firefox.exe";
+            return service;
+        }
+
+        private static FirefoxOptions GetFirefoxOptions()
+        {
+            var oOptions = new FirefoxOptions();
+
+            oOptions.SetPreference("browser.download.manager.focusWhenStarting", false);
+            oOptions.SetPreference("browser.helperApps.alwaysAsk.force", false);
+            oOptions.SetPreference("browser.download.manager.alertOnEXEOpen", false);
+            oOptions.SetPreference("browser.download.manager.closeWhenDone", false);
+            oOptions.SetPreference("browser.download.manager.showAlertOnComplete", false);
+            oOptions.SetPreference("browser.download.manager.useWindow", false);
+            oOptions.SetPreference("services.sync.prefs.sync.browser.download.manager.showWhenStarting", false);
+            oOptions.SetPreference("browser.cache.disk.enable", false);
+            oOptions.SetPreference("browser.cache.memory.enable", false);
+            oOptions.SetPreference("browser.cache.offline.enable", false);
+            oOptions.SetPreference("network.http.use-cache", false);
+            oOptions.SetPreference("network.auth.subresource-http-auth-allow", 2);
+            oOptions.AcceptInsecureCertificates = true;
+            oOptions.AddArgument("--trustAllSSLCertificates");
+
+            oOptions.Profile = GetFirefoxProfile();
+            return oOptions;
+        }
+
+        private static FirefoxProfile GetFirefoxProfile()
+        {
+            var oProfile = new FirefoxProfile();
+            oProfile.AcceptUntrustedCertificates = true;
+            oProfile.AssumeUntrustedCertificateIssuer = true;
+            return oProfile;
+        }
+
+        public void CerrarDriver(IWebDriver oDriver)
+        {
+            oDriver.Close();
+            oDriver.Quit();
+        }
+
+        public void InstanciarFirefoxDriver(ref IWebDriver oDriver)
+        {
+            try
+            {
+                oDriver = GetFirefoxDriver();
+                Esperar();
+            }
+            catch (Exception Ex)
+            {
+                throw new Exception("Ocurrió un error al abrir navegador Firefox.", Ex);
+            }
 
         }
     }
