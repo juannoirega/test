@@ -161,7 +161,11 @@ namespace GmailQuickstart
                     else
                     {
                         LogStartStep(52);
+                        try
+                        { 
                         body = GetNestedParts(infoResponse.Payload.Parts, "");
+                        }
+                         catch (Exception ex) { throw new Exception("No se pudo guardar el cuerpo del email" + ex.Message); }
                     }
 
                     if (infoResponse.Payload.Parts != null)
@@ -216,9 +220,6 @@ namespace GmailQuickstart
 
         static String GetNestedParts(IList<MessagePart> part, string curr)
         {
-           
-            try
-            {
                 string str = curr;
                 if (part == null)
                 {
@@ -243,9 +244,7 @@ namespace GmailQuickstart
 
                     return str;
                 }
-            }
-            catch (Exception ex) { throw new Exception("No se pudo guardar el cuerpo del email" + ex.Message); }
-
+           
         }
 
         public int BuscarPalabrasClaves(string DigitarTexto, string palabras)
