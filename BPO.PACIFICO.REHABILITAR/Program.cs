@@ -46,7 +46,7 @@ namespace BPO.PACIFICO.REHABILITAR
         private string _numeroVehiculos = string.Empty;
         private string _numeroAsegurados = string.Empty;
 
-        
+
 
         #endregion
 
@@ -107,42 +107,26 @@ namespace BPO.PACIFICO.REHABILITAR
             try
             {
                 _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
-                _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
+                _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ReinstatePolicy")).Click();
                 _Funciones.Esperar(5);
 
-                string _solicitanteIdElement = "StartCancellation:StartCancellationScreen:CancelPolicyDV:Source";
-                string _motivoIdElement = "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2";
-                string _reembolsoIdElement = "StartCancellation:StartCancellationScreen:CancelPolicyDV:CalcMethod";
-                string _descripcionMotivo = "SE DEJA CONSTANCIA POR EL PRESENTE ENDOSO QUE, LA POLIZA DEL RUBRO QUEDA CANCELADA, NULA Y SIN VALOR PARA TODOS SUS EFECTOS A PARTIR DEL";
+                string _motivoIdElement = "ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:ReinstatePolicyDV:Reason";
 
-                int _idCampoDominioSolicitante = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 1051).Value.ToString());
-                int _idCampoDominioMotivo = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 11).Value.ToString());
-                int _idCampoDominioReembolso = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 16).Value.ToString());
+                string _descripcionMotivo = "";
 
-                string _textoDominioSolicitante = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioSolicitante);
-                _Funciones.SeleccionarCombo(_driverGlobal, _solicitanteIdElement, _textoDominioSolicitante);
-                _Funciones.Esperar(2);
+                int _idCampoDominioMotivo = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 1054).Value.ToString());
+
 
                 string _textoDominioMotivo = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioMotivo);
                 _Funciones.SeleccionarCombo(_driverGlobal, _motivoIdElement, _textoDominioMotivo);
                 _Funciones.Esperar(2);
 
-                string _fechaEfectivaCancelacion = _Funciones.ObtenerValorElemento(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date");
-
-                _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo, " ", _fechaEfectivaCancelacion));
+                _driverGlobal.FindElement(By.Id("ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:ReinstatePolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo));
                 _Funciones.Esperar(2);
-
-                string _textoDominioReembolso = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioReembolso);
-                _Funciones.SeleccionarCombo(_driverGlobal, _reembolsoIdElement, _textoDominioReembolso);
-                _Funciones.Esperar(2);
-
-                _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:NewCancellation")).Click();
+                _driverGlobal.FindElement(By.Id("ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:JobWizardToolbarButtonSet:QuoteOrReview")).Click();
                 _Funciones.Esperar(1);
-
-                _driverGlobal.FindElement(By.Id("CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions_arrow")).Click();
-                _driverGlobal.FindElement(By.Id("CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions:CancelNow")).Click();
+                _driverGlobal.FindElement(By.Id("ReinstatementWizard:ReinstatementWizard_QuoteScreen:JobWizardToolbarButtonSet:Reinstate")).Click();
                 _Funciones.Esperar(1);
-
                 _driverGlobal.SwitchTo().Alert().Accept();
             }
             catch (Exception ex)
@@ -167,56 +151,56 @@ namespace BPO.PACIFICO.REHABILITAR
         }
         private void NavegarUrl()
         {
-           
-                try
-                {
-                    //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-                    _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("No se puede acceder al sitio policycenter", ex);
-                }
-                //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
-            
+
+            try
+            {
+                //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("No se puede acceder al sitio policycenter", ex);
+            }
+            //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
+
 
         }
 
         private void Login()
         {
-            
-                try
-                {
-                    //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
-                    _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("No se puede acceder al sistema policycenter", ex);
-                }
-                //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
-            
+
+            try
+            {
+                //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
+                _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("No se puede acceder al sistema policycenter", ex);
+            }
+            //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
+
 
         }
         private void BuscarPoliza(Ticket ticket)
         {
             _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
 
-            
-                try
+
+            try
+            {
+                //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
+                if (!string.IsNullOrEmpty(_numeroPoliza))
                 {
-                    //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
-                    if (!string.IsNullOrEmpty(_numeroPoliza))
-                    {
-                        _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
-                    }
-                    //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
+                    _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
                 }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error al buscar el numero de poliza policycenter", ex);
-                }
-            
+                //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al buscar el numero de poliza policycenter", ex);
+            }
+
 
         }
         private void GetParameterRobots()
@@ -226,7 +210,7 @@ namespace BPO.PACIFICO.REHABILITAR
                 _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
                 _usuarioPolicyCenter = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
                 _contraseñaPolicyCenter = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
-               
+
             }
             catch (Exception ex)
             {
