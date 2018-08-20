@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Genéricos", "Genéricos", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPO.PACIFICO.NOTIFICAR.EMAIL", "BPO.PACIFICO.NOTIFICAR.EMAIL\BPO.PACIFICO.NOTIFICAR.EMAIL.csproj", "{C6997F2D-D157-4150-92C3-595952980348}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actualizar Datos del Cliente", "Actualizar Datos del Cliente", "{CA3F9A0A-451B-42B6-A29E-4ADA9CA38BF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
