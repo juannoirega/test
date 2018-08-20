@@ -201,7 +201,7 @@ namespace GmailQuickstart
                     if (!String.IsNullOrEmpty(part.Filename))
                     {
                         String attId = part.Body.AttachmentId;
-
+                        
                         MessagePartBody attachPart = service.Users.Messages.Attachments.Get(_userId, messageId, attId).Execute();
                         String attachData = Regex.Replace(attachPart.Data, "-", "+");
                         attachData = Regex.Replace(attachData, "_", "/");
