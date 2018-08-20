@@ -17,6 +17,9 @@ namespace Robot.Util.Nacar
 {
     public class Functions
     {
+        #region "PARÁMETROS"
+        private static string _cRutaGeckodriver = string.Empty;
+        #endregion
         //Registro en BPM:
         public void IngresarBPM(IWebDriver oDriver, string Url, string Usuario, string Contraseña)
         {
@@ -48,11 +51,11 @@ namespace Robot.Util.Nacar
         }
         public Ticket MesaDeControl(Ticket ticket, string motivo)
         {
-            if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tranzabilidad) == null)
+            if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.trazabilidad) == null)
             {
                 ticket.TicketValues.Add(new TicketValue
                 {
-                    FieldId = eesFields.Default.tranzabilidad,
+                    FieldId = eesFields.Default.trazabilidad,
                     TicketId = ticket.Id,
                     Value = motivo,
                     CreationDate = DateTime.Now,
@@ -60,10 +63,10 @@ namespace Robot.Util.Nacar
                 });
             }
             else
-                ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tranzabilidad).Value = motivo;
+                ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.trazabilidad).Value = motivo;
 
             return ticket;
-           
+
         }
         public List<TicketValue> ValuesPadre(Ticket ticket, Default.Container container)
         {
@@ -72,7 +75,7 @@ namespace Robot.Util.Nacar
             if (ticket.ParentId != 0 && ticket.ParentId != null)
                 values.AddRange(ValuesPadre(container.Tickets.Expand(tv => tv.TicketValues).Where(o => o.Id == ticket.ParentId).First(), container));
 
-             values.AddRange(ticket.TicketValues);
+            values.AddRange(ticket.TicketValues);
 
             return values;
         }
@@ -168,6 +171,7 @@ namespace Robot.Util.Nacar
                 if (_option[i].Text.ToUpperInvariant().Equals(valorComparar))
                 {
                     _option[i].Click();
+                    Esperar();
                     break;
                 }
             }
@@ -194,7 +198,6 @@ namespace Robot.Util.Nacar
             Thread.Sleep(1000 * Convert.ToInt32(nTiempo));
         }
 
-        //Ingresar usuario y contraseña en ventana windows:
         //Anina: Ingresar usuario y contraseña en ventana windows.
         public void VentanaWindows(IWebDriver oDriver, string cUsuario, string cContraseña)
         {
@@ -214,7 +217,8 @@ namespace Robot.Util.Nacar
 
         private static FirefoxDriverService GetFirefoxDriverService()
         {
-            var service = FirefoxDriverService.CreateDefaultService(@"C:\everis.anina\geckodriver 0.16.1", "geckodriver.exe");
+            //var service = FirefoxDriverService.CreateDefaultService(@"C:\everis.anina\geckodriver 0.16.1", "geckodriver.exe");
+            var service = FirefoxDriverService.CreateDefaultService(_cRutaGeckodriver, "geckodriver.exe");
             service.FirefoxBinaryPath = @"C:\Program Files\Mozilla Firefox\firefox.exe";
             return service;
         }
@@ -256,10 +260,12 @@ namespace Robot.Util.Nacar
             oDriver.Quit();
         }
 
-        public void InstanciarFirefoxDriver(ref IWebDriver oDriver)
+        //Anina: Crea una nueva instancia para Firefox.
+        public void InstanciarFirefoxDriver(ref IWebDriver oDriver, string RutaGeckodriver)
         {
             try
             {
+                _cRutaGeckodriver = RutaGeckodriver;
                 oDriver = GetFirefoxDriver();
                 Esperar();
             }
