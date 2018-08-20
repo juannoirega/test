@@ -34,7 +34,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private string _finVigencia = string.Empty;
         private string _numeroAgente = string.Empty;
         private string _agente = string.Empty;
-        private string _tipo = string.Empty;
+        private string _tipoPoliza = string.Empty;
         private string _estado = string.Empty;
         private string _tipoVigencia = string.Empty;
         private string _numeroCanal = string.Empty;
@@ -80,7 +80,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 }
                 catch (Exception ex)
                 {
-                    LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
+                    LogFailStep(30, ex);
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
                     //capturar imagen
                 }
@@ -112,9 +112,8 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al Iniciar Internet Explorer", ex);
+                throw new Exception("Error al Iniciar Internet Explorer" + ex.Message);
             }
-            //LogInfoStep(6);//id referencial msje Log "Finalizando la carga Internet Explorer"
 
         }
         private void NavegarUrl()
@@ -127,10 +126,8 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             }
             catch (Exception ex)
             {
-                throw new Exception("No se pudo acceder al sitio policenter", ex);
+                throw new Exception("No se pudo acceder al sitio policenter" + ex.Message);
             }
-            //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
-
 
         }
         private void Login()
@@ -143,10 +140,9 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             }
             catch (Exception ex)
             {
-                throw new Exception("No se pudo acceder al sistema policenter", ex);
+                throw new Exception("No se pudo acceder al sistema policenter" + ex.Message);
 
             }
-            //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
 
         }
         private void BuscarPoliza(Ticket ticket)
@@ -162,21 +158,22 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al buscar el numero de poliza", ex);
+                throw new Exception("Error al buscar el numero de poliza" + ex.Message);
             }
-            //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
 
         }
 
         private void ObtenerDatos(Ticket ticket)
         {
+            //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de datos"
+
             string _idDesplegable = string.Empty;
             try
             {
                 _producto = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
                 _inicioVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerEffDate_date");
                 _finVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerExpirDate_date");
-                _tipo = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:Type");
+                _tipoPoliza = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:Type");
                 _estado = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:state");
                 _tipoVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:validityType");
                 _nombreContratante = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:AccountName");
@@ -224,10 +221,8 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             catch (Exception ex)
             {
 
-                throw new Exception("Error al Obtener los datos del sistema", ex);
+                throw new Exception("Error al Obtener los datos del sistema" + ex.Message);
             }
-            //LogInfoStep(5);//id referencial msje Log "Se obtubieron los datos del sistema Policenter"
-
 
         }
 
@@ -236,7 +231,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         {
             try
             {
-                string[] ValorCampos = { _producto, _inicioVigencia, _finVigencia, _agente, _numeroAgente, _tipo, _tipoVigencia, _estado, _numeroCanal,_numeroAsegurados,
+                string[] ValorCampos = { _producto, _inicioVigencia, _finVigencia, _agente, _numeroAgente, _tipoPoliza, _tipoVigencia, _estado, _numeroCanal,_numeroAsegurados,
                 _numeroVehiculos,_nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva)};
 
                 int[] IdCampos = { eesFields.Default.producto, eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia, eesFields.Default.agente,
@@ -245,23 +240,20 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
                 for (int i = 0; i < ValorCampos.Length; i++)
                     ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = IdCampos[i], Value = ValorCampos[i] });
-                
-
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocurrio un Error al grabar la informacion en el ticket", ex);
+                throw new Exception("Ocurrio un Error al grabar la informacion en el ticket" + ex.Message);
             }
 
             try
             {
-                _robot.SaveTicketNextState(ticket,_estadoFinal);
+                _robot.SaveTicketNextState(ticket, _estadoFinal);
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocurrio un Error al avanzar al siguiente estado", ex);
+                throw new Exception("Ocurrio un Error al avanzar al siguiente estado" + ex.Message);
             }
-            //LogInfoStep(5);//id referencial msje Log "Se Guardo la Informacion en el ticket"
 
         }
         private void GetParameterRobots()
@@ -276,15 +268,15 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al Obtener los parametros del robot", ex);
+                throw new Exception("Error al Obtener los parametros del robot" + ex.Message);
             }
         }
-     
+
 
         private void RecorrerGrilla()
         {
             //tabla
-      
+
             IList<IWebElement> _trColeccion = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV")).FindElements(By.XPath("id('PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV')/tbody/tr"));
 
             int _posicionTd = 0;
