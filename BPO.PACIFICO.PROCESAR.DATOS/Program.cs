@@ -120,7 +120,7 @@ namespace BPO.PACIFICO.ProcesarDatos
         private bool ValidarVacios(Ticket oTicketDatos)
         {
             int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
-                                        eesFields.Default.tipo,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
+                                        eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
                                         eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
 
             foreach (int campo in oCampos)
@@ -155,7 +155,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                                     - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
 
             //VERIFICA QUE SEA EMISIÓN:
-            if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo).Value == _cTipoPoliza)
+            if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value == _cTipoPoliza)
             {
                 if (nDiferencia.Days > _nDiasDesistimiento)
                 {

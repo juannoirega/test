@@ -52,6 +52,7 @@ namespace GmailQuickstart
             {
                 LogStartStep(2);
                 GetRobotParam();
+				Inicio();
                 Email();
             }
             catch (Exception ex)
@@ -63,6 +64,13 @@ namespace GmailQuickstart
                 Environment.Exit(0);
             }
         }
+
+		private void Inicio()
+		{
+			Console.WriteLine("♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦ ROBOT ♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦");
+			Console.WriteLine("                Robot Captura Email                    ");
+			Console.WriteLine("♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦");
+		}
 
         public void GetRobotParam()
         {
@@ -201,7 +209,7 @@ namespace GmailQuickstart
                     if (!String.IsNullOrEmpty(part.Filename))
                     {
                         String attId = part.Body.AttachmentId;
-
+                        
                         MessagePartBody attachPart = service.Users.Messages.Attachments.Get(_userId, messageId, attId).Execute();
                         String attachData = Regex.Replace(attachPart.Data, "-", "+");
                         attachData = Regex.Replace(attachData, "_", "/");
