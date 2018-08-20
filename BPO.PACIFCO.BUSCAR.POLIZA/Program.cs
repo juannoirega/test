@@ -240,7 +240,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 _numeroVehiculos,_nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva)};
 
                 int[] IdCampos = { eesFields.Default.producto, eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia, eesFields.Default.agente,
-                eesFields.Default.num_agente,eesFields.Default.tipo,eesFields.Default.tipo_vigencia,eesFields.Default.estado_poliza,eesFields.Default.canal,eesFields.Default.num_asegurados,
+                eesFields.Default.num_agente,eesFields.Default.tipo_poliza,eesFields.Default.tipo_vigencia,eesFields.Default.estado_poliza,eesFields.Default.canal,eesFields.Default.num_asegurados,
                 eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado,eesFields.Default.poliza_nueva};
 
                 for (int i = 0; i < ValorCampos.Length; i++)
