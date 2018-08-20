@@ -51,11 +51,11 @@ namespace Robot.Util.Nacar
         }
         public Ticket MesaDeControl(Ticket ticket, string motivo)
         {
-            if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tranzabilidad) == null)
+            if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.trazabilidad) == null)
             {
                 ticket.TicketValues.Add(new TicketValue
                 {
-                    FieldId = eesFields.Default.tranzabilidad,
+                    FieldId = eesFields.Default.trazabilidad,
                     TicketId = ticket.Id,
                     Value = motivo,
                     CreationDate = DateTime.Now,
@@ -63,7 +63,7 @@ namespace Robot.Util.Nacar
                 });
             }
             else
-                ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tranzabilidad).Value = motivo;
+                ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.trazabilidad).Value = motivo;
 
             return ticket;
 
