@@ -114,10 +114,10 @@ namespace BPO.PACIFICO.REHABILITAR
 
                 string _descripcionMotivo = "";
 
-                int _idCampoDominioMotivo = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 1054).Value.ToString());
+               
 
 
-                string _textoDominioMotivo = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioMotivo);
+                string _textoDominioMotivo = _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 1054).Value));
                 _Funciones.SeleccionarCombo(_driverGlobal, _motivoIdElement, _textoDominioMotivo);
                 _Funciones.Esperar(2);
 
