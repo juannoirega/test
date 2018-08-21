@@ -122,7 +122,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _url);
+                _Funciones.NavegarUrl(_driverGlobal, _url);
             }
             catch (Exception ex)
             {

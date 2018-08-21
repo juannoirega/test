@@ -155,7 +155,7 @@ namespace BPO.PACIFICO.REHABILITAR
             try
             {
                 //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
+                _Funciones.NavegarUrl(_driverGlobal, _urlPolicyCenter);
             }
             catch (Exception ex)
             {

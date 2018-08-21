@@ -42,7 +42,7 @@ namespace Robot.Util.Nacar
             _driver.Manage().Window.Maximize();
         }
 
-        public void NavegarUrlPolicyCenter(IWebDriver _driver, string url)
+        public void NavegarUrl(IWebDriver _driver, string url)
         {
             _driver.Url = url;
             _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
@@ -82,6 +82,7 @@ namespace Robot.Util.Nacar
 
         public void NavegarUrlPortalBcp(IWebDriver _driver, string url)
         {
+            //Metodo temporal solo ira un solo metodo general NavegarUrl
             _driver.Url = url;
             _driver.Manage().Window.Maximize();
             Esperar(1);
