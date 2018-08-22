@@ -359,8 +359,6 @@ namespace GmailQuickstart
 
         public void AdicionarAdjuntos(Ticket ticket)
         {
-            string value = String.Empty;
-
             for(int cont = 0; _adjuntos.Count> cont; cont ++)
             ticket.TicketValues.Add(new TicketValue { Value = _adjuntos[cont], ClonedValueOrder = cont, TicketId = ticket.Id, FieldId = eesFields.Default.documentos });
         }
