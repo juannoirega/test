@@ -78,7 +78,7 @@ namespace GmailQuickstart
             _valores[3] = _robot.GetValueParamRobot("EstadoHijo").ValueParam;
             _valores[4] = _robot.GetValueParamRobot("EstadoPadre").ValueParam;
 
-            _diretorio = _robot.GetValueParamRobot("Diretorio").ValueParam;
+           // _diretorio = _robot.GetValueParamRobot("Diretorio").ValueParam;
             LogEndStep(4);
         }
 
