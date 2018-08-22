@@ -15,53 +15,65 @@ namespace BPO.PACIFICO.ProcesarDatos
     public class Program : IRobot
     {
         #region "PARÁMETROS"
-        private static BaseRobot<Program> _robot = null;
+        private static BaseRobot<Program> _oRobot = null;
         private static int _nDiasArrepentimiento;
         private static int _nDiasDesistimiento;
-        private static string _cConProrrata = "No";
         private static string _cLineaPersonal;
         private static string _cCanal;
-        private static string _cTipoPoliza;
-        private static string _cEstadoPoliza;
+        private static string _cPolizaEmision;
+        private static string _cPolizaRenovacion;
+        private static string _cEstadoRehabilitacion;
+        private static string _cEstadoOtrosEndosos;
+        private static string _cProceso = string.Empty;
+        private static string _cLinea = string.Empty;
         private static int _nIdMesaControl;
         private static int _nIdPantallaValidacion;
         private static int _nIdNotificacion;
         private static StateAction _oMesaControl;
         private static StateAction _oPantallaValidacion;
         private static StateAction _oNotificacion;
-        private static List<StateAction> _oAcciones;
+        private static Functions _Funciones;
         #endregion
 
         static void Main(string[] args)
         {
-            _robot = new BaseRobot<Program>(args);
-            _robot.Start();
+            try
+            {
+                _oRobot = new BaseRobot<Program>(args);
+                _Funciones = new Functions();
+                _oRobot.Start();
+            }
+            catch (Exception Ex)
+            {
+                Console.WriteLine(Ex.Message);
+            }
         }
 
         protected override void Start()
         {
-            if (_robot.Tickets.Count < 1)
+            if (_oRobot.Tickets.Count < 1)
                 return;
 
             ObtenerParametros();
             LogStartStep(4);
-            //Recorre uno a uno los tickets asignados al Robot:
-            foreach (Ticket ticket in _robot.Tickets)
+            foreach (Ticket oTicket in _oRobot.Tickets)
             {
                 try
                 {
-                    _oAcciones = _robot.GetNextStateAction(ticket);
-                    _oMesaControl = _oAcciones.Where(a => a.ActionId == _nIdMesaControl).SingleOrDefault();
-                    _oPantallaValidacion = _oAcciones.Where(b => b.ActionId == _nIdPantallaValidacion).SingleOrDefault();
-                    _oNotificacion = _oAcciones.Where(c => c.ActionId == _nIdNotificacion).SingleOrDefault();
-                    ProcesarTicket(ticket);
+                    _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdMesaControl);
+                    _oPantallaValidacion = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdPantallaValidacion);
+                    _oNotificacion = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdNotificacion);
+                    _cProceso = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_proceso).Value)).ToUpperInvariant();
+                    _cLinea = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_linea).Value)).ToUpperInvariant();
+                    ProcesarTicket(oTicket);
                 }
                 catch (Exception Ex)
                 {
+                    CambiarEstadoTicket(oTicket, _oMesaControl, Ex.Message);
                     LogFailStep(12, Ex);
+                    return;
                 }
             }
-            Environment.Exit(0);
         }
 
         //Obtiene valores para los parámetros del Robot desde EES:
@@ -70,15 +82,17 @@ namespace BPO.PACIFICO.ProcesarDatos
             try
             {
                 //Parámetros del Robot Procesamiento de Datos:
-                _nDiasArrepentimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasArrepentimiento").ValueParam);
-                _nDiasDesistimiento = Convert.ToInt32(_robot.GetValueParamRobot("DiasDesistimiento").ValueParam);
-                _cLineaPersonal = _robot.GetValueParamRobot("LineaPersonal").ValueParam;
-                _cCanal = _robot.GetValueParamRobot("Canal").ValueParam;
-                _cTipoPoliza = _robot.GetValueParamRobot("TipoPoliza").ValueParam;
-                _cEstadoPoliza = _robot.GetValueParamRobot("EstadoPoliza").ValueParam;
-                _nIdMesaControl = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
-                _nIdPantallaValidacion = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
-                _nIdNotificacion = Convert.ToInt32(_robot.GetValueParamRobot("EstadoNotificacion").ValueParam);
+                _nDiasArrepentimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("DiasArrepentimiento").ValueParam);
+                _nDiasDesistimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("DiasDesistimiento").ValueParam);
+                _cLineaPersonal = _oRobot.GetValueParamRobot("LineaPersonal").ValueParam;
+                _cCanal = _oRobot.GetValueParamRobot("Canal").ValueParam;
+                _cPolizaEmision = _oRobot.GetValueParamRobot("Poliza_Tipo_1").ValueParam;
+                _cPolizaRenovacion = _oRobot.GetValueParamRobot("Poliza_Tipo_2").ValueParam;
+                _cEstadoRehabilitacion = _oRobot.GetValueParamRobot("EstadoRehabilitacion").ValueParam;
+                _cEstadoOtrosEndosos = _oRobot.GetValueParamRobot("EstadoOtrosEndosos").ValueParam;
+                _nIdMesaControl = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoError").ValueParam);
+                _nIdPantallaValidacion = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoSiguiente").ValueParam);
+                _nIdNotificacion = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoNotificacion").ValueParam);
             }
             catch (Exception Ex)
             {
@@ -86,131 +100,388 @@ namespace BPO.PACIFICO.ProcesarDatos
             }
         }
 
+        //Envía el ticket al siguiente estado:
+        private void CambiarEstadoTicket(Ticket oTicket, StateAction oAccion, string cMensaje = "")
+        {
+            _oRobot.SaveTicketNextState(cMensaje == "" ? oTicket : _Funciones.MesaDeControl(oTicket, cMensaje), oAccion.Id);
+        }
+
         //Inicia el procesamiento de datos:
         private void ProcesarTicket(Ticket oTicketDatos)
         {
+            //Valida Línea de la Póliza:
+            switch (_cLinea)
+            {
+                case "AUTOS":
+                    if (SwitchAutos(oTicketDatos))
+                        if (ReglasDeValidacionAutos(oTicketDatos))
+                        {
+                            CambiarEstadoTicket(oTicketDatos, _oPantallaValidacion);
+                        }
+                        else
+                        {
+                            //Enviar a notificación de correo:
+                            CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                        }
+                    break;
+                case "LLPP":
+                    if (SwitchLLPP(oTicketDatos))
+                        if (!ReglasDeValidacionLLPP(oTicketDatos))
+                        {
+                            //Enviar a notificación de correo:
+                            CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                        };
+                    break;
+                case "ALIANZAS":
+                    if (SwitchAlianzas(oTicketDatos))
+                        if (!ReglasDeValidacionAlianzas(oTicketDatos))
+                        {
+                            //Enviar a notificación de correo:
+                            CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                        };
+                    break;
+                case "RRGG":
+                    if (SwitchRRGG(oTicketDatos))
+                        if (!ReglasDeValidacionRRGG(oTicketDatos))
+                        {
+                            //Enviar a notificación de correo:
+                            CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                        };
+                    break;
+            }
+            CambiarEstadoTicket(oTicketDatos, _oPantallaValidacion);
+        }
+
+        #region "SWITCH"
+        private bool SwitchAutos(Ticket oTicketDatos)
+        {
             try
             {
-                //Valida campos no vacíos:
-                if (!ValidarVacios(oTicketDatos))
+                switch (_cProceso)
                 {
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToLower() == _cEstadoPoliza.ToLower()) //Estado: VIGENTE. 
+                    case "ANULACION DE POLIZA":
+                        if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoOtrosEndosos)
+                        {
+                            //Crea arreglo para los campos:
+                            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
+                                            eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
+                                            eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
+
+                            //Valida campos no vacíos:
+                            if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
+                            {
+                                //Enviar a mesa de control: Tiene campos vacíos.
+                                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            //Enviar a notificación de correo:
+                            CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                            return false;
+                        }
+                        break;
+                    case "REHABILITACION":
+                        if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() != _cEstadoRehabilitacion) //Estado: CANCELADA. 
+                        {
+                            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
+                                                            eesFields.Default.motivo_rehabilitar};
+
+                            if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
+                            {
+                                //Enviar a mesa de control: Tiene campos vacíos.
+                                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            //Enviar a notificación de correo:
+                            CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                            return false;
+                        }
+                        break;
+                    case "ACTUALIZAR DATOS DEL CLIENTE":
+                        break;
+                }
+            }
+            catch (Exception Ex)
+            {
+                throw new Exception("Ocurrió un error al validar valores del ticket: " + Convert.ToString(oTicketDatos.Id) + " en el proceso: " + _cProceso, Ex);
+            }
+            return true;
+        }
+
+        private bool SwitchLLPP(Ticket oTicketDatos)
+        {
+            switch (_cProceso)
+            {
+                case "ANULACION DE POLIZA":
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoOtrosEndosos)
                     {
-                        ValidaProducto(oTicketDatos);
+                        //Valida campos no vacíos:
+                        int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
+                                            eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
+                                            eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
+
+                        if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
+                        {
+                            //Enviar a mesa de control: Tiene campos vacíos.
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                            return false;
+                        }
                     }
                     else
                     {
                         //Enviar a notificación de correo:
                         CambiarEstadoTicket(oTicketDatos, _oNotificacion);
-                    }
-                }
-                else
-                {
-                    //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos, _oMesaControl);
-                }
-            }
-            catch (Exception Ex)
-            {
-                LogFailStep(17, Ex);
-            }
-        }
-
-        //Valida que los campos del TicketValues no estén vacíos:
-        private bool ValidarVacios(Ticket oTicketDatos)
-        {
-            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
-                                        eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
-                                        eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
-
-            foreach (int campo in oCampos)
-                if (String.IsNullOrWhiteSpace(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == campo).Value))
-                    return false;
-            return true;
-        }
-
-        private void ValidaProducto(Ticket oTicketDatos)
-        {
-            //Valida reglas con los datos obtenidos:
-            if (ReglasDeValidacion(oTicketDatos))
-            {
-                AgregarNuevoTicketValue(oTicketDatos);
-                CambiarEstadoTicket(oTicketDatos, _oPantallaValidacion);
-            }
-            else
-            {
-                //Enviar a notificación de correo:
-                CambiarEstadoTicket(oTicketDatos, _oNotificacion);
-            }
-        }
-
-        #region "REGLAS DE VALIDACIÓN"
-        private bool ReglasDeValidacion(Ticket oTicketDatos)
-        {
-            TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
-                        - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
-
-            //Para saber si es Prorrata:
-            TimeSpan nProrrata = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_fin_vigencia).Value)
-                                    - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
-
-            //VERIFICA QUE SEA EMISIÓN:
-            if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value == _cTipoPoliza)
-            {
-                if (nDiferencia.Days > _nDiasDesistimiento)
-                {
-                    //Verifica que tenga VoBo:
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
-                    {
                         return false;
                     }
-                }
-
-                if (nProrrata.Days != 365)
-                {
-                    _cConProrrata = "Si";
-                }
-            }
-            else //Es renovación:
-            {
-                //Si es prorrata:
-                if (nProrrata.Days != 365)
-                {
-                    _cConProrrata = "Si";
-                    if (nDiferencia.Days > _nDiasDesistimiento)
+                    break;
+                case "REHABILITACION":
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() != _cEstadoRehabilitacion) //Estado: CANCELADA. 
                     {
-                        //Verifica que tenga VoBo:
-                        if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
+                        int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
+                                                            eesFields.Default.motivo_rehabilitar};
+
+                        if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
                         {
+                            //Enviar a mesa de control: Tiene campos vacíos.
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
                             return false;
                         }
                     }
-                }
-                //Es devolución al 100%:
-                else if (nDiferencia.Days > _nDiasArrepentimiento)
-                {
-                    //Verifica que tenga VoBo:
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
+                    else
                     {
+                        //Enviar a notificación de correo:
+                        CambiarEstadoTicket(oTicketDatos, _oNotificacion);
                         return false;
                     }
-                }
+                    break;
+                case "ACTUALIZAR DATOS DEL CLIENTE":
+                    break;
+            }
+            return true;
+        }
+
+        private bool SwitchAlianzas(Ticket oTicketDatos)
+        {
+            switch (_cProceso)
+            {
+                case "ANULACION DE POLIZA":
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoOtrosEndosos)
+                    {
+                        //Valida campos no vacíos:
+                        int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
+                                            eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
+                                            eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia, eesFields.Default.numero_de_dni};
+
+                        if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
+                        {
+                            //Enviar a mesa de control: Tiene campos vacíos.
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        //Enviar a notificación de correo:
+                        CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                        return false;
+                    }
+                    break;
+                case "REHABILITACION":
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() != _cEstadoRehabilitacion) //Estado: CANCELADA. 
+                    {
+                        int[] oCampos = new int[] { eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado};
+
+                        if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
+                        {
+                            //Enviar a mesa de control: Tiene campos vacíos.
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        //Enviar a notificación de correo:
+                        CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                        return false;
+                    }
+                    break;
+                case "ACTUALIZAR DATOS DEL CLIENTE":
+                    break;
+            }
+            return true;
+        }
+
+        private bool SwitchRRGG(Ticket oTicketDatos)
+        {
+            switch (_cProceso)
+            {
+                case "ANULACION DE POLIZA":
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoOtrosEndosos)
+                    {
+                        //Crea arreglo para los campos:
+                        int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
+                                            eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
+                                            eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
+
+                        //Valida campos no vacíos:
+                        if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
+                        {
+                            //Enviar a mesa de control: Tiene campos vacíos.
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        //Enviar a notificación de correo:
+                        CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                        return false;
+                    }
+                    break;
+                case "REHABILITACION":
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() != _cEstadoRehabilitacion) //Estado: CANCELADA. 
+                    {
+                        int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
+                                                            eesFields.Default.motivo_rehabilitar};
+
+                        if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
+                        {
+                            //Enviar a mesa de control: Tiene campos vacíos.
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        //Enviar a notificación de correo:
+                        CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                        return false;
+                    }
+                    break;
+                case "ACTUALIZAR DATOS DEL CLIENTE":
+                    break;
             }
             return true;
         }
         #endregion
 
-        //Agrega nuevo ticket value al Ticket actual:
-        private void AgregarNuevoTicketValue(Ticket oTicketDatos)
+        #region "REGLAS DE VALIDACIÓN"
+        private Boolean ReglasDeValidacionAutos(Ticket oTicketDatos)
         {
-            oTicketDatos.TicketValues.Add(new TicketValue { FieldId = eesFields.Default.aplica_prorrata, Id = oTicketDatos.Id, Value = _cConProrrata, ClonedValueOrder = null });
+            switch (_cProceso)
+            {
+                case "ANULACION DE POLIZA":
+                    return ReglasValidacionAnulacion(oTicketDatos);
+                case "REHABILITACION":
+                    //No aplica.
+                    break;
+                case "ACTUALIZAR DATOS DEL CLIENTE":
+                    break;
+            }
+            return true;
         }
 
-        //Envía el ticket al siguiente estado:
-        private void CambiarEstadoTicket(Ticket oTicket, StateAction oAccion)
+        private Boolean ReglasDeValidacionLLPP(Ticket oTicketDatos)
         {
-            //Estado = 1: Mesa de Control, Estado = 2: Notificación de Correo.
-            _robot.SaveTicketNextState(oTicket, oAccion.Id);
+            switch (_cProceso)
+            {
+                case "ANULACION DE POLIZA":
+                    return ReglasValidacionAnulacion(oTicketDatos);
+                case "REHABILITACION":
+                    //Que no tenga siniestros: Lo valida el mismo PolicyCenter.
+                    break;
+                case "ACTUALIZAR DATOS DEL CLIENTE":
+                    break;
+            }
+            return true;
         }
+
+        private Boolean ReglasDeValidacionAlianzas(Ticket oTicketDatos)
+        {
+            switch (_cProceso)
+            {
+                case "ANULACION DE POLIZA":
+                    return ReglasValidacionAnulacion(oTicketDatos);
+                case "REHABILITACION":
+                    //Que no tenga siniestros: Lo valida el mismo PolicyCenter.
+                    break;
+                case "ACTUALIZAR DATOS DEL CLIENTE":
+                    break;
+            }
+            return true;
+        }
+
+        private Boolean ReglasDeValidacionRRGG(Ticket oTicketDatos)
+        {
+            switch (_cProceso)
+            {
+                case "ANULACION DE POLIZA":
+                    return ReglasValidacionAnulacion(oTicketDatos);
+                case "REHABILITACION":
+                    //No aplica.
+                    break;
+                case "ACTUALIZAR DATOS DEL CLIENTE":
+                    break;
+            }
+            return true;
+        }
+        #endregion
+
+        #region "REGLAS DE ANULACIÓN"
+        private Boolean ReglasValidacionAnulacion(Ticket oTicketDatos)
+        {
+            try
+            {
+                TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
+                        - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
+
+                //VERIFICA QUE SEA EMISIÓN:
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaEmision)
+                {
+                    //Con devolución al 100%:
+                    oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "false" });
+                    if (nDiferencia.Days > _nDiasDesistimiento)
+                    {
+                        //Verifica que tenga VoBo:
+                        //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
+                        //{
+                        //Con prorrateo:
+                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "true" });
+                        return false;
+                        //}
+                    }
+                }
+                else if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaRenovacion)//Es renovación:
+                {
+                    //Con devolución al 100%:
+                    oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "false" });
+                    if (nDiferencia.Days > _nDiasArrepentimiento)
+                    {
+                        //Verifica que tenga VoBo:
+                        //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
+                        //{
+                        //Con prorrateo:
+                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "true" });
+                        return false;
+                        //}
+                    }
+                }
+                else //No es ni Emisión ni Renovación:
+                {
+                    return false;
+                }
+            }
+            catch (Exception Ex)
+            {
+                throw new Exception("Ocurrió un error al validar reglas de anulación para " + _cLinea, Ex);
+            }
+            return true;
+        }
+        #endregion
     }
 }
