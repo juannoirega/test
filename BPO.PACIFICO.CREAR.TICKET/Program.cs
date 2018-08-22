@@ -94,11 +94,17 @@ namespace BPO.PACIFICO.CREAR.TICKET.HIJO
         {
 
             string[] campos = ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _fields).Value.Split(Convert.ToChar(","));
+			Ticket nuevoTicket = null;
+			if (ticketPadre.ParentId == null)
+			{
+				 nuevoTicket = new Ticket { ParentId = ticketPadre.Id, Priority = PriorityType.Media, StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoHijo).Value) };
+			}
+			else
+			{
+				 nuevoTicket = new Ticket { ParentId = ticketPadre.ParentId, Priority = PriorityType.Media, StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoHijo).Value) };
+			}
 
-            Ticket nuevoTicket = new Ticket { ParentId = ticketPadre.Id, Priority = PriorityType.Media, StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoHijo).Value) };
-
-
-            _robot.SaveNewTicket(GeneraValuesHijo(ticketPadre, nuevoTicket, campos));
+			_robot.SaveNewTicket(GeneraValuesHijo(ticketPadre, nuevoTicket, campos));
 
         }
 

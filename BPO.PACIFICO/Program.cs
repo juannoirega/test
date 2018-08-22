@@ -175,7 +175,7 @@ namespace GmailQuickstart
                         }
                          catch (Exception ex) { throw new Exception("No se pudo guardar el cuerpo del email" + ex.Message); }
                     }
-
+					//obtener archivos se existir
                     if (infoResponse.Payload.Parts != null)
                         if (infoResponse.Payload.Parts.FirstOrDefault(o => o.Filename != "") != null)
                         {
@@ -214,9 +214,10 @@ namespace GmailQuickstart
                         String attachData = Regex.Replace(attachPart.Data, "-", "+");
                         attachData = Regex.Replace(attachData, "_", "/");
                         attachData = Regex.Replace(attachData, "=", "/");
-                        byte[] data = Convert.FromBase64String(attachData);
-                        File.WriteAllBytes(Path.Combine(_diretorio, part.Filename), data);
-                        files.Add(Path.Combine(_diretorio, part.Filename));
+						files.Add(attachData);
+                        //byte[] data = Convert.FromBase64String(attachData);
+                        //File.WriteAllBytes(Path.Combine(_diretorio, part.Filename), data);
+                        //files.Add(Path.Combine(_diretorio, part.Filename));
                     }
                 }
                 return files;
@@ -267,7 +268,7 @@ namespace GmailQuickstart
             catch (Exception ex) { throw new Exception("No se pudo encontrar las palabras clave" + ex.Message); }
 
         }
-
+		//lista las palabras clave
         public List<DomainValue> ListadoValoresDominios()
         {
             var container = ODataContextWrapper.GetContainer();
@@ -276,7 +277,7 @@ namespace GmailQuickstart
 
         }
 
-
+		//decodifica la base 64
         static string DecodeBase64(string sInput)
         {
             try
@@ -326,7 +327,7 @@ namespace GmailQuickstart
             catch (Exception ex) { throw new Exception("No fue posible analizar la puntuación" + ex.Message); }
         }
 
-
+		// cria o ticket chamadno so amteodos de datos
         public void CreacionTicket(string texto, Ticket ticketPadre, bool flag)
         {
             LogStartStep(55);
@@ -360,10 +361,8 @@ namespace GmailQuickstart
         {
             string value = String.Empty;
 
-            foreach (string doc in _adjuntos)
-                value = String.Concat(doc, ",");
-
-            ticket.TicketValues.Add(new TicketValue { Value = value, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.documentos });
+            for(int cont = 0; _adjuntos.Count> cont; cont ++)
+            ticket.TicketValues.Add(new TicketValue { Value = _adjuntos[cont], ClonedValueOrder = cont, TicketId = ticket.Id, FieldId = eesFields.Default.documentos });
         }
 
         public void AdicionarValues(Ticket ticket)
