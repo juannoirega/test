@@ -47,12 +47,9 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         //Pendiente
         private string _numeroVehiculos = string.Empty;
         private string _numeroAsegurados = string.Empty;
-        private int _estadoError;
-        private int _estadoSiguiente;
-
 
         //variable temporal
-        //private static bool _esPortalBcp = false;
+        private static bool _esPortalBcp = false;
 
         #endregion
 
@@ -75,7 +72,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             }
             catch (Exception ex)
             {
-                LogFailProcess(30, ex);
+                LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
             }
 
             foreach (Ticket ticket in _robot.Tickets)
@@ -86,21 +83,23 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 }
                 catch (Exception ex)
                 {
-                    LogFailStep(30, ex);
-                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
+                    LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
+                    //Enviar a mesa control con mmensaje
                     //capturar imagen
                 }
                 finally
                 {
                     if (_driverGlobal != null)
                         _driverGlobal.Quit();
+
+                    LogEndStep(Constants.MSG_PROCESS_ENDED_KEY);
                 }
             }
         }
         private void ProcesarTicket(Ticket ticket)
         {
             //falta verificar cual sera el id del campo que confirmara si es portalbc o no**reemplazar por el "1"
-            //_esPortalBcp = ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 1).Value.ToString() == "True" ? true : false;
+            _esPortalBcp = ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 1).Value.ToString() == "True" ? true : false;
             AbrirSelenium();
             NavegarUrl();
             Login();
@@ -109,20 +108,12 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         }
         private void AnularPoliza(Ticket ticket)
         {
-            //if (_esPortalBcp)
-            //    AnularPolizaPortalBcp();
-            //else
-            AnularPolizaPolicyCenter(ticket);
-
-            try
-            {
-                _robot.SaveTicketNextState(ticket, _estadoSiguiente);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Ocurrio un error al avanzar al siguiente Estado" + ex.Message);
-            }
+            if (_esPortalBcp)
+                AnularPolizaPortalBcp();
+            else
+                AnularPolizaPolicyCenter(ticket);
         }
+
 
         private void AbrirSelenium()
         {
@@ -133,121 +124,128 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al Iniciar Internet Explorer" + ex.Message);
+                throw new Exception("Error al Iniciar Internet Explorer", ex);
             }
+            //LogInfoStep(6);//id referencial msje Log "Finalizando la carga Internet Explorer"
+
         }
         private void NavegarUrl()
         {
-            //if (_esPortalBcp)
-            //{
-            //    try
-            //    {
-            //        //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-            //        _Funciones.NavegarUrlPortalBcp(_driverGlobal, _urlBcp);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        throw new Exception("No se puede acceder al sitio portal bcp", ex);
-            //    }
-            //    //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
-            //}
-            //else
-            //{
-            try
+            if (_esPortalBcp)
             {
-                //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-                _Funciones.NavegarUrl(_driverGlobal, _urlPolicyCenter);
+                try
+                {
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+                    _Funciones.NavegarUrlPortalBcp(_driverGlobal, _urlBcp);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("No se puede acceder al sitio portal bcp", ex);
+                }
+                //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception("No se puede acceder al sitio policycenter" + ex.Message);
+                try
+                {
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+                    _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("No se puede acceder al sitio policycenter", ex);
+                }
+                //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
             }
-            //}
 
         }
 
         private void Login()
         {
-            //if (_esPortalBcp)
-            //{
-            //    try
-            //    {
-            //        //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
-            //        _Funciones.LoginPortalBcp(_driverGlobal, _usuarioBcp, _contraseñaBcp);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        throw new Exception("No se puede acceder al sistema portal bcp", ex);
-            //    }
-            //}
-            //else
-            //{
-            try
+            if (_esPortalBcp)
             {
-                //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
-                _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
+                try
+                {
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
+                    _Funciones.LoginPortalBcp(_driverGlobal, _usuarioBcp, _contraseñaBcp);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("No se puede acceder al sistema portal bcp", ex);
+                }
+                //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception("No se puede acceder al sistema policycenter" + ex.Message);
+                try
+                {
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
+                    _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("No se puede acceder al sistema policycenter", ex);
+                }
+                //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
             }
-            //}
 
         }
         private void BuscarPoliza(Ticket ticket)
         {
             _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
 
-            //if (_esPortalBcp)
-            //{
-            //    try
-            //    {
-            //        //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
-            //        if (!string.IsNullOrEmpty(_numeroPoliza))
-            //        {
-            //            _Funciones.BuscarPolizaPortalBcp(_driverGlobal, _numeroPoliza);
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        throw new Exception("Error al buscar el numero de poliza portal bcp", ex);
-            //    }
-            //}
-            //else
-            //{
-            try
+            if (_esPortalBcp)
             {
-                //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
-                if (!string.IsNullOrEmpty(_numeroPoliza))
+                try
                 {
-                    _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
+                    if (!string.IsNullOrEmpty(_numeroPoliza))
+                    {
+                        _Funciones.BuscarPolizaPortalBcp(_driverGlobal, _numeroPoliza);
+                    }
+                    //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error al buscar el numero de poliza portal bcp", ex);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception("Error al buscar el numero de poliza policycenter" + ex.Message);
+                try
+                {
+                    //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
+                    if (!string.IsNullOrEmpty(_numeroPoliza))
+                    {
+                        _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
+                    }
+                    //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error al buscar el numero de poliza policycenter", ex);
+                }
             }
-            //}
 
         }
 
-        //private void AnularPolizaPortalBcp()
-        //{
-        //    try
-        //    {
-        //        _driverGlobal.FindElement(By.XPath("//img[contains(@id,'ctl00_ContentPlaceHolder1_gvPolizas_ctl03_imgVer')]")).Click();
-        //        _Funciones.Esperar(2);
-        //        _driverGlobal.FindElement(By.XPath("//*[@id='ctl00_ContentPlaceHolder1_ddlTipoMod']/option[2]")).Click();
-        //        _Funciones.Esperar(3);
-        //        _driverGlobal.FindElement(By.XPath("//*[@id='ctl00_ContentPlaceHolder1_ddlMotivo_03']/option[2]")).Click();
-        //        //Falta confirmar la anulacion de poliza portal bcp
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Error al anular la poliza en el sistema portal bcp", ex);
-        //    }
+        private void AnularPolizaPortalBcp()
+        {
+            try
+            {
+                _driverGlobal.FindElement(By.XPath("//img[contains(@id,'ctl00_ContentPlaceHolder1_gvPolizas_ctl03_imgVer')]")).Click();
+                _Funciones.Esperar(2);
+                _driverGlobal.FindElement(By.XPath("//*[@id='ctl00_ContentPlaceHolder1_ddlTipoMod']/option[2]")).Click();
+                _Funciones.Esperar(3);
+                _driverGlobal.FindElement(By.XPath("//*[@id='ctl00_ContentPlaceHolder1_ddlMotivo_03']/option[2]")).Click();
+                //Falta confirmar la anulacion de poliza portal bcp
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al anular la poliza en el sistema portal bcp", ex);
+            }
 
-        //}
+        }
         private void AnularPolizaPolicyCenter(Ticket ticket)
         {
             try
@@ -294,11 +292,10 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al Anular la poliza en el sistema policycenter" + ex.Message);
+                throw new Exception("Error al Anular la poliza en el sistema policycenter", ex);
             }
 
         }
-
         private void GetParameterRobots()
         {
             try
@@ -306,18 +303,14 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
                 _usuarioPolicyCenter = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
                 _contraseñaPolicyCenter = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
-                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
-                _estadoSiguiente = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
-                //_usuarioBcp = _robot.GetValueParamRobot("UsuarioBcp").ValueParam;
-                //_contraseñaBcp = _robot.GetValueParamRobot("PasswordBcp").ValueParam;
-                //_urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
-                LogEndStep(4);
+                _usuarioBcp = _robot.GetValueParamRobot("UsuarioBcp").ValueParam;
+                _contraseñaBcp = _robot.GetValueParamRobot("PasswordBcp").ValueParam;
+                _urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al Obtener los parametros del robot" + ex.Message);
+                throw new Exception("Error al Obtener los parametros del robot", ex);
             }
         }
-
     }
 }
