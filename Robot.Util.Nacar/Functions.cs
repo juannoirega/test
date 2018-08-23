@@ -332,6 +332,7 @@ namespace Robot.Util.Nacar
             return true;
         }
 
+        //Anina: Verifica si existe elemento web.
         public Boolean ExisteElemento(IWebDriver oDriver, string cIdElemento, int nIntentos)
         {
             for (int i = 0; i < nIntentos; i++)

@@ -195,8 +195,6 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         private void IniciaFormularioBPM()
         {
             //Clic en pestaña Consultas Personalizadas:
-            //_oDriver.FindElement(By.Id("controlBarMenuName")).Click();
-            //_oDriver.FindElement(By.XPath("//*[@id='tdSubPopupIcon']")).Click();
             if (!_Funciones.ExisteElemento(_oDriver, "controlBarMenuName", _nIntentosOnBase))
                 IniciaFormularioBPM();
 
@@ -204,19 +202,14 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             _oDriver.FindElement(By.XPath("//*[@id ='DropDownContainer']/tbody/tr/td[2]")).Click();
 
             if (_oDriver.FindElement(By.XPath("/html/body/div[8]")).Displayed)
-            {   //Clic en Nuevo Formulario:
-
-                //_oDriver.FindElement(By.XPath("//*[@id='SubMenuOptionsTable']/tbody/tr[2]")).Click();
-                //_Funciones.SeleccionarCombo(_oDriver, "//*[@id='SubMenuOptionsTable']/tbody/tr[2]", _cOpcionOnBase);
-
+            {   
+                //Clic en Nuevo Formulario:
                 _Funciones.SeleccionarListBox(_oDriver, "//*[@id='SubMenuOptionsTable']/tbody/tr", _cOpcionOnBase);
-                //_Funciones.SeleccionarCombo(_oDriver, "//*[@id='SubMenuOptionsTable']/tbody/tr", _cOpcionOnBase);
 
                 //Seleccionar Solicitud de Pólizas:
                 _oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("NavPanelIFrame")));
                 _oDriver.FindElement(By.XPath("//html/body/form/div[2]/div[2]")).Click();
                 _cElemento = _oDriver.FindElement(By.XPath("//html/body/form/div[2]/div[2]")).Text;
-                //_oDriver.FindElement(By.XPath("//*[contains(@class,'formName')]")).Click();
                 _Funciones.Esperar(8);
             }
             else
