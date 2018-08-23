@@ -114,10 +114,10 @@ namespace BPO.PACIFICO.REHABILITAR
 
                 string _descripcionMotivo = "";
 
-               
+                int _idCampoDominioMotivo = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 1054).Value.ToString());
 
 
-                string _textoDominioMotivo = _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 1054).Value));
+                string _textoDominioMotivo = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioMotivo);
                 _Funciones.SeleccionarCombo(_driverGlobal, _motivoIdElement, _textoDominioMotivo);
                 _Funciones.Esperar(2);
 
@@ -155,7 +155,7 @@ namespace BPO.PACIFICO.REHABILITAR
             try
             {
                 //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-                _Funciones.NavegarUrl(_driverGlobal, _urlPolicyCenter);
+                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
             }
             catch (Exception ex)
             {

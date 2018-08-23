@@ -19,7 +19,11 @@ namespace Robot.Util.Nacar
     {
         #region "PARÁMETROS"
         private static string _cRutaGeckodriver = string.Empty;
+        private static string _cRutaFirefox = string.Empty;
+        private static string _cBPMWebDriver = string.Empty;
+        private static string _cGeckodriver = string.Empty;
         #endregion
+
         //Registro en BPM:
         public void IngresarBPM(IWebDriver oDriver, string Url, string Usuario, string Contraseña)
         {
@@ -42,13 +46,14 @@ namespace Robot.Util.Nacar
             _driver.Manage().Window.Maximize();
         }
 
-        public void NavegarUrl(IWebDriver _driver, string url)
+        public void NavegarUrlPolicyCenter(IWebDriver _driver, string url)
         {
             _driver.Url = url;
             _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
             _driver.Manage().Window.Maximize();
             Esperar(1);
         }
+
         public Ticket MesaDeControl(Ticket ticket, string motivo)
         {
             if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.trazabilidad) == null)
@@ -64,10 +69,9 @@ namespace Robot.Util.Nacar
             }
             else
                 ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.trazabilidad).Value = motivo;
-
             return ticket;
-
         }
+
         public List<TicketValue> ValuesPadre(Ticket ticket, Default.Container container)
         {
             List<TicketValue> values = new List<TicketValue>();
@@ -82,7 +86,6 @@ namespace Robot.Util.Nacar
 
         public void NavegarUrlPortalBcp(IWebDriver _driver, string url)
         {
-            //Metodo temporal solo ira un solo metodo general NavegarUrl
             _driver.Url = url;
             _driver.Manage().Window.Maximize();
             Esperar(1);
@@ -104,6 +107,7 @@ namespace Robot.Util.Nacar
             //Para pruebas colocar punto interrupcion para ingresar captcha manualmente
             //FALTA IMPLEMENTAR EL CAPTCHA
         }
+
         public void BuscarPolizaPolicyCenter(IWebDriver _driver, string numeroPoliza)
         {
             _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
@@ -111,6 +115,7 @@ namespace Robot.Util.Nacar
             _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
             Esperar(5);
         }
+
         public void BuscarPolizaPortalBcp(IWebDriver _driver, string numeroPoliza)
         {
             IWebElement element;
@@ -151,31 +156,36 @@ namespace Robot.Util.Nacar
 
         public void SeleccionarCombo(IWebDriver _driver, string idElement, string valorComparar)
         {
-            //id Compañia seguros
-            //Anina: Obtiene nombre del Driver
-            IList<IWebElement> _option;
-            Type oTypeDriver = _driver.GetType();
-
-            //Obtiene lista de opciones según Webdriver:
-            if (oTypeDriver.Name == "FirefoxDriver")
+            try
             {
-                _option = _driver.FindElements(By.XPath(idElement));
-                //_option = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("//*[@id='" + idElement + "']/tbody/tr/td"));
-            }
-            else
-            {
-                _option = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
-            }
-
-            for (int i = 0; i < _option.Count; i++)
-            {
-                if (_option[i].Text.ToUpperInvariant().Equals(valorComparar))
+                //Anina: Obtiene nombre del Driver
+                IList<IWebElement> oOption;
+                Type oTypeDriver = _driver.GetType();
+                //Obtiene lista de opciones según Webdriver:
+                if (oTypeDriver.Name == _cBPMWebDriver)
                 {
-                    _option[i].Click();
-                    Esperar();
-                    break;
+                    oOption = _driver.FindElements(By.XPath(idElement));
+                }
+                else
+                {
+                    oOption = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
+                }
+
+                for (int i = 0; i < oOption.Count; i++)
+                {
+                    if (oOption[i].Text.ToUpperInvariant().Equals(valorComparar))
+                    {
+                        oOption[i].Click();
+                        Esperar();
+                        break;
+                    }
                 }
             }
+            catch (Exception Ex)
+            {
+                throw new Exception("Ocurrió un error al seleccionar una opción.", Ex);
+            }
+
         }
 
         public string ObtenerValorDominio(Ticket ticket, int idCampoDominio)
@@ -207,7 +217,7 @@ namespace Robot.Util.Nacar
             oAlert.SendKeys(cUsuario + Keys.Tab + cContraseña);
             Esperar();
             oAlert.Accept();
-            Esperar(10);
+            Esperar(18);
         }
 
         private static FirefoxDriver GetFirefoxDriver()
@@ -218,10 +228,16 @@ namespace Robot.Util.Nacar
 
         private static FirefoxDriverService GetFirefoxDriverService()
         {
-            //var service = FirefoxDriverService.CreateDefaultService(@"C:\everis.anina\geckodriver 0.16.1", "geckodriver.exe");
-            var service = FirefoxDriverService.CreateDefaultService(_cRutaGeckodriver, "geckodriver.exe");
-            service.FirefoxBinaryPath = @"C:\Program Files\Mozilla Firefox\firefox.exe";
-            return service;
+            try
+            {
+                var service = FirefoxDriverService.CreateDefaultService(_cRutaGeckodriver, _cGeckodriver);
+                service.FirefoxBinaryPath = _cRutaFirefox;
+                return service;
+            }
+            catch (Exception Ex)
+            {
+                throw new Exception("No se encontró la ruta para el archivo geckodriver.exe", Ex);
+            }
         }
 
         private static FirefoxOptions GetFirefoxOptions()
@@ -257,16 +273,22 @@ namespace Robot.Util.Nacar
 
         public void CerrarDriver(IWebDriver oDriver)
         {
-            oDriver.Close();
-            oDriver.Quit();
+            if (oDriver != null)
+            {
+                oDriver.Close();
+                oDriver.Quit();
+            }
         }
 
         //Anina: Crea una nueva instancia para Firefox.
-        public void InstanciarFirefoxDriver(ref IWebDriver oDriver, string RutaGeckodriver)
+        public void InstanciarFirefoxDriver(ref IWebDriver oDriver, string RutaGeckodriver, string RutaFirefox, string BPMWebDriver, string Geckodriver)
         {
             try
             {
                 _cRutaGeckodriver = RutaGeckodriver;
+                _cRutaFirefox = RutaFirefox;
+                _cBPMWebDriver = BPMWebDriver;
+                _cGeckodriver = Geckodriver;
                 oDriver = GetFirefoxDriver();
                 Esperar();
             }
@@ -274,7 +296,78 @@ namespace Robot.Util.Nacar
             {
                 throw new Exception("Ocurrió un error al abrir navegador Firefox.", Ex);
             }
+        }
 
+        //Anina: Selecciona elemento de una lista.
+        public void SeleccionarListBox(IWebDriver oDriver, string cElemento, string cValorComparar)
+        {
+            try
+            {
+                Actions oAcciones = new Actions(oDriver);
+
+                //Obtiene lista de opciones:
+                IList<IWebElement> oOption = oDriver.FindElements(By.XPath(cElemento));
+
+                for (int i = 0; i < oOption.Count; i++)
+                {
+                    if (oOption[i].Text.ToUpperInvariant().Equals(cValorComparar))
+                    {
+                        oAcciones.MoveToElement(oOption[i]).Click();
+                        oAcciones.Build().Perform();
+                        Esperar();
+                        break;
+                    }
+                }
+            }
+            catch (Exception Ex)
+            {
+                throw new Exception("Ocurrió un error al seleccionar una opción de la lista.", Ex);
+            }
+        }
+
+        //Valida campos vacíos en TicketValues:
+        public Boolean ValidarCamposVacios(Ticket oTicket, int [] oCampos)
+        {
+            foreach (int nCampo in oCampos)
+                if (String.IsNullOrWhiteSpace(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == nCampo).Value.Trim()))
+                    return false;
+            return true;
+        }
+
+        //Anina: Verifica si existe elemento web.
+        public Boolean ExisteElemento(IWebDriver oDriver, string cIdElemento, int nIntentos)
+        {
+            for (int i = 0; i < nIntentos; i++)
+            {
+                try
+                {
+                    oDriver.FindElement(By.Id(cIdElemento));
+                    return true;
+                }
+                catch (NoSuchElementException)
+                {
+                    Esperar();
+                }
+            }
+            return false;
+        }
+
+        //Verifica que el formulario BPM se haya registrado correctamente:
+        public Boolean VerificarRegistroBPM(IWebDriver oDriver)
+        {
+            try
+            {
+                if (oDriver.SwitchTo().Alert().ToString().Length > 0)
+                {
+                    oDriver.SwitchTo().Alert().Accept();
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                Esperar();
+            }
+            return true;
         }
     }
 }
