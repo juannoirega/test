@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="everis.Ees.Proxy">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2015\everis.Ees.Proxy.dll</HintPath>
+      <HintPath>.\everis.Ees.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.OData.Client, Version=6.18.0.10905, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.OData.Client.6.18.0\lib\net40\Microsoft.OData.Client.dll</HintPath>
