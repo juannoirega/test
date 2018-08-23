@@ -114,15 +114,11 @@ namespace BPO.PACIFICO.ProcesarDatos
             {
                 case "AUTOS":
                     if (SwitchAutos(oTicketDatos))
-                        if (ReglasDeValidacionAutos(oTicketDatos))
-                        {
-                            CambiarEstadoTicket(oTicketDatos, _oPantallaValidacion);
-                        }
-                        else
+                        if (!ReglasDeValidacionAutos(oTicketDatos))
                         {
                             //Enviar a notificación de correo:
                             CambiarEstadoTicket(oTicketDatos, _oNotificacion);
-                        }
+                        };
                     break;
                 case "LLPP":
                     if (SwitchLLPP(oTicketDatos))
@@ -171,7 +167,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                             if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
                             {
                                 //Enviar a mesa de control: Tiene campos vacíos.
-                                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id + " no cuenta con todos los datos necesarios.");
                                 return false;
                             }
                         }
@@ -191,7 +187,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                             if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
                             {
                                 //Enviar a mesa de control: Tiene campos vacíos.
-                                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id + " no cuenta con todos los datos necesarios.");
                                 return false;
                             }
                         }
@@ -228,7 +224,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                         if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
                         {
                             //Enviar a mesa de control: Tiene campos vacíos.
-                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id + " no cuenta con todos los datos necesarios.");
                             return false;
                         }
                     }
@@ -248,7 +244,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                         if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
                         {
                             //Enviar a mesa de control: Tiene campos vacíos.
-                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id + " no cuenta con todos los datos necesarios.");
                             return false;
                         }
                     }
@@ -280,7 +276,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                         if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
                         {
                             //Enviar a mesa de control: Tiene campos vacíos.
-                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id + " no cuenta con todos los datos necesarios.");
                             return false;
                         }
                     }
@@ -299,7 +295,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                         if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
                         {
                             //Enviar a mesa de control: Tiene campos vacíos.
-                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id + " no cuenta con todos los datos necesarios.");
                             return false;
                         }
                     }
@@ -332,7 +328,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                         if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
                         {
                             //Enviar a mesa de control: Tiene campos vacíos.
-                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id + " no cuenta con todos los datos necesarios.");
                             return false;
                         }
                     }
@@ -352,7 +348,7 @@ namespace BPO.PACIFICO.ProcesarDatos
                         if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
                         {
                             //Enviar a mesa de control: Tiene campos vacíos.
-                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                            CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id + " no cuenta con todos los datos necesarios.");
                             return false;
                         }
                     }

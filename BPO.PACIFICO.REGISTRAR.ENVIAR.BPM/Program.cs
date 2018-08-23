@@ -31,6 +31,8 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         private static string _cRutaAdjuntos = string.Empty;
         private static string _cElemento = string.Empty;
         private static string _cEndosoAnulacion = string.Empty;
+        private static string _cBPMWebDriver = string.Empty;
+        private static string _cGeckodriver = string.Empty;
         private static StateAction _oMesaControl;
         private static StateAction _oRegistro;
         private static Functions _Funciones;
@@ -94,6 +96,8 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 _cRutaFirefox = _oRobot.GetValueParamRobot("Ruta_Firefox").ValueParam;
                 _cRutaAdjuntos = _oRobot.GetValueParamRobot("Ruta_AdjuntosBPM").ValueParam;
                 _cEndosoAnulacion = _oRobot.GetValueParamRobot("EndosoAnulacion").ValueParam;
+                _cBPMWebDriver = _oRobot.GetValueParamRobot("BPMWebDriver").ValueParam;
+                _cGeckodriver = _oRobot.GetValueParamRobot("Geckodriver").ValueParam;
             }
             catch (Exception Ex)
             {
@@ -134,7 +138,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 int nIndice = 1;
                 for (int i = 0; i < _nIntentosOnBase; i++)
                 {
-                    _Funciones.InstanciarFirefoxDriver(ref _oDriver, _cRutaGeckodriver, _cRutaFirefox);
+                    _Funciones.InstanciarFirefoxDriver(ref _oDriver, _cRutaGeckodriver, _cRutaFirefox, _cBPMWebDriver, _cGeckodriver);
                     UsuariosOnBase(oTicketDatos, nIndice);
                     _Funciones.IngresarBPM(_oDriver, _cUrlOnBase, Usuarios[0], Usuarios[1]);
                     if (_Funciones.ExisteElemento(_oDriver, "controlBarMenuName", _nIntentosOnBase))
@@ -228,8 +232,8 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
             //Ingresa fecha hora de email:
             _cElemento = "Fecha y hora de solicitud";
-            //_oDriver.FindElement(By.Id("fechayhoraderecepción_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_hora_de_email).Value);
-            _oDriver.FindElement(By.Id("fechayhoraderecepción_input")).SendKeys("14/08/2018 10:20:15" + Keys.Tab);
+            _oDriver.FindElement(By.Id("fechayhoraderecepción_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_hora_de_email).Value);
+            //_oDriver.FindElement(By.Id("fechayhoraderecepción_input")).SendKeys("14/08/2018 10:20:15" + Keys.Tab);
 
             //Selecciona tipo de solicitud:
             _cElemento = "Tipo de solicitud";
@@ -241,87 +245,78 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             _oDriver.FindElement(By.XPath("//*[@id='linea_negocio']/button")).Click();
             _Funciones.Esperar();
             _cElemento = "Línea de Negocio";
-            string cLinea = "AUTOS"; //_Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_linea).Value));
+            string cLinea = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_linea).Value));
             _Funciones.SeleccionarListBox(_oDriver, "//body/ul[2]/li/a", cLinea);            
 
             //Selecciona Producto:
             _oDriver.FindElement(By.XPath("//*[@id='producto']/button")).Click();
             _Funciones.Esperar(2);
             _cElemento = "Producto";
-            //_Funciones.SeleccionarCombo(_oDriver, "//body/ul[3]/li/a", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.producto).Value);
-            _Funciones.SeleccionarListBox(_oDriver, "//body/ul[3]/li/a", "AUTO A MEDIDA");            
+            _Funciones.SeleccionarListBox(_oDriver, "//body/ul[3]/li/a", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.producto).Value);
+            //_Funciones.SeleccionarListBox(_oDriver, "//body/ul[3]/li/a", "AUTO A MEDIDA");            
             _Funciones.Esperar(3);
 
             //Seleccionar Tipo de endoso:
             _cElemento = "Tipo de Endoso";
             _oDriver.FindElement(By.XPath("//*[@id='tipodeendoso']/button")).Click();
             _Funciones.Esperar();            
-            //string cProceso = "ANULACIÓN DE PÓLIZA"; //_Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_proceso).Value));
-            string cProceso = "ACTUALIZAR DATOS DEL CLIENTE";
+            string cProceso = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_proceso).Value));
             _Funciones.SeleccionarListBox(_oDriver, "//body/ul[4]/li/a", cProceso);            
             _Funciones.Esperar(3);
 
             //Seleccionar Motivo de Anulación:
-            //if(_Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_proceso).Value)) == _cEndosoAnulacion)
             if(_oDriver.FindElement(By.Id("motivo_anulacion")).Displayed)
             {
                 _cElemento = "Motivo de Anulación";
                 _oDriver.FindElement(By.XPath("//*[@id='motivo_anulacion']/button")).Click();
                 _Funciones.Esperar();                
-                string cMotivo = "DIFICULTADES ECONÓMICAS"; //_Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.motivo_anular).Value));
+                string cMotivo = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.motivo_anular).Value));
                 _Funciones.SeleccionarListBox(_oDriver, "//body/ul[5]/li/a", cMotivo);               
             }
 
             //Ingresar número de vehículos y asegurados:
             _cElemento = "Número Unidades/Asegurados/Bienes";
-            //_oDriver.FindElement(By.Id("nrounidnroasegnrocertinrobienes_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => 
-            //                a.FieldId == (oTicketDatos.TicketValues.FirstOrDefault(b => b.FieldId == eesFields.Default.tipo_de_linea).Value == _cLineaPorDefecto? eesFields.Default.num_vehiculos: eesFields.Default.num_asegurados)).Value);
-            _oDriver.FindElement(By.Id("nrounidnroasegnrocertinrobienes_input")).SendKeys("2"); //falta ID de nro asegurados/vehiculos/bienes            
+            _oDriver.FindElement(By.Id("nrounidnroasegnrocertinrobienes_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a =>
+                            a.FieldId == (oTicketDatos.TicketValues.FirstOrDefault(b => b.FieldId == eesFields.Default.tipo_de_linea).Value == _cLineaPorDefecto ? eesFields.Default.num_vehiculos : eesFields.Default.num_asegurados)).Value);
+            //_oDriver.FindElement(By.Id("nrounidnroasegnrocertinrobienes_input")).SendKeys("2");           
 
             //Ingresa Nro. de Póliza:
             _cElemento = "Número de Póliza";
-            //_oDriver.FindElement(By.Id("vser_nrodepolizasolicitante576_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value);
-            _oDriver.FindElement(By.Id("vser_nrodepolizasolicitante576_input")).SendKeys("2002925650");
+            _oDriver.FindElement(By.Id("vser_nrodepolizasolicitante576_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value);
+            //_oDriver.FindElement(By.Id("vser_nrodepolizasolicitante576_input")).SendKeys("2002925650");
 
             //Fecha vigencia inicio:
             _cElemento = "Fecha Inicio";
-            //_oDriver.FindElement(By.Id("vigenciaendoso_inicio_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.date_inicio_vigencia).Value);
-            _oDriver.FindElement(By.Id("vigenciaendoso_inicio_input")).SendKeys("15/08/2018");
+            _oDriver.FindElement(By.Id("vigenciaendoso_inicio_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.date_inicio_vigencia).Value);
+            //_oDriver.FindElement(By.Id("vigenciaendoso_inicio_input")).SendKeys("15/08/2018");
 
             //Fecha vigencia fin:
             _cElemento = "Fecha Fin";
-            //_oDriver.FindElement(By.Id("vigenciaendoso_fin_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.date_fin_vigencia).Value + Keys.Tab);
-            _oDriver.FindElement(By.Id("vigenciaendoso_fin_input")).SendKeys("15/08/2025" + Keys.Tab);            
+            _oDriver.FindElement(By.Id("vigenciaendoso_fin_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.date_fin_vigencia).Value + Keys.Tab);
+            //_oDriver.FindElement(By.Id("vigenciaendoso_fin_input")).SendKeys("15/08/2025" + Keys.Tab);            
 
             //Nombre del Contratante:
-            //_oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value);
-            _oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys("CARLOS REYES");
+            _oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value.ToUpper());
+            //_oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys("CARLOS REYES");
             _cElemento = "Nombre Contratante";
 
             //Nombre del Asegurado:
             _cElemento = "Nombre Asegurado";
-            //_oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_asegurado).Value);
-            _oDriver.FindElement(By.Id("vser_nombrerazonsocialdelasegurado571_input")).SendKeys("CARLOS REYES");
+            _oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_asegurado).Value.ToUpper());
+            //_oDriver.FindElement(By.Id("vser_nombrerazonsocialdelasegurado571_input")).SendKeys("CARLOS REYES");
 
             //Nro. Doc. Identidad:
-            //if (_cLineaTicket != _cLineaPorDefecto)
-            //{
-            //    _cElemento = "Documento de identidad";
-            //    _oDriver.FindElement(By.Id("nrodedocumentoidentidad_input")).SendKeys("41494426");
-            //    
-            //}
-
             if (_oDriver.FindElement(By.Id("nrodedocumentoidentidad")).Displayed)
             {
                 _cElemento = "Documento de identidad";
-                _oDriver.FindElement(By.Id("nrodedocumentoidentidad_input")).SendKeys("41494426");
-                //_oDriver.FindElement(By.Id("nrodedocumentoidentidad_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_dni).Value);
+                _oDriver.FindElement(By.Id("nrodedocumentoidentidad_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_dni).Value);
+                //_oDriver.FindElement(By.Id("nrodedocumentoidentidad_input")).SendKeys("41494426");
             }
 
             //Email de Notificación:
             _cElemento = "Email Principal para notificación";
-            //_oDriver.FindElement(By.Id("emailnotificacionprincipal_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value);
-            _oDriver.FindElement(By.Id("emailnotificacionprincipal_input")).SendKeys("algunos_son_malos@pacificoseguros.com.pe");
+            _oDriver.FindElement(By.Id("emailnotificacionprincipal_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value);
+            //_oDriver.FindElement(By.Id("emailnotificacionprincipal_input")).SendKeys("algunos_son_malos@pacificoseguros.com.pe");
 
             //Adjuntar documentos:
             _cElemento = "Adjuntar documentos";
@@ -330,11 +325,11 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
             //Email de solicitante:
             _cElemento = "Email de solicitante";
-            //if (_oDriver.FindElement(By.Id("emailsolicitante_input")).Text.Length ==  0) _oDriver.FindElement(By.Id("emailsolicitante_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value);
-            if (_oDriver.FindElement(By.Id("emailsolicitante_input")).Text.Length == 0) _oDriver.FindElement(By.Id("emailsolicitante_input")).SendKeys("algunos_son_malos@pacificoseguros.com.pe");
+            if (_oDriver.FindElement(By.Id("emailsolicitante_input")).Text.Length ==  0) _oDriver.FindElement(By.Id("emailsolicitante_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value);
+            //if (_oDriver.FindElement(By.Id("emailsolicitante_input")).Text.Length == 0) _oDriver.FindElement(By.Id("emailsolicitante_input")).SendKeys("algunos_son_malos@pacificoseguros.com.pe");
             
             //Guardar y enviar:
-            _oDriver.FindElement(By.XPath("//*[@id='Boton_enviaraemisor']/input")).SendKeys(Keys.Enter);
+            //_oDriver.FindElement(By.XPath("//*[@id='Boton_enviaraemisor']/input")).SendKeys(Keys.Enter);
             _Funciones.Esperar(5);
 
             if (_Funciones.VerificarRegistroBPM(_oDriver))

@@ -20,6 +20,8 @@ namespace Robot.Util.Nacar
         #region "PARÁMETROS"
         private static string _cRutaGeckodriver = string.Empty;
         private static string _cRutaFirefox = string.Empty;
+        private static string _cBPMWebDriver = string.Empty;
+        private static string _cGeckodriver = string.Empty;
         #endregion
 
         //Registro en BPM:
@@ -157,23 +159,23 @@ namespace Robot.Util.Nacar
             try
             {
                 //Anina: Obtiene nombre del Driver
-                IList<IWebElement> _option;
+                IList<IWebElement> oOption;
                 Type oTypeDriver = _driver.GetType();
                 //Obtiene lista de opciones según Webdriver:
-                if (oTypeDriver.Name == "FirefoxDriver")
+                if (oTypeDriver.Name == _cBPMWebDriver)
                 {
-                    _option = _driver.FindElements(By.XPath(idElement));
+                    oOption = _driver.FindElements(By.XPath(idElement));
                 }
                 else
                 {
-                    _option = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
+                    oOption = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
                 }
 
-                for (int i = 0; i < _option.Count; i++)
+                for (int i = 0; i < oOption.Count; i++)
                 {
-                    if (_option[i].Text.ToUpperInvariant().Equals(valorComparar))
+                    if (oOption[i].Text.ToUpperInvariant().Equals(valorComparar))
                     {
-                        _option[i].Click();
+                        oOption[i].Click();
                         Esperar();
                         break;
                     }
@@ -226,10 +228,9 @@ namespace Robot.Util.Nacar
 
         private static FirefoxDriverService GetFirefoxDriverService()
         {
-            //var service = FirefoxDriverService.CreateDefaultService(@"C:\everis.anina\geckodriver 0.16.1", "geckodriver.exe");
             try
             {
-                var service = FirefoxDriverService.CreateDefaultService(_cRutaGeckodriver, "geckodriver.exe");
+                var service = FirefoxDriverService.CreateDefaultService(_cRutaGeckodriver, _cGeckodriver);
                 service.FirefoxBinaryPath = _cRutaFirefox;
                 return service;
             }
@@ -280,12 +281,14 @@ namespace Robot.Util.Nacar
         }
 
         //Anina: Crea una nueva instancia para Firefox.
-        public void InstanciarFirefoxDriver(ref IWebDriver oDriver, string RutaGeckodriver, string RutaFirefox)
+        public void InstanciarFirefoxDriver(ref IWebDriver oDriver, string RutaGeckodriver, string RutaFirefox, string BPMWebDriver, string Geckodriver)
         {
             try
             {
                 _cRutaGeckodriver = RutaGeckodriver;
                 _cRutaFirefox = RutaFirefox;
+                _cBPMWebDriver = BPMWebDriver;
+                _cGeckodriver = Geckodriver;
                 oDriver = GetFirefoxDriver();
                 Esperar();
             }
@@ -320,7 +323,6 @@ namespace Robot.Util.Nacar
             {
                 throw new Exception("Ocurrió un error al seleccionar una opción de la lista.", Ex);
             }
-
         }
 
         //Valida campos vacíos en TicketValues:
