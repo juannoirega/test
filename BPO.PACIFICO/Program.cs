@@ -293,6 +293,7 @@ namespace GmailQuickstart
 		public void EvaluarPuntuacion(string texto, Ticket ticket)
 		{
 			LogStartStep(53);
+
 			try
 			{
 
@@ -310,9 +311,9 @@ namespace GmailQuickstart
 				}
 
 				int[] valores = MaioresValores();
+				
 
-
-				if (valores[0] > 0 && ((valores[0] * 100) / (valores[0] + valores[1])) >= 70)
+				if (valores[0] > 0 && ((valores[0] * 100) / (valores[0] + valores[1])) >= 70 && AdicionarNumeroPolizaoDni(ticket, texto))
 				{
 
 					CreacionTicket(texto, ticket, true);
@@ -333,7 +334,7 @@ namespace GmailQuickstart
 			try
 			{
 				DatosFields();
-				AdicionarNumeroPoliza(ticketPadre, texto);
+				
 				AdicionarValues(ticketPadre);
 
 				if (_adjuntos != null)
@@ -373,10 +374,22 @@ namespace GmailQuickstart
 
 		}
 
-		public void AdicionarNumeroPoliza(Ticket ticket, string texto)
+		public bool AdicionarNumeroPolizaoDni(Ticket ticket, string texto)
 		{
-			ticket.TicketValues.Add(new TicketValue { Value = Regex.Match(texto, "(2[1-9])[0-9]{4}[0-9]{4}").Value, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
+			string police = Regex.Match(texto, @"\s(2[1-9])[0-9]{4}[0-9]{4}\s").Value;
+			string dni = Regex.Match(texto, @"\s(2[1-9])[0-9]{4}[0-9]{4}\s").Value;
+			if (String.IsNullOrWhiteSpace(police))
+			{
+				ticket.TicketValues.Add(new TicketValue { Value = police, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
+				return true;
+			}
+			else if(String.IsNullOrWhiteSpace(dni))
+			{
+				ticket.TicketValues.Add(new TicketValue { Value = dni, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
+				return true;
+			}
 
+			return false;
 		}
 		public int[] MaioresValores()
 		{
