@@ -20,7 +20,6 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
     {
         private static BaseRobot<Program> _robot = null;
         private static IWebDriver _driverGlobal = null;
-        private static IWebElement element;
         private static Functions _Funciones;
         #region ParametrosRobot
         private string _urlPolicyCenter = string.Empty;
@@ -261,6 +260,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 string _motivoIdElement = "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2";
                 string _reembolsoIdElement = "StartCancellation:StartCancellationScreen:CancelPolicyDV:CalcMethod";
                 string _descripcionMotivo = "SE DEJA CONSTANCIA POR EL PRESENTE ENDOSO QUE, LA POLIZA DEL RUBRO QUEDA CANCELADA, NULA Y SIN VALOR PARA TODOS SUS EFECTOS A PARTIR DEL";
+
 
                 int _idCampoDominioSolicitante = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 1051).Value.ToString());
                 int _idCampoDominioMotivo = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 11).Value.ToString());
