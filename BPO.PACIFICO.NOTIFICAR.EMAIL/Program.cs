@@ -152,7 +152,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             message.Raw = Base64UrlEncode(mimeMessage.ToString());
 
             //Send Email
-            var result = service.Users.Messages.Send(message, _correoRobot).Execute();
+            service.Users.Messages.Send(message, _correoRobot).Execute();
         }
 
         private string FormatMultipleEmailAddresses(string emailAddresses)
