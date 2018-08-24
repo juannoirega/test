@@ -1,5 +1,4 @@
 ﻿using BPO.PACIFICO.NOTIFICAR.EMAIL;
-using everis.Ees.Proxy;
 using everis.Ees.Proxy.Core;
 using everis.Ees.Proxy.Services.Interfaces;
 using Everis.Ees.Entities;
@@ -9,7 +8,6 @@ using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Newtonsoft.Json;
-using Robot.Util.Nacar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,14 +21,14 @@ using System.Threading.Tasks;
 
 namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 {
-    class Program : IRobot
+     class Program : IRobot
     {
         static BaseRobot<Program> _robot = null;
 
         static string[] _valores = new string[10];
         static string[] _valoresTicket = new string[6];
         string _contenido = String.Empty;
-        string _correoRobot = "soportecorredor_des@pacifico.com.pe";
+        string _correoRobot = "bponaa@gmail.com";
         string _rutaPlantilla = String.Empty;
         static string[] Scopes = { GmailService.Scope.GmailModify };
         static string ApplicationName = "Gmail API .NET Quickstart";
@@ -41,11 +39,8 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
         List<TicketValue> ticketValue = new List<TicketValue>();
         List<TicketValue> ticketValue_Valores = new List<TicketValue>();
 
-        private static Functions _Funciones;
-
         static void Main(string[] args)
         {
-            _Funciones = new Functions();
             _robot = new BaseRobot<Program>(args);
             _robot.Start();
         }
@@ -57,59 +52,47 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
         public void ProcesarTicket()
         {
-            try
+            ticket = _robot.Tickets.FirstOrDefault();
+
+            //Datos del Ticket
+            //_valoresTicket[0] = ticket.TicketValues[0].Value;
+            //_valoresTicket[1] = ticket.TicketValues[1].Value;
+            //_valoresTicket[1] = ticket.TicketValues[1].Value;
+
+            _valoresTicket[0] = "Luis Kevin Trujillo Hoyos";
+            _valoresTicket[1] = "N° 12345678900";
+            //VALOR QUE DETERMINARA DEL DOMINIO FUNCIONAL Y QUE PLANTILLA USARA PARA LA NOTIFICIACIÓN EMAIL
+            _valoresTicket[2] = "8";
+            //Correos 
+            _valoresTicket[3] = "luistrujilloh@hotmail.com,ltrujill@everis.com";
+            //Correos Copias
+            _valoresTicket[4] = "deyssilavadoa@hotmail.com,bponaa@gmail.com";
+            
+            GetRobotParam();
+
+            //Optener todos lo Ticket del Workflow "Adjuntar Documentos"
+            List<Ticket> ticketDocumento = _robot.GetDataQueryTicket().Where(t => t.StateId == Convert.ToInt32(_valores[3])).ToList();
+
+            //Almacenar los TicketValue de Tickets
+            foreach (var item in ticketDocumento)
             {
-                ticket = _robot.Tickets.FirstOrDefault();
-
-                //Datos del Ticket
-                //_valoresTicket[0] = ticket.TicketValues[0].Value;
-                //_valoresTicket[1] = ticket.TicketValues[1].Value;
-                //_valoresTicket[2] = ticket.TicketValues[2].Value;
-
-                _valoresTicket[0] = "Luis Kevin Trujillo Hoyos";
-                _valoresTicket[1] = "N° 12345678900";
-                //VALOR QUE DETERMINARA DEL DOMINIO FUNCIONAL Y QUE PLANTILLA USARA PARA LA NOTIFICIACIÓN EMAIL
-                _valoresTicket[2] = "8";
-                //Correos 
-                _valoresTicket[3] = "luistrujilloh@hotmail.com,ltrujill@everis.com";
-                //Correos Copias
-                _valoresTicket[4] = "bponaa@gmail.com";
-                //RESULTADO
-                _valoresTicket[5] = "SOLICITUD ACEPTADA";
-
-
-                GetRobotParam();
-
-                //Optener todos lo Ticket del Workflow "Adjuntar Documentos"
-                List<Ticket> ticketDocumento = _robot.GetDataQueryTicket().Where(t => t.StateId == Convert.ToInt32(_valores[3])).ToList();
-
-                ////Almacenar los TicketValue de Tickets
-                foreach (var item in ticketDocumento)
-                {
-                    ticketValue.Add(_robot.GetDataQueryTicketValue().Where(t => t.TicketId == item.Id).OrderBy(t => t.Id).First());
-                    ticketValue.Add(_robot.GetDataQueryTicketValue().Where(t => t.TicketId == item.Id).OrderByDescending(t => t.Id).First());
-                }
-
-                ////Opteneniendo la Ruta de la Plantilla
-                _rutaPlantilla = ticketValue.OrderByDescending(t => t.Id).FirstOrDefault(o => o.TicketId == ticketValue.OrderByDescending(t => t.Id).FirstOrDefault(tv => tv.Value == _valoresTicket[2]).TicketId).Value;
-
-                LeerArchivo(_rutaPlantilla);
-                //Metodo Email
-                EnviarEmail();
-
-                if (_valoresTicket[5] == "SOLICITUD ACEPTADA")
-                    _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[0]));
-
-                else
-                    _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[1]));
-
+                ticketValue.Add(_robot.GetDataQueryTicketValue().Where(t => t.TicketId == item.Id).OrderBy(t => t.Id).First());
+                ticketValue.Add(_robot.GetDataQueryTicketValue().Where(t => t.TicketId == item.Id).OrderByDescending(t => t.Id).First());
             }
-            catch (Exception ex)
-            {
 
-                LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
-                _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[5])).Id);
-            }
+            //Opteneniendo la Ruta de la Plantilla
+            _rutaPlantilla = ticketValue.OrderByDescending(t => t.Id).FirstOrDefault(o => o.TicketId == ticketValue.OrderByDescending(t => t.Id).FirstOrDefault(tv => tv.Value == _valoresTicket[2]).TicketId).Value;
+
+            LeerArchivo(_rutaPlantilla);
+            //Metodo Email
+            EnviarEmail();
+
+            if (_valoresTicket[2] == _valoresTicket[2])
+                _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[0]));
+
+            else
+                _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[1]));
+
         }
 
         public void GetRobotParam()
@@ -119,10 +102,8 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             _valores[2] = _robot.GetValueParamRobot("FildAdjuntarDocuementos").ValueParam;
             _valores[3] = _robot.GetValueParamRobot("EstadoAdjuntarDocumentos").ValueParam;
             _valores[4] = _robot.GetValueParamRobot("RutaArchivosPlantillas").ValueParam;
-            _valores[5] = _robot.GetValueParamRobot("EstadoErrorMA").ValueParam;
 
         }
-
 
 
         public void EnviarEmail()
@@ -159,10 +140,10 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //Adjuntar Documentos
             //string docume = @"C:\Users\ltrujill\Documents\JSON.txt";
             //mail.Attachments.Add(new Attachment(docume));
-
+            
             ////Un Correo
             //mail.To.Add(new MailAddress(_correoRobot));
-
+     
             mail.To.Add(FormatMultipleEmailAddresses(_valoresTicket[3]));
             mail.CC.Add(FormatMultipleEmailAddresses(_valoresTicket[4]));
             MimeKit.MimeMessage mimeMessage = MimeKit.MimeMessage.CreateFromMailMessage(mail);
@@ -196,14 +177,14 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
 
         }
-
+        
         public void LeerArchivo(string archivo)
         {
 
             try
             {
                 //Lleyendo el JSON
-                using (StreamReader lector = new StreamReader(String.Concat(@"", _valores[4], archivo, "")))
+                using (StreamReader lector = new StreamReader(String.Concat(@"",_valores[4],archivo,"")))
                 {
                     while (lector.Peek() > -1)
                     {
@@ -224,8 +205,8 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
                         palabrasClaves.Add(new PalabrasClave() { clave = match.Value, palabra = _valoresTicket[1] });
                     else
                         palabrasClaves.Add(new PalabrasClave() { clave = match.Value, palabra = _valoresTicket[0] });
-
-
+                
+                
                 //Reemplazar las palabras Claves para enviar Correos
                 foreach (PalabrasClave p in palabrasClaves)
                     JsonCorreo.Body = ReemplazarPalabras(JsonCorreo.Body, p.clave, p.palabra);
@@ -254,4 +235,3 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
         }
     }
 }
-
