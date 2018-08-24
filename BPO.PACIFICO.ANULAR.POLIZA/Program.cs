@@ -28,28 +28,13 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         private string _usuarioBcp = string.Empty;
         private string _contraseñaBcp = string.Empty;
         private string _urlBcp = string.Empty;
-
+        private int _estadoError;
+        private int _estadoFinal;
         #endregion
         #region VariablesGLoables
         private string _numeroPoliza = string.Empty;
-        private string _producto = string.Empty;
-        private string _inicioVigencia = string.Empty;
-        private string _finVigencia = string.Empty;
-        private string _numeroAgente = string.Empty;
-        private string _agente = string.Empty;
-        private string _tipo = string.Empty;
-        private string _estado = string.Empty;
-        private string _tipoVigencia = string.Empty;
-        private string _numeroCanal = string.Empty;
-        private string _nombreContratante = string.Empty;
-        private string _nombreAsegurado = string.Empty;
-        //private static string _numeroDniContratante = string.Empty;
-        //Pendiente
-        private string _numeroVehiculos = string.Empty;
-        private string _numeroAsegurados = string.Empty;
-
         //variable temporal
-        private static bool _esPortalBcp = false;
+        //private static bool _esPortalBcp = false;
 
         #endregion
 
@@ -72,7 +57,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             }
             catch (Exception ex)
             {
-                LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
+                LogFailStep(30, ex);
             }
 
             foreach (Ticket ticket in _robot.Tickets)
@@ -83,7 +68,8 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 }
                 catch (Exception ex)
                 {
-                    LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
+                    LogFailStep(30, ex);
+                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
                     //Enviar a mesa control con mmensaje
                     //capturar imagen
                 }
@@ -91,15 +77,13 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 {
                     if (_driverGlobal != null)
                         _driverGlobal.Quit();
-
-                    LogEndStep(Constants.MSG_PROCESS_ENDED_KEY);
                 }
             }
         }
         private void ProcesarTicket(Ticket ticket)
         {
             //falta verificar cual sera el id del campo que confirmara si es portalbc o no**reemplazar por el "1"
-            _esPortalBcp = ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 1).Value.ToString() == "True" ? true : false;
+            //_esPortalBcp = ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 1).Value.ToString() == "True" ? true : false;
             AbrirSelenium();
             NavegarUrl();
             Login();
@@ -108,9 +92,9 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         }
         private void AnularPoliza(Ticket ticket)
         {
-            if (_esPortalBcp)
-                AnularPolizaPortalBcp();
-            else
+            //if (_esPortalBcp)
+            //    AnularPolizaPortalBcp();
+            //else
                 AnularPolizaPolicyCenter(ticket);
         }
 
@@ -131,21 +115,21 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         }
         private void NavegarUrl()
         {
-            if (_esPortalBcp)
-            {
-                try
-                {
-                    //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-                    _Funciones.NavegarUrlPortalBcp(_driverGlobal, _urlBcp);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("No se puede acceder al sitio portal bcp", ex);
-                }
-                //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
-            }
-            else
-            {
+            //if (_esPortalBcp)
+            //{
+            //    try
+            //    {
+            //        //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+            //        _Funciones.NavegarUrlPortalBcp(_driverGlobal, _urlBcp);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        throw new Exception("No se puede acceder al sitio portal bcp", ex);
+            //    }
+            //    //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
+            //}
+            //else
+            //{
                 try
                 {
                     //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
@@ -156,27 +140,27 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                     throw new Exception("No se puede acceder al sitio policycenter", ex);
                 }
                 //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
-            }
+            //}
 
         }
 
         private void Login()
         {
-            if (_esPortalBcp)
-            {
-                try
-                {
-                    //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
-                    _Funciones.LoginPortalBcp(_driverGlobal, _usuarioBcp, _contraseñaBcp);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("No se puede acceder al sistema portal bcp", ex);
-                }
-                //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
-            }
-            else
-            {
+            //if (_esPortalBcp)
+            //{
+            //    try
+            //    {
+            //        //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
+            //        _Funciones.LoginPortalBcp(_driverGlobal, _usuarioBcp, _contraseñaBcp);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        throw new Exception("No se puede acceder al sistema portal bcp", ex);
+            //    }
+            //    //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
+            //}
+            //else
+            //{
                 try
                 {
                     //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
@@ -187,31 +171,31 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                     throw new Exception("No se puede acceder al sistema policycenter", ex);
                 }
                 //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
-            }
+            //}
 
         }
         private void BuscarPoliza(Ticket ticket)
         {
             _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
 
-            if (_esPortalBcp)
-            {
-                try
-                {
-                    //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
-                    if (!string.IsNullOrEmpty(_numeroPoliza))
-                    {
-                        _Funciones.BuscarPolizaPortalBcp(_driverGlobal, _numeroPoliza);
-                    }
-                    //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error al buscar el numero de poliza portal bcp", ex);
-                }
-            }
-            else
-            {
+            //if (_esPortalBcp)
+            //{
+            //    try
+            //    {
+            //        //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
+            //        if (!string.IsNullOrEmpty(_numeroPoliza))
+            //        {
+            //            _Funciones.BuscarPolizaPortalBcp(_driverGlobal, _numeroPoliza);
+            //        }
+            //        //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        throw new Exception("Error al buscar el numero de poliza portal bcp", ex);
+            //    }
+            //}
+            //else
+            //{
                 try
                 {
                     //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
@@ -225,7 +209,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 {
                     throw new Exception("Error al buscar el numero de poliza policycenter", ex);
                 }
-            }
+            //}
 
         }
 
@@ -303,9 +287,12 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
                 _usuarioPolicyCenter = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
                 _contraseñaPolicyCenter = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
-                _usuarioBcp = _robot.GetValueParamRobot("UsuarioBcp").ValueParam;
-                _contraseñaBcp = _robot.GetValueParamRobot("PasswordBcp").ValueParam;
-                _urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
+                //_usuarioBcp = _robot.GetValueParamRobot("UsuarioBcp").ValueParam;
+                //_contraseñaBcp = _robot.GetValueParamRobot("PasswordBcp").ValueParam;
+                //_urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
+                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoErrorAP").ValueParam);
+                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguienteAP").ValueParam);
+                LogEndStep(4);
             }
             catch (Exception ex)
             {

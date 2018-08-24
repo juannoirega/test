@@ -69,7 +69,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             }
             catch (Exception ex)
             {
-                LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
+                LogFailStep(30, ex);
             }
 
             foreach (Ticket ticket in _robot.Tickets)
@@ -80,7 +80,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 }
                 catch (Exception ex)
                 {
-                    LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
+                    LogFailStep(30, ex);
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
                     //capturar imagen
                 }
@@ -88,8 +88,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 {
                     if (_driverGlobal != null)
                         _driverGlobal.Quit();
-
-                    LogEndStep(Constants.MSG_PROCESS_ENDED_KEY);
                 }
             }
         }
@@ -271,8 +269,9 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
                 _usuario = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
                 _contraseña = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
-                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
-                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
+                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoErrorAP").ValueParam);
+                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguienteAP").ValueParam);
+                LogEndStep(4);
             }
             catch (Exception ex)
             {
