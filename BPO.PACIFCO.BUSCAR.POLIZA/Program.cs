@@ -265,7 +265,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
         }
         private void GetParameterRobots()
-        {
+        { 
             try
             {
                 _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
