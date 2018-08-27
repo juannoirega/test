@@ -52,6 +52,7 @@ namespace GmailQuickstart
             {
                 LogStartStep(2);
                 GetRobotParam();
+                Inicio();
                 Email();
             }
             catch (Exception ex)
@@ -62,6 +63,13 @@ namespace GmailQuickstart
             {
                 Environment.Exit(0);
             }
+        }
+
+        private void Inicio()
+        {
+            Console.WriteLine("♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦ ROBOT ♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦");
+            Console.WriteLine("                Robot Captura Email                    ");
+            Console.WriteLine("♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦");
         }
 
         public void GetRobotParam()
@@ -162,10 +170,10 @@ namespace GmailQuickstart
                     {
                         LogStartStep(52);
                         try
-                        { 
-                        body = GetNestedParts(infoResponse.Payload.Parts, "");
+                        {
+                            body = GetNestedParts(infoResponse.Payload.Parts, "");
                         }
-                         catch (Exception ex) { throw new Exception("No se pudo guardar el cuerpo del email" + ex.Message); }
+                        catch (Exception ex) { throw new Exception("No se pudo guardar el cuerpo del email" + ex.Message); }
                     }
 
                     if (infoResponse.Payload.Parts != null)
@@ -220,31 +228,31 @@ namespace GmailQuickstart
 
         static String GetNestedParts(IList<MessagePart> part, string curr)
         {
-                string str = curr;
-                if (part == null)
+            string str = curr;
+            if (part == null)
+            {
+                return str;
+            }
+            else
+            {
+                foreach (var parts in part)
                 {
-                    return str;
-                }
-                else
-                {
-                    foreach (var parts in part)
+                    if (parts.Parts == null)
                     {
-                        if (parts.Parts == null)
+                        if (parts.Body != null && parts.Body.Data != null)
                         {
-                            if (parts.Body != null && parts.Body.Data != null)
-                            {
-                                str += parts.Body.Data;
-                            }
-                        }
-                        else
-                        {
-                            return GetNestedParts(parts.Parts, str);
+                            str += parts.Body.Data;
                         }
                     }
-
-                    return str;
+                    else
+                    {
+                        return GetNestedParts(parts.Parts, str);
+                    }
                 }
-           
+
+                return str;
+            }
+
         }
 
         public int BuscarPalabrasClaves(string DigitarTexto, string palabras)
@@ -285,6 +293,7 @@ namespace GmailQuickstart
         public void EvaluarPuntuacion(string texto, Ticket ticket)
         {
             LogStartStep(53);
+
             try
             {
 
@@ -304,7 +313,7 @@ namespace GmailQuickstart
                 int[] valores = MaioresValores();
 
 
-                if (valores[0] > 0 && ((valores[0] * 100) / (valores[0] + valores[1])) >= 70)
+                if (valores[0] > 0 && ((valores[0] * 100) / (valores[0] + valores[1])) >= 70 && AdicionarNumeroPolizaoDni(ticket, texto))
                 {
 
                     CreacionTicket(texto, ticket, true);
@@ -325,7 +334,7 @@ namespace GmailQuickstart
             try
             {
                 DatosFields();
-                AdicionarNumeroPoliza(ticketPadre, texto);
+
                 AdicionarValues(ticketPadre);
 
                 if (_adjuntos != null)
@@ -365,10 +374,22 @@ namespace GmailQuickstart
 
         }
 
-        public void AdicionarNumeroPoliza(Ticket ticket, string texto)
+        public bool AdicionarNumeroPolizaoDni(Ticket ticket, string texto)
         {
-            ticket.TicketValues.Add(new TicketValue { Value = Regex.Match(texto, "(2[1-9])[0-9]{4}[0-9]{4}").Value, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
+            string police = Regex.Match(texto, @"\s(2[1-9])[0-9]{4}[0-9]{4}\s").Value;
+            string dni = Regex.Match(texto, @"\s(2[1-9])[0-9]{4}[0-9]{4}\s").Value;
+            if (String.IsNullOrWhiteSpace(police))
+            {
+                ticket.TicketValues.Add(new TicketValue { Value = police, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
+                return true;
+            }
+            else if (String.IsNullOrWhiteSpace(dni))
+            {
+                ticket.TicketValues.Add(new TicketValue { Value = dni, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
+                return true;
+            }
 
+            return false;
         }
         public int[] MaioresValores()
         {
