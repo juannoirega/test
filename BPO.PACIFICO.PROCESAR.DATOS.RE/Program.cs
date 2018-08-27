@@ -113,7 +113,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                 else
                 {
                     //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cuenta con todos los datos necesarios.");
+                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id.ToString() + " no cuenta con todos los datos necesarios.");
                     return;
                 }
             }
@@ -130,7 +130,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                 else
                 {
                     //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cuenta con todos los datos necesarios.");
+                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id.ToString() + " no cuenta con todos los datos necesarios.");
                     return;
                 }
             }
@@ -164,13 +164,13 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                 else
                 {
                     //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cuenta con todos los datos necesarios.");
+                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id.ToString() + " no cuenta con todos los datos necesarios.");
                     return;
                 }
             }
             else
             {
-                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no pertenece a ninguna Línea de Negocio.");
+                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id.ToString() + " no pertenece a ninguna Línea de Negocio.");
             }
             CambiarEstadoTicket(oTicketDatos, _oPantallaValidacion);
         }
