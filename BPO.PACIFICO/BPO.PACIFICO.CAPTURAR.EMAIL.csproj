@@ -124,7 +124,6 @@
     <None Include="credentials.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Robot.Util.Nacar\Robot.Util.csproj">
