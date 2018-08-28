@@ -23,7 +23,8 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         private static string _cUrlOnBase = string.Empty;
         private static string _cTipoSolicitud = string.Empty;
         private static int _nIntentosOnBase;
-        private static string _cOpcionOnBase = string.Empty;
+        private static string _cOpcionFormulario = string.Empty;
+        private static string _cOpcionWorkflow = string.Empty;
         private static string _cLineaPorDefecto = string.Empty;
         private static string _cLineaTicket = string.Empty;
         private static string _cRutaGeckodriver = string.Empty;
@@ -47,10 +48,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 _Funciones = new Functions();
                 _oRobot.Start();
             }
-            catch (Exception Ex)
-            {
-                Console.WriteLine(Ex.Message);
-            }
+            catch (Exception Ex) { Console.WriteLine(Ex.Message); }
         }
 
         protected override void Start()
@@ -90,7 +88,8 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 _cUrlOnBase = _oRobot.GetValueParamRobot("URLOnBase").ValueParam;
                 _cTipoSolicitud = _oRobot.GetValueParamRobot("TipoSolicitud").ValueParam;
                 _nIntentosOnBase = Convert.ToInt32(_oRobot.GetValueParamRobot("AccesoOnBase_Intentos").ValueParam);
-                _cOpcionOnBase = _oRobot.GetValueParamRobot("OnBase_Opcion").ValueParam;
+                _cOpcionFormulario = _oRobot.GetValueParamRobot("OnBase_Formulario").ValueParam;
+                _cOpcionWorkflow = _oRobot.GetValueParamRobot("OnBase_Workflow").ValueParam;
                 _cLineaPorDefecto = _oRobot.GetValueParamRobot("LineaPorDefecto").ValueParam;
                 _cRutaGeckodriver = _oRobot.GetValueParamRobot("Ruta_geckodriver").ValueParam;
                 _cRutaFirefox = _oRobot.GetValueParamRobot("Ruta_Firefox").ValueParam;
@@ -99,10 +98,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 _cBPMWebDriver = _oRobot.GetValueParamRobot("BPMWebDriver").ValueParam;
                 _cGeckodriver = _oRobot.GetValueParamRobot("Geckodriver").ValueParam;
             }
-            catch (Exception Ex)
-            {
-                LogFailStep(12, Ex);
-            }
+            catch (Exception Ex) { LogFailStep(12, Ex); }
         }
 
         //Obtiene los usuarios OnBase según Línea de negocio:
@@ -122,11 +118,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 }
                 return Usuarios;
             }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un error al obtener datos de usuario.", Ex);
-            }
-
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener datos de usuario: " + Ex.Message, Ex); }
         }
 
         //Inicia el procesamiento de tickets:
@@ -168,16 +160,13 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
                 return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
             }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un error al validar campos del Ticket: " + Convert.ToString(oTicketDatos.Id), Ex);
-            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al validar campos del Ticket: " + Convert.ToString(oTicketDatos.Id), Ex); }
         }
 
         //Envía el ticket al siguiente estado:
         private void CambiarEstadoTicket(Ticket oTicket, StateAction oAccion, string cMensaje = "")
         {
-            _oRobot.SaveTicketNextState(cMensaje == ""? oTicket:_Funciones.MesaDeControl(oTicket, cMensaje), oAccion.Id);
+            _oRobot.SaveTicketNextState(cMensaje == "" ? oTicket : _Funciones.MesaDeControl(oTicket, cMensaje), oAccion.Id);
         }
 
         //Realiza el registro de anulación en OnBase:
@@ -206,9 +195,9 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             _oDriver.FindElement(By.XPath("//*[@id ='DropDownContainer']/tbody/tr/td[2]")).Click();
 
             if (_oDriver.FindElement(By.XPath("/html/body/div[8]")).Displayed)
-            {   
+            {
                 //Clic en Nuevo Formulario:
-                _Funciones.SeleccionarListBox(_oDriver, "//*[@id='SubMenuOptionsTable']/tbody/tr", _cOpcionOnBase);
+                _Funciones.SeleccionarListBox(_oDriver, "//*[@id='SubMenuOptionsTable']/tbody/tr", _cOpcionFormulario);
 
                 //Seleccionar Solicitud de Pólizas:
                 _oDriver.SwitchTo().Frame(_oDriver.FindElement(By.Id("NavPanelIFrame")));
@@ -239,14 +228,14 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             _cElemento = "Tipo de solicitud";
             _oDriver.FindElement(By.XPath("//*[@id='tipodesolicitud']/button")).Click();
             _Funciones.Esperar();
-            _Funciones.SeleccionarListBox(_oDriver, "/html/body/ul[1]/li", _cTipoSolicitud);            
+            _Funciones.SeleccionarListBox(_oDriver, "/html/body/ul[1]/li", _cTipoSolicitud);
 
             //Selecciona Línea de Negocio:
             _oDriver.FindElement(By.XPath("//*[@id='linea_negocio']/button")).Click();
             _Funciones.Esperar();
             _cElemento = "Línea de Negocio";
             string cLinea = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_linea).Value));
-            _Funciones.SeleccionarListBox(_oDriver, "//body/ul[2]/li/a", cLinea);            
+            _Funciones.SeleccionarListBox(_oDriver, "//body/ul[2]/li/a", cLinea);
 
             //Selecciona Producto:
             _oDriver.FindElement(By.XPath("//*[@id='producto']/button")).Click();
@@ -259,19 +248,19 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             //Seleccionar Tipo de endoso:
             _cElemento = "Tipo de Endoso";
             _oDriver.FindElement(By.XPath("//*[@id='tipodeendoso']/button")).Click();
-            _Funciones.Esperar();            
+            _Funciones.Esperar();
             string cProceso = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_proceso).Value));
-            _Funciones.SeleccionarListBox(_oDriver, "//body/ul[4]/li/a", cProceso);            
+            _Funciones.SeleccionarListBox(_oDriver, "//body/ul[4]/li/a", cProceso);
             _Funciones.Esperar(3);
 
             //Seleccionar Motivo de Anulación:
-            if(_oDriver.FindElement(By.Id("motivo_anulacion")).Displayed)
+            if (_oDriver.FindElement(By.Id("motivo_anulacion")).Displayed)
             {
                 _cElemento = "Motivo de Anulación";
                 _oDriver.FindElement(By.XPath("//*[@id='motivo_anulacion']/button")).Click();
-                _Funciones.Esperar();                
+                _Funciones.Esperar();
                 string cMotivo = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.motivo_anular).Value));
-                _Funciones.SeleccionarListBox(_oDriver, "//body/ul[5]/li/a", cMotivo);               
+                _Funciones.SeleccionarListBox(_oDriver, "//body/ul[5]/li/a", cMotivo);
             }
 
             //Ingresar número de vehículos y asegurados:
@@ -320,20 +309,25 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
             //Adjuntar documentos:
             _cElemento = "Adjuntar documentos";
-            _oDriver.FindElement(By.XPath("//*[@id='attach_251']/div[2]/span/input")).SendKeys(_cRutaAdjuntos + "EJEMPLO_PDF_1.pdf");            
+            foreach (string cDocumentos in Adjuntos(oTicketDatos))
+            {
+                _oDriver.FindElement(By.XPath("//*[@id='attach_251']/div[2]/span/input")).SendKeys(cDocumentos);
+            }
             _Funciones.Esperar(2);
 
             //Email de solicitante:
             _cElemento = "Email de solicitante";
-            if (_oDriver.FindElement(By.Id("emailsolicitante_input")).Text.Length ==  0) _oDriver.FindElement(By.Id("emailsolicitante_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value);
+            if (_oDriver.FindElement(By.Id("emailsolicitante_input")).Text.Length == 0) _oDriver.FindElement(By.Id("emailsolicitante_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value);
             //if (_oDriver.FindElement(By.Id("emailsolicitante_input")).Text.Length == 0) _oDriver.FindElement(By.Id("emailsolicitante_input")).SendKeys("algunos_son_malos@pacificoseguros.com.pe");
-            
+
             //Guardar y enviar:
             //_oDriver.FindElement(By.XPath("//*[@id='Boton_enviaraemisor']/input")).SendKeys(Keys.Enter);
-            _Funciones.Esperar(5);
+            _Funciones.Esperar(3);
 
             if (_Funciones.VerificarRegistroBPM(_oDriver))
             {
+                _Funciones.Esperar(7);
+                WorkflowOnBase();
                 CambiarEstadoTicket(oTicketDatos, _oRegistro);
                 LogEndStep(1);
             }
@@ -347,6 +341,63 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 _Funciones.Esperar(10);
                 LlenarFormularioBPM(oTicketDatos);
             }
+        }
+
+        //Obtiene documentos adjuntos según endoso:
+        private string[] Adjuntos(Ticket oTicketDatos)
+        {
+            try
+            {
+                return oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.documentos).Value.Split(',');
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener documentos adjuntos: " + Ex.Message, Ex); }
+        }
+
+        private void WorkflowOnBase()
+        {
+            try
+            {
+                _cElemento = _oDriver.FindElement(By.XPath("//*[@id ='MainMenuHeader']/tbody/tr/td[3]")).Text;
+                _oDriver.FindElement(By.XPath("//*[@id ='MainMenuHeader']/tbody/tr/td[3]")).Click();
+
+                if (_oDriver.FindElement(By.XPath("/html/body/div[7]")).Displayed)
+                {
+                    //Clic en Workflow:
+                    _Funciones.SeleccionarListBox(_oDriver, "//*[@id='SubMenuOptionsTable']/tbody/tr", _cOpcionWorkflow);
+                    _Funciones.Esperar(5);
+
+                    //Carga ventana de Workflow en nueva instancia Firefox.
+
+                    //En pestaña Carpeta de Trabajo:
+
+                    //Se muestra grilla con lista de documentos (panel derecho), es necesario actualizar grilla.
+
+                    //Seleccionar el documento según Nro. de Trámite (El que se genera al registrar formulario BPM).
+
+                    _Funciones.Esperar(5);
+
+                    //Aprobar o rechazar trámite:
+                    _Funciones.Esperar(2);
+
+                    //Seleccionar canal: Por descripción, validar de qué forma se obtendrá el nombre de canal desde PolicyCenter.
+
+                    //Seleccionar Agente: Ingresando el número de agente sin ceros.
+
+                    //Seleccionar motivo de rechazo emisor: Validar desde dónde se obtiene el motivo.
+
+                    //Ingresar Comentario Rechazo Emisor: Validar si este dato es obligatorio y opcional y de dónde se obtiene.
+
+                    //Finalmente, presionar botón Grabar.
+
+                    _Funciones.Esperar(4);
+                    //Seleccionar opción NO (Enviar notificación).         
+                }
+                else
+                {
+                    WorkflowOnBase();
+                }
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al ingresar a la opción Workflow: " + Ex.Message, Ex); }
         }
     }
 }
