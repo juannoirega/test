@@ -39,10 +39,11 @@ C:\Users\jnorieac\Source\Repos\BPO.v3.Robot2\BPO.PACIFICO\BPO.PACIFICO\obj\Debug
 C:\ANINAMAC\PACÍFICO SEGUROS\Desarrollo - Equipo RPA Pacífico\BPO.PACIFICO\BPO.PACIFICO\bin\Debug\BPO.PACIFICO.exe.config
 C:\ANINAMAC\PACÍFICO SEGUROS\Desarrollo - Equipo RPA Pacífico\BPO.PACIFICO\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.exe
 C:\ANINAMAC\PACÍFICO SEGUROS\Desarrollo - Equipo RPA Pacífico\BPO.PACIFICO\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.pdb
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\BPO.PACIFICO.exe.config
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.exe
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.pdb
+C:\Users\clazarom\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\BPO.PACIFICO.exe.config
+C:\Users\clazarom\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.exe
+C:\Users\clazarom\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.pdb
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\credentials.json
+C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\BPO.PACIFICO.exe.config
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\BPO.PACIFICO.exe
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\BPO.PACIFICO.pdb
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\everis.Ees.Proxy.dll
@@ -57,11 +58,15 @@ C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Microsoft.OData.Core.dll
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Microsoft.OData.Edm.dll
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Microsoft.Spatial.dll
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Newtonsoft.Json.dll
+C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Robot.Util.Nacar.dll
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\System.Net.Http.dll
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\System.Security.Cryptography.Algorithms.dll
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\System.Security.Cryptography.Encoding.dll
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\System.Security.Cryptography.Primitives.dll
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\System.Security.Cryptography.X509Certificates.dll
+C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\WebDriver.dll
+C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Robot.Util.Nacar.pdb
+C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Robot.Util.Nacar.dll.config
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Google.Apis.pdb
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Google.Apis.xml
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Google.Apis.Auth.pdb
@@ -75,29 +80,9 @@ C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Microsoft.OData.Core.xml
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Microsoft.OData.Edm.xml
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Microsoft.Spatial.xml
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Newtonsoft.Json.xml
+C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\WebDriver.xml
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.CAPTURAR.EMAIL.csprojAssemblyReference.cache
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.CAPTURAR.EMAIL.csproj.CoreCompileInputs.cache
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Robot.Util.Nacar.dll
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\WebDriver.dll
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\BPO.Framework.dll
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\EPPlus.dll
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\SautinSoft.PdfFocus.dll
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\AForge.Imaging.dll
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\clsEHLLAPI.dll
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\WebDriver.Support.dll
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\AForge.dll
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\AForge.Math.dll
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Robot.Util.Nacar.pdb
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Robot.Util.Nacar.dll.config
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\WebDriver.xml
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\BPO.Framework.xml
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\EPPlus.xml
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\SautinSoft.PdfFocus.xml
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\AForge.Imaging.xml
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\WebDriver.Support.xml
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\AForge.xml
-C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\AForge.Math.xml
 C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.CAPTURAR.EMAIL.csproj.CopyComplete
-C:\Users\clazarom\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\BPO.PACIFICO.exe.config
-C:\Users\clazarom\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.exe
-C:\Users\clazarom\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.pdb
+C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.exe
+C:\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.pdb
