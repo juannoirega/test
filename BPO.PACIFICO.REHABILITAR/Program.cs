@@ -22,7 +22,7 @@ namespace BPO.PACIFICO.REHABILITAR
         private static IWebDriver _driverGlobal = null;
         private static IWebElement element;
         private static Functions _Funciones;
-
+        private int _estadoFinal;
         #region ParametrosRobot
         private string _urlPolicyCenter = string.Empty;
         private string _usuarioPolicyCenter = string.Empty;
@@ -134,6 +134,14 @@ namespace BPO.PACIFICO.REHABILITAR
                 throw new Exception("Error al Rehabilitar la poliza en el sistema policycenter", ex);
             }
 
+            try
+            {
+                _robot.SaveTicketNextState(ticket, _estadoFinal);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrio un Error al avanzar al siguiente estado - Rehabilitar Poliza", ex);
+            }
         }
         private void AbrirSelenium()
         {
