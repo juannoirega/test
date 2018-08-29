@@ -154,7 +154,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             try
             {
                 //obtener el numero  de Poliza
-                _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
+                _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.numero_de_poliza).Value.ToString();
 
                 _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
             }
