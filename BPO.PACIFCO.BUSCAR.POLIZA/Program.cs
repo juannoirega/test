@@ -189,13 +189,14 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                     _idDesplegable = string.Empty;
                 }
 
+                int count = 0;
                 if (!string.IsNullOrEmpty(_idDesplegable))
                 {
                     IList<IWebElement> _option = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX")).FindElements(By.XPath("//option"));
 
                     for (int h = 1; h < _option.Count; h++)
                     {
-                        RecorrerGrilla();
+                        _polizaNueva = _Funciones.RecorrerGrilla(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "Tipo", "Renovación", ref count);
 
                         if (!_polizaNueva)
                             break;
@@ -206,7 +207,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 }
                 else
                 {
-                    RecorrerGrilla();
+                    _polizaNueva = _Funciones.RecorrerGrilla(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "Tipo", "Renovación", ref count);
                 }
 
                 //Numero Canal
@@ -276,43 +277,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             catch (Exception ex)
             {
                 throw new Exception("Error al Obtener los parametros del robot", ex);
-            }
-        }
-     
-
-        private void RecorrerGrilla()
-        {
-            //tabla
-      
-            IList<IWebElement> _trColeccion = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV")).FindElements(By.XPath("id('PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV')/tbody/tr"));
-
-            int _posicionTd = 0;
-            foreach (IWebElement item in _trColeccion)
-            {
-                IList<IWebElement> _td = item.FindElements(By.XPath("td"));
-
-                for (int j = 0; j < _td.Count; j++)
-                {
-                    string _tipoCabecera = _td[j].Text;
-                    if (_tipoCabecera.Equals("Tipo"))
-                    {
-                        _posicionTd = j;
-                        break;
-                    }
-                    if (_posicionTd > 0)
-                    {
-                        string _tipoValor = _td[_posicionTd].Text;
-
-                        if (_tipoValor.Equals("Renovación"))
-                        {
-                            _polizaNueva = false;
-                            break;
-                        }
-                        break;
-                    }
-                }
-                if (!_polizaNueva)
-                    break;
             }
         }
 

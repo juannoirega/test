@@ -369,5 +369,41 @@ namespace Robot.Util.Nacar
             }
             return true;
         }
+
+        public bool RecorrerGrilla(IWebDriver _driver, string idTabla, string cabecera, string valorBuscar, ref int posicionFila)
+        {
+            //tabla
+            IList<IWebElement> _trColeccion = _driver.FindElement(By.Id(idTabla)).FindElements(By.XPath("id('" + idTabla + "')/tbody/tr"));
+
+            int _posicionCabecera = 0;
+            foreach (IWebElement item in _trColeccion)
+            {
+                IList<IWebElement> _td = item.FindElements(By.XPath("td"));
+
+                for (int j = 0; j < _td.Count; j++)
+                {
+                    string _Cabecera = _td[j].Text;
+                    if (_Cabecera.Contains(cabecera))
+                    {
+                        _posicionCabecera = j;
+                        break;
+                    }
+                    if (_posicionCabecera > 0)
+                    {
+                        string _valorFila = _td[_posicionCabecera].Text;
+
+                        if (_valorFila.Contains(valorBuscar))
+                        {
+                            return false;
+                        }
+                        break;
+                    }
+                }
+
+                posicionFila++;
+            }
+            return true;
+        }
+
     }
 }

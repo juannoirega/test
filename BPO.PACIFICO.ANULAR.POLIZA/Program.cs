@@ -9,6 +9,7 @@ using Robot.Util.Nacar;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -33,6 +34,8 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         #endregion
         #region VariablesGLoables
         private string _numeroPoliza = string.Empty;
+        private string _rutaDocumentos = string.Empty;
+
         //variable temporal
         //private static bool _esPortalBcp = false;
 
@@ -89,13 +92,14 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             Login();
             BuscarPoliza(ticket);
             AnularPoliza(ticket);
+            GuardarPdf(ticket);
         }
         private void AnularPoliza(Ticket ticket)
         {
             //if (_esPortalBcp)
             //    AnularPolizaPortalBcp();
             //else
-                AnularPolizaPolicyCenter(ticket);
+            AnularPolizaPolicyCenter(ticket);
         }
 
 
@@ -130,16 +134,16 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             //}
             //else
             //{
-                try
-                {
-                    //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-                    _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("No se puede acceder al sitio policycenter", ex);
-                }
-                //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
+            try
+            {
+                //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("No se puede acceder al sitio policycenter", ex);
+            }
+            //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
             //}
 
         }
@@ -161,16 +165,16 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             //}
             //else
             //{
-                try
-                {
-                    //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
-                    _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("No se puede acceder al sistema policycenter", ex);
-                }
-                //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
+            try
+            {
+                //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
+                _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("No se puede acceder al sistema policycenter", ex);
+            }
+            //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
             //}
 
         }
@@ -196,19 +200,19 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             //}
             //else
             //{
-                try
+            try
+            {
+                //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
+                if (!string.IsNullOrEmpty(_numeroPoliza))
                 {
-                    //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
-                    if (!string.IsNullOrEmpty(_numeroPoliza))
-                    {
-                        _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
-                    }
-                    //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
+                    _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
                 }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error al buscar el numero de poliza policycenter", ex);
-                }
+                //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al buscar el numero de poliza policycenter", ex);
+            }
             //}
 
         }
@@ -273,10 +277,65 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 _Funciones.Esperar(1);
 
                 _driverGlobal.SwitchTo().Alert().Accept();
+                _driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:JobCompleteDV:ViewPolicy")).Click();
             }
             catch (Exception ex)
             {
                 throw new Exception("Error al Anular la poliza en el sistema policycenter", ex);
+            }
+
+        }
+        private void GuardarPdf(Ticket ticket)
+        {
+            try
+            {
+                _Funciones.Esperar(2);
+                _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_Documents']")).SendKeys(Keys.Enter);
+                _Funciones.Esperar(2);
+
+                string _idTabla = "PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV";
+                string _cabecera = "Nombre";
+                string _valorBuscar = "ACCOUNTHOLDER";
+                int _posicionFila = -1;
+                bool _resultado = _Funciones.RecorrerGrilla(_driverGlobal, _idTabla, _cabecera, _valorBuscar, ref _posicionFila);
+                string _filaArchivo = _posicionFila.ToString();
+
+                _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV:" + _filaArchivo + ":DocumentsLV_ViewLink_link']")).Click();
+                _Funciones.Esperar(2);
+
+                //Ruta donde se guardan los pdfs
+                DirectoryInfo directory = new DirectoryInfo(@"D:/Users/E05167/AppData/Local/Temp/Guidewire");
+
+                var listaArchivos = directory.GetDirectories().OrderByDescending(f => f.LastWriteTime).First();
+                var archivopdf = listaArchivos.GetFiles()[0].Name;
+
+                //ruta pdf generado
+                string origenArchivo = Path.Combine(listaArchivos.FullName, archivopdf);
+
+                //Ruta Local Destino
+                string rutaDestino = Path.Combine(_rutaDocumentos, archivopdf);
+
+                //Cantidad Documentos
+                int CantidadDocumentos = ticket.TicketValues.Where(t => t.FieldId == eesFields.Default.documentos).ToList().Count;
+
+                File.Copy(origenArchivo, rutaDestino);
+
+                ticket.TicketValues.Add(new TicketValue { Value = rutaDestino, ClonedValueOrder = CantidadDocumentos + 1, TicketId = ticket.Id, FieldId = eesFields.Default.documentos });
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception("Error al guardar el archivo pdf", ex);
+            }
+
+            try
+            {
+                _robot.SaveTicketNextState(ticket, _estadoFinal);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("Ocurrio un error al avanzar al siguiente estado", ex);
             }
 
         }
@@ -290,8 +349,9 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 //_usuarioBcp = _robot.GetValueParamRobot("UsuarioBcp").ValueParam;
                 //_contraseñaBcp = _robot.GetValueParamRobot("PasswordBcp").ValueParam;
                 //_urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
-                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoErrorAP").ValueParam);
-                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguienteAP").ValueParam);
+                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
+                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
+                _rutaDocumentos = _robot.GetValueParamRobot("RutaDocumentos").ValueParam;
                 LogEndStep(4);
             }
             catch (Exception ex)
