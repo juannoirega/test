@@ -156,36 +156,16 @@ namespace Robot.Util.Nacar
 
         public void SeleccionarCombo(IWebDriver _driver, string idElement, string valorComparar)
         {
-            try
-            {
-                //Anina: Obtiene nombre del Driver
-                IList<IWebElement> oOption;
-                Type oTypeDriver = _driver.GetType();
-                //Obtiene lista de opciones según Webdriver:
-                if (oTypeDriver.Name == _cBPMWebDriver)
-                {
-                    oOption = _driver.FindElements(By.XPath(idElement));
-                }
-                else
-                {
-                    oOption = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
-                }
+            IList<IWebElement> oOption = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
 
-                for (int i = 0; i < oOption.Count; i++)
+            for (int i = 0; i < oOption.Count; i++)
+            {
+                if (oOption[i].Text.ToUpperInvariant().Equals(valorComparar))
                 {
-                    if (oOption[i].Text.ToUpperInvariant().Equals(valorComparar))
-                    {
-                        oOption[i].Click();
-                        Esperar();
-                        break;
-                    }
+                    oOption[i].Click();
+                    break;
                 }
             }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un error al seleccionar una opción.", Ex);
-            }
-
         }
 
         public string ObtenerValorDominio(Ticket ticket, int idCampoDominio)
@@ -326,7 +306,7 @@ namespace Robot.Util.Nacar
         }
 
         //Valida campos vacíos en TicketValues:
-        public Boolean ValidarCamposVacios(Ticket oTicket, int [] oCampos)
+        public Boolean ValidarCamposVacios(Ticket oTicket, int[] oCampos)
         {
             foreach (int nCampo in oCampos)
                 if (String.IsNullOrWhiteSpace(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == nCampo).Value.Trim()))

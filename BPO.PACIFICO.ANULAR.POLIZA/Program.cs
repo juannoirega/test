@@ -253,11 +253,11 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 int _idCampoDominioReembolso = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.forma_de_reembolso).Value.ToString());
 
                 string _textoDominioSolicitante = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioSolicitante);
-                _Funciones.SeleccionarCombo(_driverGlobal, _solicitanteIdElement, _textoDominioSolicitante);
+                _Funciones.SeleccionarCombo(_driverGlobal, _solicitanteIdElement, _textoDominioSolicitante.ToUpperInvariant());
                 _Funciones.Esperar(2);
 
                 string _textoDominioMotivo = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioMotivo);
-                _Funciones.SeleccionarCombo(_driverGlobal, _motivoIdElement, _textoDominioMotivo);
+                _Funciones.SeleccionarCombo(_driverGlobal, _motivoIdElement, _textoDominioMotivo.ToUpperInvariant());
                 _Funciones.Esperar(2);
 
                 string _fechaEfectivaCancelacion = _Funciones.ObtenerValorElemento(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date");
@@ -266,7 +266,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 _Funciones.Esperar(2);
 
                 string _textoDominioReembolso = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioReembolso);
-                _Funciones.SeleccionarCombo(_driverGlobal, _reembolsoIdElement, _textoDominioReembolso);
+                _Funciones.SeleccionarCombo(_driverGlobal, _reembolsoIdElement, _textoDominioReembolso.ToUpperInvariant());
                 _Funciones.Esperar(2);
 
                 _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:NewCancellation")).Click();
