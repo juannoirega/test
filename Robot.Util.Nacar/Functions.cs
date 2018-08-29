@@ -156,36 +156,16 @@ namespace Robot.Util.Nacar
 
         public void SeleccionarCombo(IWebDriver _driver, string idElement, string valorComparar)
         {
-            try
-            {
-                //Anina: Obtiene nombre del Driver
-                IList<IWebElement> oOption;
-                Type oTypeDriver = _driver.GetType();
-                //Obtiene lista de opciones según Webdriver:
-                if (oTypeDriver.Name == _cBPMWebDriver)
-                {
-                    oOption = _driver.FindElements(By.XPath(idElement));
-                }
-                else
-                {
-                    oOption = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
-                }
+            IList<IWebElement> oOption = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
 
-                for (int i = 0; i < oOption.Count; i++)
+            for (int i = 0; i < oOption.Count; i++)
+            {
+                if (oOption[i].Text.ToUpperInvariant().Equals(valorComparar))
                 {
-                    if (oOption[i].Text.ToUpperInvariant().Equals(valorComparar))
-                    {
-                        oOption[i].Click();
-                        Esperar();
-                        break;
-                    }
+                    oOption[i].Click();
+                    break;
                 }
             }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un error al seleccionar una opción.", Ex);
-            }
-
         }
 
         public string ObtenerValorDominio(Ticket ticket, int idCampoDominio)
@@ -326,7 +306,7 @@ namespace Robot.Util.Nacar
         }
 
         //Valida campos vacíos en TicketValues:
-        public Boolean ValidarCamposVacios(Ticket oTicket, int [] oCampos)
+        public Boolean ValidarCamposVacios(Ticket oTicket, int[] oCampos)
         {
             foreach (int nCampo in oCampos)
                 if (String.IsNullOrWhiteSpace(oTicket.TicketValues.FirstOrDefault(o => o.FieldId == nCampo).Value.Trim()))
@@ -369,5 +349,41 @@ namespace Robot.Util.Nacar
             }
             return true;
         }
+
+        public bool RecorrerGrilla(IWebDriver _driver, string idTabla, string cabecera, string valorBuscar, ref int posicionFila)
+        {
+            //tabla
+            IList<IWebElement> _trColeccion = _driver.FindElement(By.Id(idTabla)).FindElements(By.XPath("id('" + idTabla + "')/tbody/tr"));
+
+            int _posicionCabecera = 0;
+            foreach (IWebElement item in _trColeccion)
+            {
+                IList<IWebElement> _td = item.FindElements(By.XPath("td"));
+
+                for (int j = 0; j < _td.Count; j++)
+                {
+                    string _Cabecera = _td[j].Text;
+                    if (_Cabecera.Contains(cabecera))
+                    {
+                        _posicionCabecera = j;
+                        break;
+                    }
+                    if (_posicionCabecera > 0)
+                    {
+                        string _valorFila = _td[_posicionCabecera].Text;
+
+                        if (_valorFila.Contains(valorBuscar))
+                        {
+                            return false;
+                        }
+                        break;
+                    }
+                }
+
+                posicionFila++;
+            }
+            return true;
+        }
+
     }
 }

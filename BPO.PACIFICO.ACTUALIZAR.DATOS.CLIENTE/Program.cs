@@ -23,15 +23,15 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
     {
         private static BaseRobot<Program> _robot = null;
         private static IWebDriver _driverGlobal = new InternetExplorerDriver();
-
-
+        string campo = string.Empty;
+        string texto = string.Empty;
         private static Functions _Funciones;
-        Ticket ticket = new Ticket();
+      
         static string[] _valoresTickets = new string[10];
         static string[] _valoresTickets_Ident = new string[10];
-        static List<DomainValue> _listadoCampos = null;
-        static List<DomainValue> _listadoPosicion = null;
-
+      
+        Ticket ticket = new Ticket();
+        List<TicketValue> ticketVa = null;
         #region ParametrosRobot
         private string _urlContactManager = string.Empty;
         private string _usuarioContactManager = string.Empty;
@@ -97,9 +97,12 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _valoresTickets[1] = "20100049181";
                 //DNI - RUC
                 _valoresTickets[2] = "Salud";
-
-
-
+                
+               
+                
+                ticket = _robot.Tickets.FirstOrDefault();
+                ticketVa = _robot.GetDataQueryTicketValue().Where(a => a.TicketId == ticket.Id).ToList();
+                
             }
             catch (Exception ex)
             {
@@ -200,7 +203,18 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             _driverGlobal.FindElement(By.Id("ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Edit")).Click();
             _Funciones.Esperar(3);
 
-            EditarFormulario();
+            //var container = ODataContextWrapper.GetContainer();
+
+            //foreach (TicketValue item in ticketVa)
+            //{
+            //    var Fiel = container.Fields.Where(f => f.Id == item.FieldId).Select(t => new { t.Label }).FirstOrDefault();
+            //    campo = Fiel.Label;
+            //    texto = item.Value;
+            //    if (texto != "")
+            //        EditarFormulario(campo, texto);
+            //}
+
+            //EditarFormulario();
         }
 
         public void EditarFormulario()
@@ -209,7 +223,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             String comparar = _valoresTickets_Ident[3];
 
             switch (comparar)
-            {
+            { 
                 case "Nacionalidad":
                     CambiarNacionalidad(texto);
                     break;
