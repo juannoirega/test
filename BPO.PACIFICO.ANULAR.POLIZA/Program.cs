@@ -248,9 +248,9 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 string _descripcionMotivo = "SE DEJA CONSTANCIA POR EL PRESENTE ENDOSO QUE, LA POLIZA DEL RUBRO QUEDA CANCELADA, NULA Y SIN VALOR PARA TODOS SUS EFECTOS A PARTIR DEL";
 
 
-                int _idCampoDominioSolicitante = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 1051).Value.ToString());
-                int _idCampoDominioMotivo = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 11).Value.ToString());
-                int _idCampoDominioReembolso = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 16).Value.ToString());
+                int _idCampoDominioSolicitante = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.solicitante).Value.ToString());
+                int _idCampoDominioMotivo = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.motivo_anular).Value.ToString());
+                int _idCampoDominioReembolso = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.forma_de_reembolso).Value.ToString());
 
                 string _textoDominioSolicitante = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioSolicitante);
                 _Funciones.SeleccionarCombo(_driverGlobal, _solicitanteIdElement, _textoDominioSolicitante);

@@ -181,7 +181,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 _nombreAsegurado = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Name");
 
                 try
-                {
+                {//Agregar id ComboBox Paginacion
                     _idDesplegable = _Funciones.ObtenerValorElemento(_driverGlobal, "FALTA ID DEL COMBOBOX");
                 }
                 catch
@@ -192,6 +192,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 int count = 0;
                 if (!string.IsNullOrEmpty(_idDesplegable))
                 {
+                    //Agregar id ComboBox Paginacion
                     IList<IWebElement> _option = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX")).FindElements(By.XPath("//option"));
 
                     for (int h = 1; h < _option.Count; h++)
@@ -201,6 +202,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                         if (!_polizaNueva)
                             break;
 
+                        //Agregar id ComboBox Paginacion
                         IList<IWebElement> _option2 = _driverGlobal.FindElement(By.Name("FALTA ID DEL COMBOBOX")).FindElements(By.XPath("//option"));
                         _option2[h].Click();
                     }
