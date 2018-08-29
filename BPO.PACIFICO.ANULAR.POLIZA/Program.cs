@@ -349,9 +349,10 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 //_usuarioBcp = _robot.GetValueParamRobot("UsuarioBcp").ValueParam;
                 //_contraseñaBcp = _robot.GetValueParamRobot("PasswordBcp").ValueParam;
                 //_urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
-                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
-                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
-                _rutaDocumentos = _robot.GetValueParamRobot("RutaDocumentos").ValueParam;
+
+                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoErrorAP").ValueParam);
+                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguienteAP").ValueParam);
+
                 LogEndStep(4);
             }
             catch (Exception ex)
