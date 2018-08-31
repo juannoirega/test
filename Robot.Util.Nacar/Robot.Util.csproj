@@ -111,6 +111,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="eesDomains.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>eesDomains.settings</DependentUpon>
+    </Compile>
     <Compile Include="eesFields.cs" />
     <Compile Include="eesFields.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -128,6 +133,10 @@
   <ItemGroup>
     <None Include="app.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="eesDomains.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>eesDomains.Designer.cs</LastGenOutput>
     </None>
     <None Include="eesFields.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
