@@ -8,6 +8,7 @@ using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Newtonsoft.Json;
+using Robot.Util.Nacar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
      class Program : IRobot
     {
         static BaseRobot<Program> _robot = null;
+
+        private static Functions _Funciones;
 
         static string[] _valores = new string[10];
         static string[] _valoresTicket = new string[6];
@@ -52,44 +55,52 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
         public void ProcesarTicket()
         {
-            ticket = _robot.Tickets.FirstOrDefault();
-
-            
-            _valoresTicket[0] = "Luis Kevin Trujillo Hoyos";
-            _valoresTicket[1] = "N° 12345678900";
-            //VALOR QUE DETERMINARA DEL DOMINIO FUNCIONAL Y QUE PLANTILLA USARA PARA LA NOTIFICIACIÓN EMAIL
-            _valoresTicket[2] = "8";
-            //Correos 
-            _valoresTicket[3] = "luistrujilloh@hotmail.com,ltrujill@everis.com";
-            //Correos Copias
-            _valoresTicket[4] = "bponaa@gmail.com";
-            
-            GetRobotParam();
-
-            //Optener todos lo Ticket del Workflow "Adjuntar Documentos"
-            List<Ticket> ticketDocumento = _robot.GetDataQueryTicket().Where(t => t.StateId == Convert.ToInt32(_valores[3])).ToList();
-
-            //Almacenar los TicketValue de Tickets
-            foreach (var item in ticketDocumento)
+            try
             {
-                ticketValue.Add(_robot.GetDataQueryTicketValue().Where(t => t.TicketId == item.Id).OrderBy(t => t.Id).First());
-                ticketValue.Add(_robot.GetDataQueryTicketValue().Where(t => t.TicketId == item.Id).OrderByDescending(t => t.Id).First());
+                ticket = _robot.Tickets.FirstOrDefault();
+
+
+                _valoresTicket[0] = "Luis Kevin Trujillo Hoyos";
+                _valoresTicket[1] = "N° 12345678900";
+                //VALOR QUE DETERMINARA DEL DOMINIO FUNCIONAL Y QUE PLANTILLA USARA PARA LA NOTIFICIACIÓN EMAIL
+                _valoresTicket[2] = "8";
+                //Correos 
+                _valoresTicket[3] = "luistrujilloh@hotmail.com,ltrujill@everis.com";
+                //Correos Copias
+                _valoresTicket[4] = "bponaa@gmail.com";
+
+                GetRobotParam();
+
+                //Optener todos lo Ticket del Workflow "Adjuntar Documentos"
+                List<Ticket> ticketDocumento = _robot.GetDataQueryTicket().Where(t => t.StateId == Convert.ToInt32(_valores[3])).ToList();
+
+                //Almacenar los TicketValue de Tickets
+                foreach (var item in ticketDocumento)
+                {
+                    ticketValue.Add(_robot.GetDataQueryTicketValue().Where(t => t.TicketId == item.Id).OrderBy(t => t.Id).First());
+                    ticketValue.Add(_robot.GetDataQueryTicketValue().Where(t => t.TicketId == item.Id).OrderByDescending(t => t.Id).First());
+                }
+
+                //Opteneniendo la Ruta de la Plantilla
+                _rutaPlantilla = ticketValue.OrderByDescending(t => t.Id).FirstOrDefault(o => o.TicketId == ticketValue.OrderByDescending(t => t.Id).FirstOrDefault(tv => tv.Value == _valoresTicket[2]).TicketId).Value;
+
+                LeerArchivo(_rutaPlantilla);
+                //Metodo Email
+                EnviarEmail();
+
+                if (_valoresTicket[2] == _valoresTicket[2])
+                    _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[0]));
+
+                else
+                    _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[1]));
             }
+            catch (Exception ex)
+            {
 
-            //Opteneniendo la Ruta de la Plantilla
-            _rutaPlantilla = ticketValue.OrderByDescending(t => t.Id).FirstOrDefault(o => o.TicketId == ticketValue.OrderByDescending(t => t.Id).FirstOrDefault(tv => tv.Value == _valoresTicket[2]).TicketId).Value;
-
-            LeerArchivo(_rutaPlantilla);
-            //Metodo Email
-            EnviarEmail();
-
-            if (_valoresTicket[2] == _valoresTicket[2])
-                _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[0]));
-
-            else
-                _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[1]));
-
-        }
+                LogFailStep(30, ex);
+                //_robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
+            }
+         }
 
         public void GetRobotParam()
         {
