@@ -385,5 +385,22 @@ namespace Robot.Util.Nacar
             return true;
         }
 
+        public FunctionalDomains<List<DomainValue>> GetDomainValuesByParameters(Func<FunctionalDomains<List<DomainValue>>, FunctionalDomains<List<DomainValue>>> SearchDomain
+                                                                                ,string nameFunctionalDomain
+                                                                                ,string[,] parametersQueryable
+                                                                                ,int page = 1
+                                                                                ,int bufferSize = 100)
+        {
+            Dictionary<string, List<string>> parameters = new Dictionary<string, List<string>>();
+            for (int i = 0; i < parametersQueryable.GetLength(0); i++)
+            {
+                parameters.Add(parametersQueryable[i, 0], new List<string> { parametersQueryable[i, 1] });
+            }
+
+            FunctionalDomains<List<DomainValue>> objSearch = FunctionalDomains<List<DomainValue>>.CreateFunctionalDomainsSearch(nameFunctionalDomain, parameters, page, bufferSize);
+
+            FunctionalDomains<List<DomainValue>> objResult = SearchDomain(objSearch);
+            return objResult;
+        }                                                   
     }
 }
