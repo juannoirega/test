@@ -93,6 +93,42 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
         private void ProcesarTicket(Ticket ticket)
         {
+            bool _buscarPolicyCenter, _existeValorProducto, _buscarContactManager;
+            int _idEstadoInicio;
+            try
+            {
+                FunctionalDomains<List<DomainValue>> objSearch4 = _Funciones.GetDomainValuesByParameters(_robot.SearchDomain, "Procesos", new string[,] { { "nombre", "Anulación de Póliza" }, { "activo", "1" } });
+                //cambiar id 18 referencial por el id del campo producto real
+                _existeValorProducto = !string.IsNullOrEmpty(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 18).Value.ToString()) ? true : false;
+                _buscarPolicyCenter = objSearch4.FunctionalDomain[2].Value.ToString() == "1" ? true : false;
+                _buscarContactManager = objSearch4.FunctionalDomain[3].Value.ToString() == "1" ? true : false;
+                _idEstadoInicio = Convert.ToInt32(objSearch4.FunctionalDomain[4].Value.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al Verificar el tipo de Proceso", ex);
+            }
+
+            if (_buscarPolicyCenter)
+            {
+                if (!_existeValorProducto)
+                    BuscarPolicyCenter(ticket);
+            }
+
+            if (_buscarContactManager)
+            {
+                List<StateAction> accionesEstado = _robot.GetNextStateAction(_robot.Tickets.FirstOrDefault());
+                StateAction siguienteEstado = accionesEstado.Where(se => se.ActionDescription == "Ir ContactManager").FirstOrDefault();
+                _robot.SaveTicketNextState(ticket, siguienteEstado.Id);
+            }
+            else
+            {
+                _robot.SaveTicketNextState(ticket, _idEstadoInicio);
+            }
+
+        }
+        private void BuscarPolicyCenter(Ticket ticket)
+        {
             AbrirSelenium();
             NavegarUrl();
             Login();
@@ -111,7 +147,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             {
                 throw new Exception("Error al Iniciar Internet Explorer", ex);
             }
-            //LogInfoStep(6);//id referencial msje Log "Finalizando la carga Internet Explorer"
 
         }
         private void NavegarUrl()
@@ -126,8 +161,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             {
                 throw new Exception("No se pudo acceder al sitio policenter", ex);
             }
-            //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
-
 
         }
         private void Login()
@@ -143,7 +176,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 throw new Exception("No se pudo acceder al sistema policenter", ex);
 
             }
-            //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
 
         }
         private void BuscarPoliza(Ticket ticket)
@@ -152,7 +184,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-                //obtener el numero  de Poliza
                 _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.numero_de_poliza).Value.ToString();
 
                 _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
@@ -248,7 +279,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         }
         private void GetParameterRobots()
         {
-
             _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
             _usuario = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
             _contraseña = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
