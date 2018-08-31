@@ -35,6 +35,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         #region VariablesGLoables
         private string _numeroPoliza = string.Empty;
         private string _rutaDocumentos = string.Empty;
+        private string _numeroEndoso = string.Empty;
 
         //variable temporal
         //private static bool _esPortalBcp = false;
@@ -73,8 +74,6 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 {
                     LogFailStep(30, ex);
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
-                    //Enviar a mesa control con mmensaje
-                    //capturar imagen
                 }
                 finally
                 {
@@ -283,7 +282,33 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             {
                 throw new Exception("Error al Anular la poliza en el sistema policycenter", ex);
             }
+            try
+            {
+                IList<IWebElement> _trColeccion = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV")).FindElements(By.XPath("id('PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV')/tbody/tr"));
 
+                int _posicionTd = 0;
+                foreach (IWebElement item in _trColeccion)
+                {
+                    IList<IWebElement> _td = item.FindElements(By.XPath("td"));
+
+                    for (int j = 0; j < _td.Count; j++)
+                    {
+                        string _tipoCabecera = _td[j].Text;
+                        if (_tipoCabecera.Equals("N.° de orden de trabajo"))
+                        {
+                            _posicionTd = j;
+                            break;
+                        }
+                        if (_posicionTd > 0)
+                        {
+                            _numeroEndoso = _td[_posicionTd].Text;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { throw new Exception("Error al buscar numero de orden de trabajo", ex); }
+
+            ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, Value = _numeroEndoso, FieldId = eesFields.Default.numero_de_endoso });
         }
         private void GuardarPdf(Ticket ticket)
         {
