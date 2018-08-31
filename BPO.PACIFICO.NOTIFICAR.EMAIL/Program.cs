@@ -54,11 +54,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
         {
             ticket = _robot.Tickets.FirstOrDefault();
 
-            //Datos del Ticket
-            //_valoresTicket[0] = ticket.TicketValues[0].Value;
-            //_valoresTicket[1] = ticket.TicketValues[1].Value;
-            //_valoresTicket[1] = ticket.TicketValues[1].Value;
-
+            
             _valoresTicket[0] = "Luis Kevin Trujillo Hoyos";
             _valoresTicket[1] = "N° 12345678900";
             //VALOR QUE DETERMINARA DEL DOMINIO FUNCIONAL Y QUE PLANTILLA USARA PARA LA NOTIFICIACIÓN EMAIL
@@ -66,7 +62,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //Correos 
             _valoresTicket[3] = "luistrujilloh@hotmail.com,ltrujill@everis.com";
             //Correos Copias
-            _valoresTicket[4] = "deyssilavadoa@hotmail.com,bponaa@gmail.com";
+            _valoresTicket[4] = "bponaa@gmail.com";
             
             GetRobotParam();
 

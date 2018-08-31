@@ -31,13 +31,12 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         static string[] _valoresTickets_Ident = new string[10];
       
         Ticket ticket = new Ticket();
-        List<TicketValue> ticketVa = null;
+        List<TicketValue> ticketValue = null;
+
         #region ParametrosRobot
         private string _urlContactManager = string.Empty;
         private string _usuarioContactManager = string.Empty;
         private string _contraseñaContactManager = string.Empty;
-        private string _ToblaPersonaCampos = string.Empty;
-        private string _ToblaPersonaPosicion = string.Empty;
         #endregion
 
 
@@ -61,13 +60,14 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
             }
 
+
+
+
         }
 
         private void ProcesarTicket()
         {
-            ticket = _robot.Tickets.FirstOrDefault();
-
-            //= ticket.TicketValues[0].Value
+           
             AbrirSelenium();
             NavegarUrl();
             Login();
@@ -80,34 +80,34 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             try
             {
-
-
-                //Identificador  Tipo Contacto 
-                _valoresTickets_Ident[0] = "Empresa";
-                //Tipo Documento
-                _valoresTickets_Ident[1] = "RUC";
-                //iden
-                _valoresTickets_Ident[3] = "Sector Económico";
-
-
-                //Datos
-                //Codigo Contacto
-                _valoresTickets[0] = "";
-                //DNI - RUC
-                _valoresTickets[1] = "20100049181";
-                //DNI - RUC
-                _valoresTickets[2] = "Salud";
-                
                
-                
+                var container = ODataContextWrapper.GetContainer();
+
                 ticket = _robot.Tickets.FirstOrDefault();
-                ticketVa = _robot.GetDataQueryTicketValue().Where(a => a.TicketId == ticket.Id).ToList();
+
+                ticketValue = _robot.GetDataQueryTicketValue().Where(a => a.TicketId == ticket.Id).ToList();
+
+
+                String[] listaCampos = (ticket.TicketValues[7].Value).Split(',');
+
+                foreach (string campo in listaCampos)
+                {
+                    var Fiel = container.Fields.Where(f => f.Name == campo.ToString()).Select(t => new { t.Id, t.Label }).FirstOrDefault();
+                    var texto = ticketValue.Where(t => t.FieldId == Convert.ToInt32(Fiel.Id)).Select(t => new { t.Value }).FirstOrDefault();
+
+                    EditarFormulario(Fiel.Label.ToString(), texto.Value.ToString());
+                }
                 
+
+                _robot.SaveTicketNextState(ticket, 1008);
+
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception("Error al Obtener los Valores del robot", ex);
+
+                throw;
             }
+
         }
 
 
@@ -118,8 +118,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _urlContactManager = _robot.GetValueParamRobot("URLContactManager").ValueParam;
                 _usuarioContactManager = _robot.GetValueParamRobot("UsuarioContactManager").ValueParam;
                 _contraseñaContactManager = _robot.GetValueParamRobot("PasswordContactManager").ValueParam;
-                _ToblaPersonaCampos = _robot.GetValueParamRobot("TablaPersonaCampo").ValueParam;
-                _ToblaPersonaPosicion = _robot.GetValueParamRobot("TablaPersonaPosicion").ValueParam;
             }
             catch (Exception ex)
             {
@@ -203,26 +201,12 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             _driverGlobal.FindElement(By.Id("ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Edit")).Click();
             _Funciones.Esperar(3);
 
-            //var container = ODataContextWrapper.GetContainer();
-
-            //foreach (TicketValue item in ticketVa)
-            //{
-            //    var Fiel = container.Fields.Where(f => f.Id == item.FieldId).Select(t => new { t.Label }).FirstOrDefault();
-            //    campo = Fiel.Label;
-            //    texto = item.Value;
-            //    if (texto != "")
-            //        EditarFormulario(campo, texto);
-            //}
-
-            //EditarFormulario();
+          
         }
 
-        public void EditarFormulario()
+        public void EditarFormulario(String campo, String texto)
         {
-            String texto = _valoresTickets[2];
-            String comparar = _valoresTickets_Ident[3];
-
-            switch (comparar)
+            switch (campo)
             { 
                 case "Nacionalidad":
                     CambiarNacionalidad(texto);
