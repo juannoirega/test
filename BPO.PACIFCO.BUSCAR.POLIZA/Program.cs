@@ -82,7 +82,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 {
                     LogFailStep(30, ex);
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
-                    //capturar imagen
                 }
                 finally
                 {
@@ -103,7 +102,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         }
         private void AbrirSelenium()
         {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
+            LogStartStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
             try
             {
                 _Funciones.AbrirSelenium(ref _driverGlobal);
@@ -117,7 +116,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         }
         private void NavegarUrl()
         {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+            LogStartStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
 
             try
             {
@@ -133,7 +132,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         }
         private void Login()
         {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
+            LogStartStep(5);//id referencial msje Log "Iniciando login policenter"
 
             try
             {
@@ -149,7 +148,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         }
         private void BuscarPoliza(Ticket ticket)
         {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
+            LogStartStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
 
             try
             {
@@ -158,16 +157,12 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
                 _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al buscar el numero de poliza", ex);
-            }
-            //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
-
+            catch (Exception ex) { throw new Exception("Error al buscar el numero de poliza", ex); }
         }
 
         private void ObtenerDatos(Ticket ticket)
         {
+            LogStartStep(5);//id referencial msje Log "Iniciando Busqueda de Datos PolicyCenter"
             string _idDesplegable = string.Empty;
             try
             {
@@ -227,14 +222,12 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
                 throw new Exception("Error al Obtener los datos del sistema", ex);
             }
-            //LogInfoStep(5);//id referencial msje Log "Se obtubieron los datos del sistema Policenter"
-
-
         }
 
 
         private void GrabarInformacion(Ticket ticket)
         {
+            LogStartStep(5);//id referencial msje Log "Iniciando Guardar informacion en el Ticket"
             try
             {
                 string[] ValorCampos = { _producto, _inicioVigencia, _finVigencia, _agente, _numeroAgente, _tipo, _tipoVigencia, _estado, _numeroCanal,_numeroAsegurados,
@@ -246,40 +239,22 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
                 for (int i = 0; i < ValorCampos.Length; i++)
                     ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = IdCampos[i], Value = ValorCampos[i] });
-                
-
             }
             catch (Exception ex)
             {
                 throw new Exception("Ocurrio un Error al grabar la informacion en el ticket", ex);
             }
 
-            try
-            {
-                _robot.SaveTicketNextState(ticket,_estadoFinal);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Ocurrio un Error al avanzar al siguiente estado", ex);
-            }
-            //LogInfoStep(5);//id referencial msje Log "Se Guardo la Informacion en el ticket"
-
         }
         private void GetParameterRobots()
-        { 
-            try
-            {
-                _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
-                _usuario = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
-                _contraseña = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
-                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoErrorAP").ValueParam);
-                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguienteAP").ValueParam);
-                LogEndStep(4);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Obtener los parametros del robot", ex);
-            }
+        {
+
+            _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
+            _usuario = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
+            _contraseña = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
+            _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoErrorAP").ValueParam);
+            _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguienteAP").ValueParam);
+            LogEndStep(4);
         }
 
     }

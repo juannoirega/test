@@ -168,13 +168,13 @@ namespace Robot.Util.Nacar
             }
         }
 
-        public string ObtenerValorDominio(Ticket ticket, int idCampoDominio)
+        public string ObtenerValorDominio(Ticket ticket, int idDominio)
         {
             var container = ODataContextWrapper.GetContainer();
             try
             {
                 if (ticket != null)
-                    return container.DomainValues.FirstOrDefault(p => p.Id == idCampoDominio).Value.Trim().ToUpperInvariant();
+                    return container.DomainValues.FirstOrDefault(p => p.Id == idDominio).Value.Trim().ToUpperInvariant();
             }
             catch
             {
