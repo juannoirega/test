@@ -9,6 +9,7 @@ using Everis.Ees.Entities;
 using System.Threading;
 using Microsoft.VisualBasic;
 using Robot.Util.Nacar;
+using everis.Ees.Proxy.Services;
 
 namespace BPO.PACIFICO.PROCESARDATOS.AP
 {
@@ -45,10 +46,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                 _Funciones = new Functions();
                 _oRobot.Start();
             }
-            catch (Exception Ex)
-            {
-                Console.WriteLine(Ex.Message);
-            }
+            catch (Exception Ex) { Console.WriteLine(Ex.Message); }
         }
 
         protected override void Start()
@@ -112,6 +110,23 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
 
         //Inicia el procesamiento de datos:
         private void ProcesarTicket(Ticket oTicketDatos)
+        {
+            ObtieneLineaDeNegocio(oTicketDatos);
+            Condicionales(oTicketDatos);
+        }
+
+        private void ObtieneLineaDeNegocio(Ticket oTicketDatos)
+        {
+            try
+            {
+                var oContainer = ODataContextWrapper.GetContainer();
+                List<DomainValue> oDomainValues = new List<DomainValue>();
+                oDomainValues = oContainer.DomainValues.Where(a => a.DomainId == eesFields.Default.tipo_de_linea).ToList();
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener Línea de Negocio: " + Ex.Message, Ex); }
+        }
+
+        private void Condicionales(Ticket oTicketDatos)
         {
             //Valida Línea de la Póliza:
             if (_cLinea == _cRehabilitacionAutos)
