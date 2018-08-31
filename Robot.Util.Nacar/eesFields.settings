@@ -185,5 +185,11 @@
     <Setting Name="departamento" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1076</Value>
     </Setting>
+    <Setting Name="tipo_de_producto" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1101</Value>
+    </Setting>
+    <Setting Name="numero_de_endoso" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1102</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

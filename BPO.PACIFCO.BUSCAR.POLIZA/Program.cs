@@ -30,6 +30,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         #region VariablesGLoables
         private string _numeroPoliza = string.Empty;
         private string _producto = string.Empty;
+        private string _tipoProducto = string.Empty;
         private string _inicioVigencia = string.Empty;
         private string _finVigencia = string.Empty;
         private string _numeroAgente = string.Empty;
@@ -198,6 +199,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             try
             {
                 _producto = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
+                _tipoProducto = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:PolicyTypeExt");
                 _inicioVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerEffDate_date");
                 _finVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerExpirDate_date");
                 _tipo = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:Type");
@@ -262,11 +264,11 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             try
             {
                 string[] ValorCampos = { _producto, _inicioVigencia, _finVigencia, _agente, _numeroAgente, _tipo, _tipoVigencia, _estado, _numeroCanal,_numeroAsegurados,
-                _numeroVehiculos,_nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva)};
+                _numeroVehiculos,_nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva),_tipoProducto};
 
                 int[] IdCampos = { eesFields.Default.producto, eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia, eesFields.Default.agente,
                 eesFields.Default.num_agente,eesFields.Default.tipo_poliza,eesFields.Default.tipo_vigencia,eesFields.Default.estado_poliza,eesFields.Default.canal,eesFields.Default.num_asegurados,
-                eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado,eesFields.Default.poliza_nueva};
+                eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado,eesFields.Default.poliza_nueva,eesFields.Default.tipo_de_producto};
 
                 for (int i = 0; i < ValorCampos.Length; i++)
                     ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = IdCampos[i], Value = ValorCampos[i] });
