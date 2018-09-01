@@ -1,4 +1,4 @@
-﻿using everis.Ees.Proxy.Core;
+using everis.Ees.Proxy.Core;
 using everis.Ees.Proxy.Services;
 using everis.Ees.Proxy.Services.Interfaces;
 using Everis.Ees.Entities;
@@ -77,7 +77,7 @@ namespace BPO.PACIFICO.CREAR.TICKET.HIJO
             {
                 var container = ODataContextWrapper.GetContainer();
 
-                var ticket = container.Tickets.FirstOrDefault(o => o.Id == ticketPadre.Id);
+                var ticket = container.Tickets.Where(o => o.Id == ticketPadre.Id).FirstOrDefault();
 
                 if (error)
                     ticket.StateId = Convert.ToInt32(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == _estadoError).Value);
@@ -104,6 +104,8 @@ namespace BPO.PACIFICO.CREAR.TICKET.HIJO
 
         private Ticket GeneraValuesHijo(Ticket ticketPadre, Ticket nuevoTicket, string[] campos)
         {
+            campos = campos.Where(o => o != "").ToArray(); 
+
             foreach (string campo in campos)
                 if (ticketPadre.TicketValues.Where(o => o.FieldId == Convert.ToInt32(campo)).ToList().Count < 2)
                     nuevoTicket.TicketValues.Add(ticketPadre.TicketValues.FirstOrDefault(o => o.FieldId == Convert.ToInt32(campo)));
