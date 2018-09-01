@@ -1,4 +1,4 @@
-﻿using everis.Ees.Proxy.Core;
+using everis.Ees.Proxy.Core;
 using everis.Ees.Proxy.Services.Interfaces;
 using Everis.Ees.Entities;
 using Google.Apis.Auth.OAuth2;
@@ -30,7 +30,7 @@ namespace GmailQuickstart
         static string[] Scopes = { GmailService.Scope.GmailReadonly };
         static string[] _palabras = new string[2];
         static string[] _valores = new string[10];
-        static string _userId = "bponaa@gmail.com";
+        static string _userId = "soportecorredor_des@pacifico.com.pe";
         static List<string> _adjuntos = null;
         static int[] _fields = { eesFields.Default.cuerpo_de_email, eesFields.Default.asunto_de_email, eesFields.Default.estado_error, eesFields.Default.estado_hijo, eesFields.Default.estado_padre, eesFields.Default.fields, eesFields.Default.fecha_hora_de_email, eesFields.Default.email_solicitante, eesFields.Default.email_en_copia };
         static string ApplicationName = "Gmail API .NET Quickstart";
@@ -88,7 +88,7 @@ namespace GmailQuickstart
             UserCredential credential;
 
             using (var stream =
-                new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+                new FileStream("credentials.json", FileMode.Open, FileAccess.ReadWrite))
             {
                 string credPath = "token.json";
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
@@ -127,6 +127,7 @@ namespace GmailQuickstart
 
                     Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
                     AcionRequest(infoResponse, service);
+                  
                     _listado.Clear();
                 }
             }
@@ -187,6 +188,7 @@ namespace GmailQuickstart
                     _valores[0] = DecodeBase64(body);
 
 
+
                     EvaluarPuntuacion(String.Concat(DecodeBase64(body), " ", _valores[1]), new Ticket { Priority = PriorityType.Media, RobotVirtualMachineId = null, StateId = null });
 
                     Array.Clear(_valores, 0, _valores.Length);
@@ -206,7 +208,8 @@ namespace GmailQuickstart
                 List<string> files = new List<string>();
                 foreach (MessagePart part in parts)
                 {
-                    if (!String.IsNullOrEmpty(part.Filename))
+                   
+                    if (!String.IsNullOrEmpty(part.Filename)&& part.Filename.Substring(part.Filename.Length - 3,3)!="gif")
                     {
                         String attId = part.Body.AttachmentId;
 
@@ -361,14 +364,16 @@ namespace GmailQuickstart
         {
             
 
-            for (int num = 1;  _adjuntos.Count> num; num++)
+            for (int num = 0;  _adjuntos.Count> num; num++)
             ticket.TicketValues.Add(new TicketValue { Value = _adjuntos[num], ClonedValueOrder = num, TicketId = ticket.Id, FieldId = eesFields.Default.documentos});
         }
 
         public void AdicionarValues(Ticket ticket)
         {
-            for (int cont = 0; 5 >= cont; cont++)
+            for (int cont = 0; _fields.Length > cont; cont++)
                 ticket.TicketValues.Add(new TicketValue { Value = _valores[cont], ClonedValueOrder = null, TicketId = ticket.Id, FieldId = _fields[cont] });
+
+            ticket.TicketValues.Add(new TicketValue { Value = _userId, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.email_dirigido });
 
         }
 
