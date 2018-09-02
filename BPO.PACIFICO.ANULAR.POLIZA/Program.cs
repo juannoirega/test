@@ -1,4 +1,4 @@
-﻿using everis.Ees.Proxy;
+using everis.Ees.Proxy;
 using everis.Ees.Proxy.Core;
 using everis.Ees.Proxy.Services.Interfaces;
 using Everis.Ees.Entities;
@@ -179,7 +179,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         }
         private void BuscarPoliza(Ticket ticket)
         {
-            _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
+            _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 25).Value.ToString();
 
             //if (_esPortalBcp)
             //{
@@ -375,8 +375,8 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 //_contraseñaBcp = _robot.GetValueParamRobot("PasswordBcp").ValueParam;
                 //_urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
 
-                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoErrorAP").ValueParam);
-                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguienteAP").ValueParam);
+                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
+                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
 
                 LogEndStep(4);
             }
