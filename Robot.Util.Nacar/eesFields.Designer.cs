@@ -583,10 +583,28 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1102")]
-        public int numero_de_endoso {
+        [global::System.Configuration.DefaultSettingValueAttribute("1113")]
+        public int tipo_de_interes {
             get {
-                return ((int)(this["numero_de_endoso"]));
+                return ((int)(this["tipo_de_interes"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1114")]
+        public int porcentaje {
+            get {
+                return ((int)(this["porcentaje"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1112")]
+        public int nombre_endosatario {
+            get {
+                return ((int)(this["nombre_endosatario"]));
             }
         }
     }

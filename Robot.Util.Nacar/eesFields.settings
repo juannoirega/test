@@ -188,8 +188,14 @@
     <Setting Name="tipo_de_producto" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1101</Value>
     </Setting>
-    <Setting Name="numero_de_endoso" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1102</Value>
+    <Setting Name="tipo_de_interes" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1113</Value>
+    </Setting>
+    <Setting Name="porcentaje" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1114</Value>
+    </Setting>
+    <Setting Name="nombre_endosatario" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1112</Value>
     </Setting>
   </Settings>
 </SettingsFile>

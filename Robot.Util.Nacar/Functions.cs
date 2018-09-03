@@ -350,9 +350,10 @@ namespace Robot.Util.Nacar
             return true;
         }
 
-        public bool RecorrerGrilla(IWebDriver _driver, string idTabla, string cabecera, string valorBuscar, ref int posicionFila)
+        public bool VerificarValorGrilla(IWebDriver _driver, string idTabla, string cabecera, string valorBuscar, ref int posicionFila)
         {
             //tabla
+            bool _valorEncontrado = false;
             IList<IWebElement> _trColeccion = _driver.FindElement(By.Id(idTabla)).FindElements(By.XPath("id('" + idTabla + "')/tbody/tr"));
 
             int _posicionCabecera = 0;
@@ -374,7 +375,7 @@ namespace Robot.Util.Nacar
 
                         if (_valorFila.Contains(valorBuscar))
                         {
-                            return false;
+                            return _valorEncontrado = true;
                         }
                         break;
                     }
@@ -382,14 +383,39 @@ namespace Robot.Util.Nacar
 
                 posicionFila++;
             }
-            return true;
+            return _valorEncontrado;
+        }
+
+        public List<string> obtenerValorGrilla(IWebDriver _driver,string idtabla)
+        {
+            List<string> valor = new List<string>();
+            IList<IWebElement> _trColeccion = _driver.FindElement(By.Id(idtabla)).FindElements(By.XPath("id('" + idtabla + "')/tbody/tr"));
+
+            int _count = 0;
+            foreach (IWebElement item in _trColeccion)
+            {
+                IList<IWebElement> _td = item.FindElements(By.XPath("td"));
+                for (int j = 0; j < _td.Count; j++)
+                {
+                    if (_count == 0)
+                    {
+                        _count++;
+                        break;
+                    }
+                    valor.Add(_td[j].Text);
+                    _count++;
+                }
+                if (_count > 1)
+                    return valor;
+            }
+            return valor;
         }
 
         public FunctionalDomains<List<DomainValue>> GetDomainValuesByParameters(Func<FunctionalDomains<List<DomainValue>>, FunctionalDomains<List<DomainValue>>> SearchDomain
-                                                                                ,string nameFunctionalDomain
-                                                                                ,string[,] parametersQueryable
-                                                                                ,int page = 1
-                                                                                ,int bufferSize = 100)
+                                                                                , string nameFunctionalDomain
+                                                                                , string[,] parametersQueryable
+                                                                                , int page = 1
+                                                                                , int bufferSize = 100)
         {
             Dictionary<string, List<string>> parameters = new Dictionary<string, List<string>>();
             for (int i = 0; i < parametersQueryable.GetLength(0); i++)
@@ -401,6 +427,6 @@ namespace Robot.Util.Nacar
 
             FunctionalDomains<List<DomainValue>> objResult = SearchDomain(objSearch);
             return objResult;
-        }                                                   
+        }
     }
 }

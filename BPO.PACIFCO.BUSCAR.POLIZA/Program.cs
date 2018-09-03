@@ -42,9 +42,18 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private string _numeroCanal = string.Empty;
         private string _nombreContratante = string.Empty;
         private string _nombreAsegurado = string.Empty;
+        private string _procesoPolicyCenter = string.Empty;
+        private string _procesoContact = string.Empty;
+        private string _procesoInicio = string.Empty;
+        private string _nombreProceso = string.Empty;
+        private string _nombreEndosatario = string.Empty;
+        private string _tipoInteres = string.Empty;
+        private string _porcentaje = string.Empty;
         private bool _polizaNueva = true;
         private int _estadoError;
         private int _estadoFinal;
+        private int _dominioProceso;
+        private int _idProceso;
 
         //private static string _numeroDniContratante = string.Empty;
         //Pendiente
@@ -99,19 +108,20 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             int _idEstadoInicio;
             try
             {
-              var container = ODataContextWrapper.GetContainer();
+
+                var container = ODataContextWrapper.GetContainer();
                 //poner parametro
-                List<Domain> dominios = container.Domains.Expand(dv=>dv.DomainValues).Where(df=>df.ParentId==1055).ToList();
+                List<Domain> dominios = container.Domains.Expand(dv => dv.DomainValues).Where(df => df.ParentId == _dominioProceso).ToList();
 
                 //poner parametro
                 int numero = dominios.FirstOrDefault(o => o.Name == "nombre").DomainValues.FirstOrDefault(o => o.Value == "Anulación de Póliza").LineNumber;
-               // FunctionalDomains<List<DomainValue>> objSearch4 = _Funciones.GetDomainValuesByParameters(_robot.SearchDomain, "Procesos Version Final", new string[,] { { "nombre", "Anulación de Póliza" }, { "activo", "1" } });
+                // FunctionalDomains<List<DomainValue>> objSearch4 = _Funciones.GetDomainValuesByParameters(_robot.SearchDomain, "Procesos Version Final", new string[,] { { "nombre", "Anulación de Póliza" }, { "activo", "1" } });
                 //cambiar id 18 referencial por el id del campo producto real
                 _existeValorProducto = ValidacionProducto(ticket);
                 //poner parametro para las buquesdas de dominio
                 _buscarPolicyCenter = ValidacionPoliCenter(dominios, numero);
                 _buscarContactManager = ValidacionContactManager(dominios, numero);
-                _idEstadoInicio = Convert.ToInt32(dominios.FirstOrDefault(o => o.Name == "id_estado_inicio").DomainValues.FirstOrDefault(o => o.LineNumber == numero).Value);
+                _idEstadoInicio = Convert.ToInt32(dominios.FirstOrDefault(o => o.Name == _procesoInicio).DomainValues.FirstOrDefault(o => o.LineNumber == numero).Value);
             }
             catch (Exception ex)
             {
@@ -136,15 +146,16 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             }
 
         }
-        private bool ValidacionPoliCenter(List<Domain> dominios, int numero) {
+        private bool ValidacionPoliCenter(List<Domain> dominios, int numero)
+        {
 
             try
             {
-                if (dominios.FirstOrDefault(o => o.Name == "policy_center").DomainValues.FirstOrDefault(o => o.LineNumber == numero).Value == "1")
+                if (dominios.FirstOrDefault(o => o.Name == _procesoPolicyCenter).DomainValues.FirstOrDefault(o => o.LineNumber == numero).Value == "1")
                     return true;
                 else
                     return false;
-            
+
             }
             catch { return false; }
         }
@@ -153,7 +164,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-                if (dominios.FirstOrDefault(o => o.Name == "contact_manager").DomainValues.FirstOrDefault(o => o.LineNumber == numero).Value == "1")
+                if (dominios.FirstOrDefault(o => o.Name == _procesoContact).DomainValues.FirstOrDefault(o => o.LineNumber == numero).Value == "1")
                     return true;
                 else
                     return false;
@@ -164,9 +175,10 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
         private bool ValidacionProducto(Ticket ticket)
         {
-            try {
+            try
+            {
                 if (!String.IsNullOrEmpty(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 18).Value))
-                        return true;
+                    return true;
                 else
                     return false;
 
@@ -272,7 +284,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
                     for (int h = 1; h < _option.Count; h++)
                     {
-                        _polizaNueva = _Funciones.RecorrerGrilla(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "Tipo", "Renovación", ref count);
+                        _polizaNueva = _Funciones.VerificarValorGrilla(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "Tipo", "Renovación", ref count) == true ? false : true;
 
                         if (!_polizaNueva)
                             break;
@@ -284,7 +296,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 }
                 else
                 {
-                    _polizaNueva = _Funciones.RecorrerGrilla(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "Tipo", "Renovación", ref count);
+                    _polizaNueva = _Funciones.VerificarValorGrilla(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "Tipo", "Renovación", ref count) == true ? false : true;
                 }
 
                 //Numero Canal
@@ -296,6 +308,18 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
                 foreach (string item in ArrayAgente)
                     _agente = string.Concat(_agente, item, " ");
+
+                _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PersonalVehicles")).Click();
+                _Funciones.Esperar(5);
+                _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:LineWizardStepSet:PAVehiclesScreen:PAVehiclesPanelSet:VehiclesListDetailPanel:VehiclesDetailsCV:AdditionalInterestCardTab")).Click();
+                var _valoresEndosatarios = _Funciones.obtenerValorGrilla(_driverGlobal,"PolicyChangeWizard:LOBWizardStepGroup:LineWizardStepSet:PAVehiclesScreen:PAVehiclesPanelSet:VehiclesListDetailPanel:VehiclesDetailsCV:AdditionalInterestDetailsDV:AdditionalInterestLV");
+                if (_valoresEndosatarios.Count > 0)
+                {
+                    _nombreEndosatario = _valoresEndosatarios[1];
+                    _tipoInteres = _valoresEndosatarios[2];
+                    _porcentaje = _valoresEndosatarios[3];
+                }
+
             }
             catch (Exception ex)
             {
@@ -311,11 +335,12 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             try
             {
                 string[] ValorCampos = { _producto, _inicioVigencia, _finVigencia, _agente, _numeroAgente, _tipo, _tipoVigencia, _estado, _numeroCanal,_numeroAsegurados,
-                _numeroVehiculos,_nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva),_tipoProducto};
+                _numeroVehiculos,_nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva),_tipoProducto,_nombreEndosatario,_tipoInteres,_porcentaje};
 
                 int[] IdCampos = { eesFields.Default.producto, eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia, eesFields.Default.agente,
                 eesFields.Default.num_agente,eesFields.Default.tipo_poliza,eesFields.Default.tipo_vigencia,eesFields.Default.estado_poliza,eesFields.Default.canal,eesFields.Default.num_asegurados,
-                eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado,eesFields.Default.poliza_nueva,eesFields.Default.tipo_de_producto};
+                eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado,eesFields.Default.poliza_nueva,eesFields.Default.tipo_de_producto,eesFields.Default.nombre_endosatario,
+                eesFields.Default.tipo_de_interes,eesFields.Default.porcentaje};
 
                 for (int i = 0; i < ValorCampos.Length; i++)
                     ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = IdCampos[i], Value = ValorCampos[i] });
@@ -326,6 +351,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             }
 
         }
+   
         private void GetParameterRobots()
         {
             _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
@@ -333,6 +359,12 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             _contraseña = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
             _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoErrorAP").ValueParam);
             _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguienteAP").ValueParam);
+            _dominioProceso = Convert.ToInt32(_robot.GetValueParamRobot("DominoProcesso").ValueParam);
+            _procesoPolicyCenter = _robot.GetValueParamRobot("ProcessoPolicyCenter").ValueParam;
+            _procesoContact = _robot.GetValueParamRobot("ProcessoContact").ValueParam;
+            _procesoInicio = _robot.GetValueParamRobot("ProcessoInicio").ValueParam;
+            _nombreProceso = _robot.GetValueParamRobot("NombreProcesso").ValueParam;
+            _idProceso = Convert.ToInt32(_robot.GetValueParamRobot("IdProceso").ValueParam);
             LogEndStep(4);
         }
 

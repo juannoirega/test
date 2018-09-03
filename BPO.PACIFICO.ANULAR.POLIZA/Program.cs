@@ -35,8 +35,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         #region VariablesGLoables
         private string _numeroPoliza = string.Empty;
         private string _rutaDocumentos = string.Empty;
-        private string _numeroEndoso = string.Empty;
-
+        private string _numeroOrdenTrabajo = string.Empty;
         //variable temporal
         //private static bool _esPortalBcp = false;
 
@@ -179,7 +178,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         }
         private void BuscarPoliza(Ticket ticket)
         {
-            _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 25).Value.ToString();
+            _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.numero_de_poliza).Value.ToString();
 
             //if (_esPortalBcp)
             //{
@@ -284,31 +283,17 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             }
             try
             {
-                IList<IWebElement> _trColeccion = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV")).FindElements(By.XPath("id('PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV')/tbody/tr"));
+                var valores = _Funciones.obtenerValorGrilla(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV");
+                if (valores.Count > 0)
+                    _numeroOrdenTrabajo = valores[5];
 
-                int _posicionTd = 0;
-                foreach (IWebElement item in _trColeccion)
-                {
-                    IList<IWebElement> _td = item.FindElements(By.XPath("td"));
-
-                    for (int j = 0; j < _td.Count; j++)
-                    {
-                        string _tipoCabecera = _td[j].Text;
-                        if (_tipoCabecera.Equals("N.° de orden de trabajo"))
-                        {
-                            _posicionTd = j;
-                            break;
-                        }
-                        if (_posicionTd > 0)
-                        {
-                            _numeroEndoso = _td[_posicionTd].Text;
-                        }
-                    }
-                }
+                ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, Value = _numeroOrdenTrabajo, FieldId = eesFields.Default.num_orden_trabajo });
             }
-            catch (Exception ex) { throw new Exception("Error al buscar numero de orden de trabajo", ex); }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al buscar numero de orden de trabajo", ex);
+            }
 
-            ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, Value = _numeroEndoso, FieldId = eesFields.Default.numero_de_endoso });
         }
         private void GuardarPdf(Ticket ticket)
         {
@@ -322,7 +307,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 string _cabecera = "Nombre";
                 string _valorBuscar = "ACCOUNTHOLDER";
                 int _posicionFila = -1;
-                bool _resultado = _Funciones.RecorrerGrilla(_driverGlobal, _idTabla, _cabecera, _valorBuscar, ref _posicionFila);
+                _Funciones.VerificarValorGrilla(_driverGlobal, _idTabla, _cabecera, _valorBuscar, ref _posicionFila);
                 string _filaArchivo = _posicionFila.ToString();
 
                 _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV:" + _filaArchivo + ":DocumentsLV_ViewLink_link']")).Click();
@@ -364,6 +349,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             }
 
         }
+
         private void GetParameterRobots()
         {
             try
