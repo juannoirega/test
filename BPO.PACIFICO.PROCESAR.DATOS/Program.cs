@@ -120,6 +120,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             Condicionales(oTicketDatos);
         }
 
+        //Anina: Método para determinar a qué Línea pertenece la póliza.
         private void ObtieneLineaDeNegocio(Ticket oTicketDatos)
         {
             try
@@ -129,6 +130,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener Línea de Negocio: " + Ex.Message, Ex); }
         }
 
+        //Invoca a los métodos de validación según la línea a la cual pertenece la póliza:
         private void Condicionales(Ticket oTicketDatos)
         {
             //Valida Línea de la Póliza:
@@ -207,6 +209,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             CambiarEstadoTicket(oTicketDatos, _oPantallaValidacion);
         }
 
+        //Valida campos vacíos del ticket:
         private Boolean ValidarDatosPoliza(Ticket oTicketDatos)
         {
             int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
@@ -221,6 +224,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
         }
 
         #region "REGLAS DE VALIDACIÓN"
+        //Reglas de validación para la línea Autos:
         private Boolean ReglasDeValidacionAutos(Ticket oTicketDatos)
         {
             try
@@ -276,6 +280,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             return true;
         }
 
+        //Reglas de validación para la línea Líneas Personales:
         private Boolean ReglasDeValidacionLLPP(Ticket oTicketDatos)
         {
             try
@@ -331,6 +336,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             return true;
         }
 
+        //Reglas de validación para la línea B&A:
         private Boolean ReglasDeValidacionAlianzas(Ticket oTicketDatos)
         {
             try
@@ -386,6 +392,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             return true;
         }
 
+        //Reglas de validación para la línea Riesgos Generales:
         private Boolean ReglasDeValidacionRRGG(Ticket oTicketDatos)
         {
             try
