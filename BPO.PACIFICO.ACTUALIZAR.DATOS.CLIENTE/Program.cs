@@ -29,7 +29,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
       
         static string[] _valoresTickets = new string[10];
         static string[] _valoresTickets_Ident = new string[10];
-      
+        
         Ticket ticket = new Ticket();
         List<TicketValue> ticketValue = null;
 
@@ -59,10 +59,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             {
                 LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
             }
-
-
-
-
         }
 
         private void ProcesarTicket()

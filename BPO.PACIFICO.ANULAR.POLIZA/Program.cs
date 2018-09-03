@@ -76,8 +76,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 }
                 finally
                 {
-                    if (_driverGlobal != null)
-                        _driverGlobal.Quit();
+                    _Funciones.CerrarDriver(_driverGlobal);
                 }
             }
         }
@@ -234,8 +233,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         }
         private void AnularPolizaPolicyCenter(Ticket ticket)
         {
-            try
-            {
+          
                 _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
                 _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
                 _Funciones.Esperar(5);
@@ -276,17 +274,15 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
 
                 _driverGlobal.SwitchTo().Alert().Accept();
                 _driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:JobCompleteDV:ViewPolicy")).Click();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Anular la poliza en el sistema policycenter", ex);
-            }
+            
+           
             try
             {
                 var valores = _Funciones.obtenerValorGrilla(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV");
                 if (valores.Count > 0)
                     _numeroOrdenTrabajo = valores[5];
 
+                if(!string.IsNullOrEmpty(_numeroOrdenTrabajo))
                 ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, Value = _numeroOrdenTrabajo, FieldId = eesFields.Default.num_orden_trabajo });
             }
             catch (Exception ex)

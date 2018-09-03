@@ -74,6 +74,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 return;
 
             LogStartStep(2);
+
             try
             {
                 GetParameterRobots();
@@ -96,8 +97,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 }
                 finally
                 {
-                    if (_driverGlobal != null)
-                        _driverGlobal.Quit();
+                    _Funciones.CerrarDriver(_driverGlobal);
                 }
             }
         }
@@ -107,7 +107,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             bool _buscarPolicyCenter, _existeValorProducto, _buscarContactManager;
             int _idEstadoInicio;
             try
-            {
+            {  
 
                 var container = ODataContextWrapper.GetContainer();
                 //poner parametro
