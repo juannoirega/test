@@ -1,5 +1,6 @@
-﻿using everis.Ees.Proxy;
+using everis.Ees.Proxy;
 using everis.Ees.Proxy.Core;
+using everis.Ees.Proxy.Services;
 using everis.Ees.Proxy.Services.Interfaces;
 using Everis.Ees.Entities;
 using OpenQA.Selenium;
@@ -98,12 +99,19 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             int _idEstadoInicio;
             try
             {
-                FunctionalDomains<List<DomainValue>> objSearch4 = _Funciones.GetDomainValuesByParameters(_robot.SearchDomain, "Procesos", new string[,] { { "nombre", "Anulación de Póliza" }, { "activo", "1" } });
+              var container = ODataContextWrapper.GetContainer();
+                //poner parametro
+                List<Domain> dominios = container.Domains.Expand(dv=>dv.DomainValues).Where(df=>df.ParentId==1055).ToList();
+
+                //poner parametro
+                int numero = dominios.FirstOrDefault(o => o.Name == "nombre").DomainValues.FirstOrDefault(o => o.Value == "Anulación de Póliza").LineNumber;
+               // FunctionalDomains<List<DomainValue>> objSearch4 = _Funciones.GetDomainValuesByParameters(_robot.SearchDomain, "Procesos Version Final", new string[,] { { "nombre", "Anulación de Póliza" }, { "activo", "1" } });
                 //cambiar id 18 referencial por el id del campo producto real
-                _existeValorProducto = !string.IsNullOrEmpty(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 18).Value.ToString()) ? true : false;
-                _buscarPolicyCenter = objSearch4.FunctionalDomain[2].Value.ToString() == "1" ? true : false;
-                _buscarContactManager = objSearch4.FunctionalDomain[3].Value.ToString() == "1" ? true : false;
-                _idEstadoInicio = Convert.ToInt32(objSearch4.FunctionalDomain[4].Value.ToString());
+                _existeValorProducto = ValidacionProducto(ticket);
+                //poner parametro para las buquesdas de dominio
+                _buscarPolicyCenter = ValidacionPoliCenter(dominios, numero);
+                _buscarContactManager = ValidacionContactManager(dominios, numero);
+                _idEstadoInicio = Convert.ToInt32(dominios.FirstOrDefault(o => o.Name == "id_estado_inicio").DomainValues.FirstOrDefault(o => o.LineNumber == numero).Value);
             }
             catch (Exception ex)
             {
@@ -126,6 +134,45 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             {
                 _robot.SaveTicketNextState(ticket, _idEstadoInicio);
             }
+
+        }
+        private bool ValidacionPoliCenter(List<Domain> dominios, int numero) {
+
+            try
+            {
+                if (dominios.FirstOrDefault(o => o.Name == "policy_center").DomainValues.FirstOrDefault(o => o.LineNumber == numero).Value == "1")
+                    return true;
+                else
+                    return false;
+            
+            }
+            catch { return false; }
+        }
+        private bool ValidacionContactManager(List<Domain> dominios, int numero)
+        {
+
+            try
+            {
+                if (dominios.FirstOrDefault(o => o.Name == "contact_manager").DomainValues.FirstOrDefault(o => o.LineNumber == numero).Value == "1")
+                    return true;
+                else
+                    return false;
+
+            }
+            catch { return false; }
+        }
+
+        private bool ValidacionProducto(Ticket ticket)
+        {
+            try {
+                if (!String.IsNullOrEmpty(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 18).Value))
+                        return true;
+                else
+                    return false;
+
+
+            }
+            catch { return false; }
 
         }
         private void BuscarPolicyCenter(Ticket ticket)
