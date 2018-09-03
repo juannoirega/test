@@ -74,8 +74,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         {
             try
             {
-                //Parámetros del Robot Procesamiento de Datos:
-                _cEstadoRehabilitacion = _oRobot.GetValueParamRobot("EstadoRehabilitacion").ValueParam;                
+                //Parámetros del Robot Procesamiento de Datos:                               
                 _nIdMesaControl = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoError").ValueParam);
                 _nIdPantallaValidacion = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoSiguiente").ValueParam);
                 _nIdNotificacion = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoNotificacion").ValueParam);
