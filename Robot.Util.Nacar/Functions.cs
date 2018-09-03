@@ -131,29 +131,36 @@ namespace Robot.Util.Nacar
             Esperar(2);
         }
 
-        public string ObtenerValorElemento(IWebDriver _driver, string idElemento, string type = "id")
+        public string GetElementValue(IWebDriver driver, string idElement, string type = "id")
         {
-            switch (type.ToLower())
+            try
             {
-                case "id":
-                    return _driver.FindElement(By.Id(idElemento)).Text;
-                case "xpath":
-                    return _driver.FindElement(By.XPath(idElemento)).Text;
-                case "linktext":
-                    return _driver.FindElement(By.LinkText(idElemento)).Text;
-                case "name":
-                    return _driver.FindElement(By.Name(idElemento)).Text;
-                case "tagname":
-                    return _driver.FindElement(By.TagName(idElemento)).Text;
-                case "classname":
-                    return _driver.FindElement(By.ClassName(idElemento)).Text;
-                case "partiallinktext":
-                    return _driver.FindElement(By.PartialLinkText(idElemento)).Text;
-                default:
-                    return null;
+                switch (type.ToLower())
+                {
+                    case "id":
+                        return driver.FindElement(By.Id(idElement)).Text;
+                    case "xpath":
+                        return driver.FindElement(By.XPath(idElement)).Text;
+                    case "linktext":
+                        return driver.FindElement(By.LinkText(idElement)).Text;
+                    case "name":
+                        return driver.FindElement(By.Name(idElement)).Text;
+                    case "tagname":
+                        return driver.FindElement(By.TagName(idElement)).Text;
+                    case "classname":
+                        return driver.FindElement(By.ClassName(idElement)).Text;
+                    case "partiallinktext":
+                        return driver.FindElement(By.PartialLinkText(idElement)).Text;
+                    default:
+                        return null;
+                }
             }
+            catch (Exception ex)
+            {
+                throw new Exception (String.Format("Se produjo un error al tratar de obtener el elemento \"{0}\" por \"{1}\".", idElement, type), ex);
+            }       
         }
-
+        
         public void SeleccionarCombo(IWebDriver _driver, string idElement, string valorComparar)
         {
             IList<IWebElement> oOption = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));

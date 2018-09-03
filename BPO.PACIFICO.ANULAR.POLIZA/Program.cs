@@ -256,7 +256,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 _Funciones.SeleccionarCombo(_driverGlobal, _motivoIdElement, _textoDominioMotivo.ToUpperInvariant());
                 _Funciones.Esperar(2);
 
-                string _fechaEfectivaCancelacion = _Funciones.ObtenerValorElemento(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date");
+                string _fechaEfectivaCancelacion = _Funciones.GetElementValue(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date");
 
                 _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo, " ", _fechaEfectivaCancelacion));
                 _Funciones.Esperar(2);

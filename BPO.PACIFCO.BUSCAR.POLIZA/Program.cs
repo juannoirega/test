@@ -257,19 +257,19 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             string _idDesplegable = string.Empty;
             try
             {
-                _producto = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
-                _tipoProducto = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:PolicyTypeExt");
-                _inicioVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerEffDate_date");
-                _finVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerExpirDate_date");
-                _tipo = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:Type");
-                _estado = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:state");
-                _tipoVigencia = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:validityType");
-                _nombreContratante = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:AccountName");
-                _nombreAsegurado = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Name");
+                _producto = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
+                _tipoProducto = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:PolicyTypeExt");
+                _inicioVigencia = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerEffDate_date");
+                _finVigencia = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerExpirDate_date");
+                _tipo = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:Type");
+                _estado = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:state");
+                _tipoVigencia = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:validityType");
+                _nombreContratante = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:AccountName");
+                _nombreAsegurado = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Name");
 
                 try
                 {//Agregar id ComboBox Paginacion
-                    _idDesplegable = _Funciones.ObtenerValorElemento(_driverGlobal, "FALTA ID DEL COMBOBOX");
+                    _idDesplegable = _Funciones.GetElementValue(_driverGlobal, "FALTA ID DEL COMBOBOX");
                 }
                 catch
                 {
@@ -300,10 +300,10 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 }
 
                 //Numero Canal
-                _numeroCanal = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:SecondaryProducerCode").Split(' ').FirstOrDefault();
+                _numeroCanal = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:SecondaryProducerCode").Split(' ').FirstOrDefault();
 
                 //Agente Numero y Nombre
-                string[] ArrayAgente = _Funciones.ObtenerValorElemento(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:ProducerCodeOfRecord").Split(' ');
+                string[] ArrayAgente = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:ProducerCodeOfRecord").Split(' ');
                 _numeroAgente = ArrayAgente[0];
 
                 foreach (string item in ArrayAgente)
