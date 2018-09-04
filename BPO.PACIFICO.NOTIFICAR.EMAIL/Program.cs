@@ -42,6 +42,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
         Ticket ticket = new Ticket();
         List<TicketValue> ticketValue = new List<TicketValue>();
         List<TicketValue> ticketValue_Valores = new List<TicketValue>();
+        DomainValue TipoProceso = null;
 
         static void Main(string[] args)
         {
@@ -67,7 +68,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
                 catch (Exception ex)
                 {
                     LogFailStep(30, ex);
-                    //_robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
+                    cambiarEstado(TipoProceso.Value, ticket, "si", ex.Message);
                 }
 
             }
@@ -88,6 +89,10 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //Correos Copias
             _valoresTicket[4] = "luistrujilloh@hotmail.com";
 
+
+            //Opteniendo el Nombre del Dominio Funcionanal para pasar al Siguiente Estado
+            var container = ODataContextWrapper.GetContainer();
+            TipoProceso = container.DomainValues.Where(c => c.Id == Convert.ToInt32(_valoresTicket[2])).FirstOrDefault();
 
 
             //Optener todos lo Ticket del Workflow "Adjuntar Documentos"
@@ -114,12 +119,10 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //Metodo Email
             EnviarEmail();
 
-            //Opteniendo el Nombre del Dominio Funcionanal para pasar al Siguiente Estado
-            var container = ODataContextWrapper.GetContainer();
-            DomainValue TipoProceso = container.DomainValues.Where(c => c.Id == Convert.ToInt32(_valoresTicket[2])).FirstOrDefault();
+           
 
 
-            cambiarEstado(TipoProceso.Value, ticket);
+            cambiarEstado(TipoProceso.Value, ticket,"no","");
 
         }
 
@@ -277,27 +280,45 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             return Regex.Replace(texto, @"(?:" + palabra + ")", "" + reemplazar + "");
         }
 
-        public void cambiarEstado(String TipoProceso, Ticket ticket)
+        public void cambiarEstado(String TipoProceso, Ticket ticket,String error,String mensaje)
         {
             switch (TipoProceso)
             {
                 case "Plantilla Conforme Anulación Póliza":
+                    if(error=="si")
+                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId ==  Convert.ToInt32(_valores[6])).Id);
+                    else
                     _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[0]));
                     break;
                 case "Plantilla Rechazo Anulación Póliza":
-                    _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[1]));
+                    if (error == "si")
+                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[6])).Id);
+                    else
+                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[1]));
                     break;
                 case "Plantilla Conforme Rehabilitación":
-                    _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[5]));
+                    if (error == "si")
+                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[7])).Id);
+                    else
+                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[8]));
                     break;
                 case "Plantilla Rechazo Rehabilitación":
-                    _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[6]));
+                    if (error == "si")
+                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[7])).Id);
+                    else
+                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[9]));
                     break;
                 case "Plantilla Conforme Actualización Cliente":
-                    _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[7]));
+                    if (error == "si")
+                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[12])).Id);
+                    else
+                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[10]));
                     break;
                 case "Plantilla Rechazo Actualización CLiente":
-                    _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[8]));
+                    if (error == "si")
+                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[12])).Id);
+                    else
+                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[11]));
                     break;
 
             }
