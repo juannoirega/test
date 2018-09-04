@@ -62,6 +62,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
 
             ObtenerParametros();
             LogStartStep(4);
+            Inicio();
             foreach (Ticket oTicket in _oRobot.Tickets)
             {
                 try
@@ -80,6 +81,13 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                     return;
                 }
             }
+        }
+
+        private void Inicio()
+        {
+            Console.WriteLine("♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦ ROBOT ♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦");
+            Console.WriteLine("             Robot Procesamiento de Datos              ");
+            Console.WriteLine("♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦");
         }
 
         //Obtiene valores para los parámetros del Robot desde EES:
