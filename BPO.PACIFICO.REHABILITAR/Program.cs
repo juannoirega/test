@@ -22,11 +22,13 @@ namespace BPO.PACIFICO.REHABILITAR
         private static IWebDriver _driverGlobal = null;
         private static IWebElement element;
         private static Functions _Funciones;
-        private int _estadoFinal;
+        
         #region ParametrosRobot
         private string _urlPolicyCenter = string.Empty;
         private string _usuarioPolicyCenter = string.Empty;
         private string _contraseñaPolicyCenter = string.Empty;
+        private int _estadoError;
+        private int _estadoFinal;
         #endregion
         #region VariablesGLoables
         private string _numeroPoliza = string.Empty;
@@ -102,47 +104,7 @@ namespace BPO.PACIFICO.REHABILITAR
             BuscarPoliza(ticket);
             RehabilitarPoliza(ticket);
         }
-        private void RehabilitarPoliza(Ticket ticket)
-        {
-            try
-            {
-                _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
-                _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ReinstatePolicy")).Click();
-                _Funciones.Esperar(5);
-
-                string _motivoIdElement = "ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:ReinstatePolicyDV:Reason";
-
-                string _descripcionMotivo = "";
-
-                int _idCampoDominioMotivo = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 1054).Value.ToString());
-
-
-                string _textoDominioMotivo = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioMotivo);
-                _Funciones.SeleccionarCombo(_driverGlobal, _motivoIdElement, _textoDominioMotivo);
-                _Funciones.Esperar(2);
-
-                _driverGlobal.FindElement(By.Id("ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:ReinstatePolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo));
-                _Funciones.Esperar(2);
-                _driverGlobal.FindElement(By.Id("ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:JobWizardToolbarButtonSet:QuoteOrReview")).Click();
-                _Funciones.Esperar(1);
-                _driverGlobal.FindElement(By.Id("ReinstatementWizard:ReinstatementWizard_QuoteScreen:JobWizardToolbarButtonSet:Reinstate")).Click();
-                _Funciones.Esperar(1);
-                _driverGlobal.SwitchTo().Alert().Accept();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Rehabilitar la poliza en el sistema policycenter", ex);
-            }
-
-            try
-            {
-                _robot.SaveTicketNextState(ticket, _estadoFinal);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Ocurrio un Error al avanzar al siguiente estado - Rehabilitar Poliza", ex);
-            }
-        }
+        
         private void AbrirSelenium()
         {
             //LogInfoStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
@@ -211,6 +173,48 @@ namespace BPO.PACIFICO.REHABILITAR
 
 
         }
+        private void RehabilitarPoliza(Ticket ticket)
+        {
+            try
+            {
+                _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
+                _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ReinstatePolicy")).Click();
+                _Funciones.Esperar(5);
+
+                string _motivoIdElement = "ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:ReinstatePolicyDV:Reason";
+
+                string _descripcionMotivo = "";
+
+                int _idCampoDominioMotivo = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == 1054).Value.ToString());
+
+
+                string _textoDominioMotivo = _Funciones.ObtenerValorDominio(ticket, _idCampoDominioMotivo);
+                _Funciones.SeleccionarCombo(_driverGlobal, _motivoIdElement, _textoDominioMotivo);
+                _Funciones.Esperar(2);
+
+                _driverGlobal.FindElement(By.Id("ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:ReinstatePolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo));
+                _Funciones.Esperar(2);
+                _driverGlobal.FindElement(By.Id("ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:JobWizardToolbarButtonSet:QuoteOrReview")).Click();
+                _Funciones.Esperar(1);
+                _driverGlobal.FindElement(By.Id("ReinstatementWizard:ReinstatementWizard_QuoteScreen:JobWizardToolbarButtonSet:Reinstate")).Click();
+                _Funciones.Esperar(1);
+                _driverGlobal.SwitchTo().Alert().Accept();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al Rehabilitar la poliza en el sistema policycenter", ex);
+            }
+
+            try
+            {
+                _robot.SaveTicketNextState(ticket, _estadoFinal);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrio un Error al avanzar al siguiente estado - Rehabilitar Poliza", ex);
+            }
+        }   
+
         private void GetParameterRobots()
         {
             try
