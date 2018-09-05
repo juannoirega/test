@@ -197,5 +197,8 @@
     <Setting Name="nombre_endosatario" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1112</Value>
     </Setting>
+    <Setting Name="tipoplantillaen" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1118</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

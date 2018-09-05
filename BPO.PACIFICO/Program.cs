@@ -40,10 +40,8 @@ namespace GmailQuickstart
         #endregion
         static void Main(string[] args)
         {
-
             _robot = new BaseRobot<Program>(args);
             _robot.Start();
-
         }
 
         protected override void Start()
@@ -124,10 +122,9 @@ namespace GmailQuickstart
             {
                 foreach (Message message in messages)
                 {
-
                     Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
                     AcionRequest(infoResponse, service);
-                  
+
                     _listado.Clear();
                 }
             }
@@ -135,9 +132,6 @@ namespace GmailQuickstart
             {
                 LogInfoStep(44);
             }
-
-
-
         }
         //cada message tiene una acion de requerimento
         public void AcionRequest(Message infoResponse, GmailService service)
@@ -208,8 +202,8 @@ namespace GmailQuickstart
                 List<string> files = new List<string>();
                 foreach (MessagePart part in parts)
                 {
-                   
-                    if (!String.IsNullOrEmpty(part.Filename)&& part.Filename.Substring(part.Filename.Length - 3,3)!="gif")
+
+                    if (!String.IsNullOrEmpty(part.Filename) && part.Filename.Substring(part.Filename.Length - 3, 3) != "gif")
                     {
                         String attId = part.Body.AttachmentId;
 
@@ -225,8 +219,6 @@ namespace GmailQuickstart
                 return files;
             }
             catch (Exception ex) { throw new Exception("No fue posible guardar los adjuntos" + ex.Message); }
-
-
         }
 
         static String GetNestedParts(IList<MessagePart> part, string curr)
@@ -265,7 +257,7 @@ namespace GmailQuickstart
             {
                 palabras = String.Format(palabras, "{0:D15}");
 
-                return new Regex(String.Concat(@"(?:", palabras, " )")).Matches(DigitarTexto).Count;
+                return new Regex(String.Concat(@"(?:", palabras, " )")).Matches(DigitarTexto.ToUpperInvariant()).Count;
             }
             catch (Exception ex) { throw new Exception("No se pudo encontrar las palabras clave" + ex.Message); }
 
@@ -276,9 +268,7 @@ namespace GmailQuickstart
             var container = ODataContextWrapper.GetContainer();
 
             return container.DomainValues.Where(a => a.DomainId == 1009).ToList();
-
         }
-
 
         static string DecodeBase64(string sInput)
         {
@@ -287,7 +277,12 @@ namespace GmailQuickstart
                 String codedBody = Regex.Replace(sInput, "([-])", "+");
                 codedBody = Regex.Replace(codedBody, "([_])", "+");
                 byte[] data = Convert.FromBase64String(Regex.Replace(codedBody, "=", "/"));
-                return Encoding.UTF8.GetString(data);
+                string texto = Encoding.UTF8.GetString(data);
+                var match = Regex.Match(texto, "(<div\\s)");
+                if (match.Success)
+                    return texto.Substring(match.Index, texto.Length - match.Index);
+                else
+                    return texto;
             }
             catch (Exception ex) { throw new Exception("No se pudo convertir la Base64" + ex.Message); }
         }
@@ -299,15 +294,12 @@ namespace GmailQuickstart
 
             try
             {
-
-
                 string palabraClave = String.Empty;
 
                 foreach (DomainValue b in _listado)
                 {
-                    palabraClave = b.Value.ToString();
+                    palabraClave = b.Value.ToString().ToUpperInvariant();
                     int contador = BuscarPalabrasClaves(texto, palabraClave);
-
 
                     if (contador > 0)
                         puntos.Add(new Puntuacion() { contador = contador, palabra = palabraClave });
@@ -315,21 +307,18 @@ namespace GmailQuickstart
 
                 int[] valores = MaioresValores();
 
-
-                if (valores[0] > 0 && ((valores[0] * 100) / (valores[0] + valores[1])) >= 70 && AdicionarNumeroPolizaoDni(ticket, texto))
+                if (AdicionarNumeroPolizaoDnioRuc(ticket, texto) && valores[0] > 0 && ((valores[0] * 100) / (valores[0] + valores[1])) >= 70)
                 {
 
                     CreacionTicket(texto, ticket, true);
                 }
                 else
                 {
-
                     CreacionTicket(texto, ticket, false);
                 }
             }
             catch (Exception ex) { throw new Exception("No fue posible analizar la puntuación" + ex.Message); }
         }
-
 
         public void CreacionTicket(string texto, Ticket ticketPadre, bool flag)
         {
@@ -337,7 +326,6 @@ namespace GmailQuickstart
             try
             {
                 DatosFields();
-
                 AdicionarValues(ticketPadre);
 
                 if (_adjuntos != null)
@@ -351,21 +339,18 @@ namespace GmailQuickstart
                 _robot.SaveNewTicket(ticketPadre);
             }
             catch (Exception ex) { throw new Exception("No se pudo crear el Ticket" + ex.Message); }
-
         }
+
         public void DatosFields()
         {
-
             foreach (int field in _fields)
                 _valores[5] = String.Concat(field.ToString(), ",", _valores[5]);
         }
 
         public void AdicionarAdjuntos(Ticket ticket)
         {
-            
-
-            for (int num = 0;  _adjuntos.Count> num; num++)
-            ticket.TicketValues.Add(new TicketValue { Value = _adjuntos[num], ClonedValueOrder = num, TicketId = ticket.Id, FieldId = eesFields.Default.documentos});
+            for (int num = 0; _adjuntos.Count > num; num++)
+                ticket.TicketValues.Add(new TicketValue { Value = _adjuntos[num], ClonedValueOrder = num, TicketId = ticket.Id, FieldId = eesFields.Default.documentos });
         }
 
         public void AdicionarValues(Ticket ticket)
@@ -374,25 +359,52 @@ namespace GmailQuickstart
                 ticket.TicketValues.Add(new TicketValue { Value = _valores[cont], ClonedValueOrder = null, TicketId = ticket.Id, FieldId = _fields[cont] });
 
             ticket.TicketValues.Add(new TicketValue { Value = _userId, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.email_dirigido });
-
         }
 
-        public bool AdicionarNumeroPolizaoDni(Ticket ticket, string texto)
+        public bool AdicionarNumeroPolizaoDnioRuc(Ticket ticket, string texto)
         {
-            string police = Regex.Match(texto, @"\s(2[1-9])[0-9]{4}[0-9]{4}\s").Value;
-            string dni = Regex.Match(texto, @"\s(2[1-9])[0-9]{4}[0-9]{4}\s").Value;
-            if (String.IsNullOrWhiteSpace(police))
+            string police = Regex.Match(texto, @"[^1-9]((2[1-9])[0-9]{4}[0-9]{4})([^1-9]|$)").Value;
+            string dni = Regex.Match(texto, @"[^1-9](([1-9])[0-9]{4}[0-9]{4})([^1-9]|$)").Value;
+            string ruc = Regex.Match(texto, @"[^1-9](([1-9])[0-9]{5}[0-9]{5})([^1-9]|$)").Value;
+            ruc = ValidarRuc(ruc);
+            if (!String.IsNullOrWhiteSpace(police))
             {
-                ticket.TicketValues.Add(new TicketValue { Value = police, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
+                ticket.TicketValues.Add(new TicketValue { Value = police.Substring(1, 10), ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
                 return true;
             }
-            else if (String.IsNullOrWhiteSpace(dni))
+            else if (!String.IsNullOrWhiteSpace(dni))
             {
-                ticket.TicketValues.Add(new TicketValue { Value = dni, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
+                ticket.TicketValues.Add(new TicketValue { Value = dni.Substring(1, 9), ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
                 return true;
+            }
+            else if (!String.IsNullOrWhiteSpace(ruc))
+            {
+                ticket.TicketValues.Add(new TicketValue { Value = ruc.Substring(1, 11), ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.numero_de_poliza });
+                return true;
+
             }
 
             return false;
+        }
+
+        public string ValidarRuc(string ruc)
+        {
+            if (String.IsNullOrWhiteSpace(ruc))
+                return null;
+
+            char[] numeros = ruc.Substring(1, 11).ToCharArray();
+
+            int total = 0;
+            int[] operador = new int[] { 5, 4, 3, 2, 7, 6, 5, 4, 3, 2 };
+
+            for (int i = 0; i < 10; i++)
+                total += Convert.ToInt32(numeros[i]) * operador[i];
+
+            if ((total % 11) == Convert.ToInt32(numeros[10]))
+                return ruc;
+            else
+                return null;
+
         }
         public int[] MaioresValores()
         {
