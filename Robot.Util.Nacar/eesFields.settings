@@ -30,7 +30,7 @@
       <Value Profile="(Default)">15</Value>
     </Setting>
     <Setting Name="canal" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">4</Value>
+      <Value Profile="(Default)">1123</Value>
     </Setting>
     <Setting Name="agente" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">2</Value>
@@ -199,6 +199,78 @@
     </Setting>
     <Setting Name="tipoplantillaen" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1118</Value>
+    </Setting>
+    <Setting Name="poliza_nro" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1136</Value>
+    </Setting>
+    <Setting Name="id_estado_retorno" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1117</Value>
+    </Setting>
+    <Setting Name="reproceso_contador" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1116</Value>
+    </Setting>
+    <Setting Name="poliza_est" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1137</Value>
+    </Setting>
+    <Setting Name="poliza_fec_emision" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1138</Value>
+    </Setting>
+    <Setting Name="poliza_tipo_vig" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1139</Value>
+    </Setting>
+    <Setting Name="poliza_fec_ini_vig" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1140</Value>
+    </Setting>
+    <Setting Name="poliza_fec_fin_vig" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1141</Value>
+    </Setting>
+    <Setting Name="canal_org" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1119</Value>
+    </Setting>
+    <Setting Name="canal_agente_cod" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1120</Value>
+    </Setting>
+    <Setting Name="canal_agente" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1121</Value>
+    </Setting>
+    <Setting Name="canal_cod" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1122</Value>
+    </Setting>
+    <Setting Name="servicio_org" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1124</Value>
+    </Setting>
+    <Setting Name="servicio_agente_cod" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1125</Value>
+    </Setting>
+    <Setting Name="servicio_agente" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1126</Value>
+    </Setting>
+    <Setting Name="servicio_canal_cod" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1127</Value>
+    </Setting>
+    <Setting Name="servicio_canal" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1128</Value>
+    </Setting>
+    <Setting Name="cuenta_nro" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1130</Value>
+    </Setting>
+    <Setting Name="cuenta_nombre" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1133</Value>
+    </Setting>
+    <Setting Name="nombre_de_asegurado" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1134</Value>
+    </Setting>
+    <Setting Name="flg_nuevo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1132</Value>
+    </Setting>
+    <Setting Name="siniestros" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1131</Value>
+    </Setting>
+    <Setting Name="endosos" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1135</Value>
+    </Setting>
+    <Setting Name="poliza_anu_motivo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1115</Value>
     </Setting>
   </Settings>
 </SettingsFile>

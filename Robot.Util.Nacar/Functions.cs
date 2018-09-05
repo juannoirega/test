@@ -450,5 +450,57 @@ namespace Robot.Util.Nacar
             FunctionalDomains<List<DomainValue>> objResult = SearchDomain(objSearch);
             return objResult;
         }
+
+        public List<int> ObtenerValoresReprocesamiento(Ticket ticket)
+        {
+            List<int> valores = new List<int>();
+            int _reprocesoContador = 0, _idEstadoRetorno = 0;
+            if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.reproceso_contador) != null)
+            {
+                _reprocesoContador = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.reproceso_contador).Value);
+            }
+            valores.Add(_reprocesoContador);
+
+            if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.id_estado_retorno) != null)
+            {
+                _idEstadoRetorno = ticket.StateId.Value;
+            }
+            valores.Add(_idEstadoRetorno);
+
+            return valores;
+        }
+
+        public Ticket GuardarValoresReprocesamiento(Ticket ticket, int reprocesoContador, int idEstadoRetorno)
+        {
+            if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.reproceso_contador) == null)
+            {
+                ticket.TicketValues.Add(new TicketValue
+                {
+                    FieldId = eesFields.Default.reproceso_contador,
+                    TicketId = ticket.Id,
+                    Value = reprocesoContador.ToString(),
+                    CreationDate = DateTime.Now,
+                    ClonedValueOrder = null
+                });
+            }
+            else
+                ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.reproceso_contador).Value = reprocesoContador.ToString();
+
+            if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.id_estado_retorno) == null)
+            {
+                ticket.TicketValues.Add(new TicketValue
+                {
+                    FieldId = eesFields.Default.id_estado_retorno,
+                    TicketId = ticket.Id,
+                    Value = idEstadoRetorno.ToString(),
+                    CreationDate = DateTime.Now,
+                    ClonedValueOrder = null
+                });
+            }
+            else
+                ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.id_estado_retorno).Value = idEstadoRetorno.ToString();
+
+            return ticket;
+        }
     }
 }
