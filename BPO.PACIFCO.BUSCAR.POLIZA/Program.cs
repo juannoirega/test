@@ -107,11 +107,10 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 catch (Exception ex)
                 {
                     LogFailStep(30, ex);
-                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
                     _reprocesoContador++;
                     _idEstadoRetorno++;
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
-
+                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
                 }
                 finally
                 {
