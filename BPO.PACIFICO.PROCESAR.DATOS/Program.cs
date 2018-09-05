@@ -48,7 +48,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
         {
             try
             {
-                _oRobot = new BaseRobot<Program>(args);
+                _oRobot = new BaseRobot<BPO.PACIFICO.PROCESARDATOS.AP.Program>(args);
                 _Funciones = new Functions();
                 _oRobot.Start();
             }
@@ -67,8 +67,8 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             {
                 try
                 {
-                    _cProceso = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_proceso).Value));
                     _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdMesaControl);
+                    _cProceso = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_proceso).Value));
                     _oPantallaValidacion = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdPantallaValidacion);
                     _oNotificacion = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdNotificacion);
                     ProcesosEndoso(oTicket);
@@ -110,7 +110,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                 _cLineaLLPP = _oRobot.GetValueParamRobot("LineaLLPP").ValueParam;
                 _cLineaAlianzas = _oRobot.GetValueParamRobot("LineaAlianzas").ValueParam;
                 _cLineaRRGG = _oRobot.GetValueParamRobot("LineaRRGG").ValueParam;
-                _bEnviarNotificacion = Convert.ToBoolean(_oRobot.GetValueParamRobot("EnviarNotificacion").ValueParam);
+                _bEnviarNotificacion = Convert.ToBoolean(Convert.ToInt64(_oRobot.GetValueParamRobot("EnviarNotificacion").ValueParam));
                 _cDominioLineas = _oRobot.GetValueParamRobot("DominioLineas").ValueParam;
                 _cDominioProcesos = _oRobot.GetValueParamRobot("DominioProcesos").ValueParam;
                 _cDominioLineasCol3 = _oRobot.GetValueParamRobot("DominioLineas_col3").ValueParam;
