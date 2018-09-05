@@ -80,14 +80,15 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
 
 
-            _valoresTicket[0] = "Luis Kevin Trujillo Hoyos";
-            _valoresTicket[1] = "N° 12345678900";
-            //VALOR QUE DETERMINARA DEL DOMINIO FUNCIONAL Y QUE PLATILLA USAR PARA LA NOTIFICIACIÓN
-            _valoresTicket[2] = ticket.TicketValues[0].Value;
+            _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value;
+            _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
+            //VALOR QUE DETERMINARA DEL DOMINIO FUNCIONAL Y QUE PLATILLA USAR PARA LA NOTIFICIACIÓN 
+            _valoresTicket[2] = "1037";
+
             //Correos 
-            _valoresTicket[3] = "bponaa@gmail.com,ltrujill@everis.com";
+            _valoresTicket[3] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value;
             //Correos Copias
-            _valoresTicket[4] = "luistrujilloh@hotmail.com";
+            _valoresTicket[4] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_en_copia).Value;
 
 
             //Opteniendo el Nombre del Dominio Funcionanal para pasar al Siguiente Estado
@@ -130,20 +131,22 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
         {
             _valores[0] = _robot.GetValueParamRobot("EstadoSolicitudAceptadaA").ValueParam;
             _valores[1] = _robot.GetValueParamRobot("EstadoSolicitudRechazadaA").ValueParam;
-            _valores[2] = _robot.GetValueParamRobot("FildAdjuntarDocuementos").ValueParam;
+
+            _valores[2] = _robot.GetValueParamRobot("FieldAdjuntarDocumentos").ValueParam;
             _valores[3] = _robot.GetValueParamRobot("EstadoAdjuntarDocumentos").ValueParam;
             _valores[4] = _robot.GetValueParamRobot("RutaArchivosPlantillas").ValueParam;
-            _valores[5] = _robot.GetValueParamRobot("RutaArchivosPlantillas").ValueParam;
+         
 
             _valores[6] = _robot.GetValueParamRobot("EstadoErrorMA").ValueParam;
             _valores[7] = _robot.GetValueParamRobot("EstadoErrorMR").ValueParam;
 
             _valores[8] = _robot.GetValueParamRobot("EstadoSolicitudAceptadaR").ValueParam;
             _valores[9] = _robot.GetValueParamRobot("EstadoSolicitudRechazadaR").ValueParam;
+
             _valores[10] = _robot.GetValueParamRobot("EstadoSolicitudAceptadaAC").ValueParam;
             _valores[11] = _robot.GetValueParamRobot("EstadoSolicitudRechazadaAC").ValueParam;
 
-            _valores[12] = _robot.GetValueParamRobot("EstadoErrorAC").ValueParam;
+            _valores[12] = _robot.GetValueParamRobot("EstadoErrorMAC").ValueParam;
 
         }
 
