@@ -147,7 +147,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             //Si es Actualización de Datos:
             else if(_cProceso == Procesos[2])
             {
-                CondicionalesAnulacionPoliza(oTicketDatos);
+                CondicionalesActualizacionPoliza(oTicketDatos);
             }            
         }
 
@@ -395,19 +395,18 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: CANCELADA. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: VIGENTE. 
                 {
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
 
-                    //Con devolución al 100%: 
-                    oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "0" });
-
+                    
                     //VERIFICA QUE SEA EMISIÓN:
                     if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaEmision)
                     {
                         if (nDiferencia.Days > _nDiasDesistimiento)
-                        {
+                        {   
+                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante 
                             //Verifica que tenga VoBo:
                             //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
                             //{
@@ -421,6 +420,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
 
                         if (nDiferencia.Days > _nDiasArrepentimiento)
                         {
+                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
                             //Verifica que tenga VoBo:
                             //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
                             //{
@@ -431,6 +431,8 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                     }
                     else //No es ni Emisión ni Renovación:
                     {
+                        //Con devolución al 100%: 
+                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "0" });
                         return false;
                     }
                 }
@@ -478,14 +480,13 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
 
-                    //Con devolución al 100%: 
-                    oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "false" });
-
+                   
                     //VERIFICA QUE SEA EMISIÓN:
                     if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaEmision)
                     {
                         if (nDiferencia.Days > _nDiasDesistimiento)
                         {
+                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
                             //Verifica que tenga VoBo:
                             //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
                             //{
@@ -499,6 +500,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
 
                         if (nDiferencia.Days > _nDiasArrepentimiento)
                         {
+                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
                             //Verifica que tenga VoBo:
                             //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
                             //{
@@ -508,7 +510,9 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                         }
                     }
                     else //No es ni Emisión ni Renovación:
-                    {
+                    { 
+                        //Con devolución al 100%: 
+                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "false" });
                         return false;
                     }
                 }
@@ -576,14 +580,12 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
 
-                    //Con devolución al 100%: 
-                    oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "false" });
-
                     //VERIFICA QUE SEA EMISIÓN:
                     if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaEmision)
                     {
                         if (nDiferencia.Days > _nDiasDesistimiento)
                         {
+                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
                             //Verifica que tenga VoBo:
                             //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
                             //{
@@ -597,6 +599,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
 
                         if (nDiferencia.Days > _nDiasArrepentimiento)
                         {
+                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
                             //Verifica que tenga VoBo:
                             //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
                             //{
@@ -607,6 +610,8 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                     }
                     else //No es ni Emisión ni Renovación:
                     {
+                        //Con devolución al 100%: 
+                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "false" });
                         return false;
                     }
                 }
@@ -674,14 +679,13 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
 
-                    //Con devolución al 100%: 
-                    oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "false" });
-
+                   
                     //VERIFICA QUE SEA EMISIÓN:
                     if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaEmision)
                     {
                         if (nDiferencia.Days > _nDiasDesistimiento)
                         {
+                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
                             //Verifica que tenga VoBo:
                             //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
                             //{
@@ -695,6 +699,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
 
                         if (nDiferencia.Days > _nDiasArrepentimiento)
                         {
+                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
                             //Verifica que tenga VoBo:
                             //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
                             //{
@@ -705,6 +710,8 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                     }
                     else //No es ni Emisión ni Renovación:
                     {
+                        //Con devolución al 100%: 
+                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "false" });
                         return false;
                     }
                 }
