@@ -191,11 +191,9 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                     return true;
                 else
                     return false;
-
             }
             catch { return false; }
         }
-
         private bool ValidacionProducto(Ticket ticket)
         {
             try
@@ -204,8 +202,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                     return true;
                 else
                     return false;
-
-
             }
             catch { return false; }
 
@@ -383,13 +379,15 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             LogStartStep(5);//id referencial msje Log "Iniciando Guardar informacion en el Ticket"
             try
             {
-                string[] ValorCampos = { _producto, _polizaInicioVigencia, _polizaFinVigencia, _agente, _numeroAgente, _tipo, _polizaTipoVigencia, _polizaEstado, _numeroCanal,_numeroAsegurados,
-                _numeroVehiculos,_nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva),_tipoProducto,_nombreEndosatario,_tipoInteres,_porcentaje};
+                string[] ValorCampos = { _producto, _polizaInicioVigencia, _polizaFinVigencia, _polizaTipoVigencia, _polizaEstado,_numeroAsegurados, _numeroVehiculos,
+                                         _nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva),_tipoProducto,_polizaFechaEmision,_canalOrganizacion,_canalAgenteCodido,
+                _canalAgente,_canalCodigo,_canal,_servicioOrganizacion,_servicioAgenteCodigo,_servicioAgente,_servicioCanalCodigo,_servicioCanal,_numeroCuenta,_anulacionMotivo};
 
-                int[] IdCampos = { eesFields.Default.producto, eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia, eesFields.Default.agente,
-                eesFields.Default.num_agente,eesFields.Default.tipo_poliza,eesFields.Default.tipo_vigencia,eesFields.Default.estado_poliza,eesFields.Default.canal,eesFields.Default.num_asegurados,
-                eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado,eesFields.Default.poliza_nueva,eesFields.Default.tipo_de_producto,eesFields.Default.nombre_endosatario,
-                eesFields.Default.tipo_de_interes,eesFields.Default.porcentaje};
+                int[] IdCampos = { eesFields.Default.producto, eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia,eesFields.Default.tipo_vigencia,eesFields.Default.estado_poliza,
+                eesFields.Default.num_asegurados,eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado,eesFields.Default.poliza_nueva,
+                eesFields.Default.tipo_de_producto,eesFields.Default.poliza_fec_emision,eesFields.Default.canal_org,eesFields.Default.canal_agente_cod,eesFields.Default.canal_agente,
+                eesFields.Default.canal_cod,eesFields.Default.canal,eesFields.Default.servicio_org,eesFields.Default.servicio_agente_cod,eesFields.Default.servicio_agente,eesFields.Default.servicio_canal_cod,
+                eesFields.Default.servicio_canal,eesFields.Default.cuenta_nro,eesFields.Default.motivo_anular};
 
                 for (int i = 0; i < ValorCampos.Length; i++)
                     ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = IdCampos[i], Value = ValorCampos[i] });
