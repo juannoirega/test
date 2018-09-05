@@ -607,5 +607,14 @@ namespace Robot.Util.Nacar {
                 return ((int)(this["nombre_endosatario"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1118")]
+        public int tipoplantillaen {
+            get {
+                return ((int)(this["tipoplantillaen"]));
+            }
+        }
     }
 }

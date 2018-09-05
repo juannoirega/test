@@ -82,7 +82,8 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
             _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value;
             _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
-            //VALOR QUE DETERMINARA DEL DOMINIO FUNCIONAL Y QUE PLATILLA USAR PARA LA NOTIFICIACIÓN 
+
+            //CAMPO QUE VIENE DE LOS ROBOT QUE INDICA QUE TIPO DE PLANTILLA USARA 
             _valoresTicket[2] = "1037";
 
             //Correos 
