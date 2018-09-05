@@ -131,29 +131,36 @@ namespace Robot.Util.Nacar
             Esperar(2);
         }
 
-        public string ObtenerValorElemento(IWebDriver _driver, string idElemento, string type = "id")
+        public string GetElementValue(IWebDriver driver, string idElement, string type = "id")
         {
-            switch (type.ToLower())
+            try
             {
-                case "id":
-                    return _driver.FindElement(By.Id(idElemento)).Text;
-                case "xpath":
-                    return _driver.FindElement(By.XPath(idElemento)).Text;
-                case "linktext":
-                    return _driver.FindElement(By.LinkText(idElemento)).Text;
-                case "name":
-                    return _driver.FindElement(By.Name(idElemento)).Text;
-                case "tagname":
-                    return _driver.FindElement(By.TagName(idElemento)).Text;
-                case "classname":
-                    return _driver.FindElement(By.ClassName(idElemento)).Text;
-                case "partiallinktext":
-                    return _driver.FindElement(By.PartialLinkText(idElemento)).Text;
-                default:
-                    return null;
+                switch (type.ToLower())
+                {
+                    case "id":
+                        return driver.FindElement(By.Id(idElement)).Text;
+                    case "xpath":
+                        return driver.FindElement(By.XPath(idElement)).Text;
+                    case "linktext":
+                        return driver.FindElement(By.LinkText(idElement)).Text;
+                    case "name":
+                        return driver.FindElement(By.Name(idElement)).Text;
+                    case "tagname":
+                        return driver.FindElement(By.TagName(idElement)).Text;
+                    case "classname":
+                        return driver.FindElement(By.ClassName(idElement)).Text;
+                    case "partiallinktext":
+                        return driver.FindElement(By.PartialLinkText(idElement)).Text;
+                    default:
+                        return null;
+                }
             }
+            catch (Exception ex)
+            {
+                throw new Exception (String.Format("Se produjo un error al tratar de obtener el elemento \"{0}\" por \"{1}\".", idElement, type), ex);
+            }       
         }
-
+        
         public void SeleccionarCombo(IWebDriver _driver, string idElement, string valorComparar)
         {
             IList<IWebElement> oOption = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
@@ -352,62 +359,77 @@ namespace Robot.Util.Nacar
 
         public bool VerificarValorGrilla(IWebDriver _driver, string idTabla, string cabecera, string valorBuscar, ref int posicionFila)
         {
-            //tabla
             bool _valorEncontrado = false;
-            IList<IWebElement> _trColeccion = _driver.FindElement(By.Id(idTabla)).FindElements(By.XPath("id('" + idTabla + "')/tbody/tr"));
-
-            int _posicionCabecera = 0;
-            foreach (IWebElement item in _trColeccion)
+            try
             {
-                IList<IWebElement> _td = item.FindElements(By.XPath("td"));
+                IList<IWebElement> _trColeccion = _driver.FindElement(By.Id(idTabla)).FindElements(By.XPath("id('" + idTabla + "')/tbody/tr"));
 
-                for (int j = 0; j < _td.Count; j++)
+                int _posicionCabecera = 0;
+                foreach (IWebElement item in _trColeccion)
                 {
-                    string _Cabecera = _td[j].Text;
-                    if (_Cabecera.Contains(cabecera))
-                    {
-                        _posicionCabecera = j;
-                        break;
-                    }
-                    if (_posicionCabecera > 0)
-                    {
-                        string _valorFila = _td[_posicionCabecera].Text;
+                    IList<IWebElement> _td = item.FindElements(By.XPath("td"));
 
-                        if (_valorFila.Contains(valorBuscar))
+                    for (int j = 0; j < _td.Count; j++)
+                    {
+                        string _Cabecera = _td[j].Text;
+                        if (_Cabecera.Contains(cabecera))
                         {
-                            return _valorEncontrado = true;
+                            _posicionCabecera = j;
+                            break;
                         }
-                        break;
-                    }
-                }
+                        if (_posicionCabecera > 0)
+                        {
+                            string _valorFila = _td[_posicionCabecera].Text;
 
-                posicionFila++;
+                            if (_valorFila.Contains(valorBuscar))
+                            {
+                                return _valorEncontrado = true;
+                            }
+                            break;
+                        }
+                    }
+
+                    posicionFila++;
+                }
             }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrio un error al buscar el valor en la grilla",ex);
+            }
+     
             return _valorEncontrado;
         }
 
         public List<string> obtenerValorGrilla(IWebDriver _driver,string idtabla)
         {
             List<string> valor = new List<string>();
-            IList<IWebElement> _trColeccion = _driver.FindElement(By.Id(idtabla)).FindElements(By.XPath("id('" + idtabla + "')/tbody/tr"));
-
-            int _count = 0;
-            foreach (IWebElement item in _trColeccion)
+            try
             {
-                IList<IWebElement> _td = item.FindElements(By.XPath("td"));
-                for (int j = 0; j < _td.Count; j++)
+                IList<IWebElement> _trColeccion = _driver.FindElement(By.Id(idtabla)).FindElements(By.XPath("id('" + idtabla + "')/tbody/tr"));
+
+                int _count = 0;
+                foreach (IWebElement item in _trColeccion)
                 {
-                    if (_count == 0)
+                    IList<IWebElement> _td = item.FindElements(By.XPath("td"));
+                    for (int j = 0; j < _td.Count; j++)
                     {
+                        if (_count == 0)
+                        {
+                            _count++;
+                            break;
+                        }
+                        valor.Add(_td[j].Text);
                         _count++;
-                        break;
                     }
-                    valor.Add(_td[j].Text);
-                    _count++;
+                    if (_count > 1)
+                        return valor;
                 }
-                if (_count > 1)
-                    return valor;
             }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrio un error al obtener el valor en la grilla", ex);
+            }
+
             return valor;
         }
 
