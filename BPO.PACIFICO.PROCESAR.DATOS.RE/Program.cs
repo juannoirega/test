@@ -19,14 +19,15 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         private static int _nIdMesaControl;
         private static int _nIdPantallaValidacion;
         private static int _nIdNotificacion;
-        private static string _cRehabilitacionAutos = string.Empty;
-        private static string _cRehabilitacionLLPP = string.Empty;
-        private static string _cRehabilitacionAlianzas = string.Empty;
-        private static string _cRehabilitacionRRGG = string.Empty;
+        private static string _cLineaAutos = string.Empty;
+        private static string _cLineaLLPP = string.Empty;
+        private static string _cLineaAlianzas = string.Empty;
+        private static string _cLineaRRGG = string.Empty;
         private static StateAction _oMesaControl;
         private static StateAction _oPantallaValidacion;
         private static StateAction _oNotificacion;
         private static Functions _Funciones;
+        private static string[] Procesos;
         #endregion
 
         static void Main(string[] args)
@@ -54,10 +55,11 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
             {
                 try
                 {
-                    _cLinea = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_linea).Value)).ToUpperInvariant();
                     _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdMesaControl);
+                    _cLinea = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_linea).Value)).ToUpperInvariant();
                     _oPantallaValidacion = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdPantallaValidacion);
                     _oNotificacion = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdNotificacion);
+                    ProcesosEndoso(oTicket);
                     ProcesarTicket(oTicket);
                 }
                 catch (Exception Ex)
@@ -78,10 +80,10 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                 _nIdMesaControl = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoError").ValueParam);
                 _nIdPantallaValidacion = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoSiguiente").ValueParam);
                 _nIdNotificacion = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoNotificacion").ValueParam);
-                _cRehabilitacionAutos = _oRobot.GetValueParamRobot("LineaAutos").ValueParam;
-                _cRehabilitacionLLPP = _oRobot.GetValueParamRobot("LineaLLPP").ValueParam;
-                _cRehabilitacionAlianzas = _oRobot.GetValueParamRobot("LineaAlianzas").ValueParam;
-                _cRehabilitacionRRGG = _oRobot.GetValueParamRobot("LineaRRGG").ValueParam;
+                _cLineaAutos = _oRobot.GetValueParamRobot("LineaAutos").ValueParam;
+                _cLineaLLPP = _oRobot.GetValueParamRobot("LineaLLPP").ValueParam;
+                _cLineaAlianzas = _oRobot.GetValueParamRobot("LineaAlianzas").ValueParam;
+                _cLineaRRGG = _oRobot.GetValueParamRobot("LineaRRGG").ValueParam;
             }
             catch (Exception Ex)
             {
@@ -95,49 +97,34 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
             _oRobot.SaveTicketNextState(cMensaje == "" ? oTicket : _Funciones.MesaDeControl(oTicket, cMensaje), oAccion.Id);
         }
 
+
+        //Obtiene un arreglo con todos los procesos de endoso:
+        private string[] ProcesosEndoso(Ticket oTicketDatos)
+        {
+            try
+            {
+                Procesos = _oRobot.GetValueParamRobot("Procesos").ValueParam.Split(',');
+                return Procesos;
+            }
+            catch (Exception Ex)
+            {
+                throw new Exception("Ocurrió un erro al obtener lista de procesos de endoso: " + Ex.Message, Ex);
+            }
+        }
+
         //Inicia el procesamiento de datos:
         private void ProcesarTicket(Ticket oTicketDatos)
         {
+            //Campos para Validar:
+            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
+                                       eesFields.Default.motivo_rehabilitar, eesFields.Default.estado_poliza};
+
             //Valida Línea de la Póliza:
-            if(_cLinea == _cRehabilitacionAutos)
+            if (_cLinea == _cLineaLLPP)
             {
                 if (ValidarDatosPoliza(oTicketDatos))
                 {
-                    if (!ReglasDeValidacionAutos(oTicketDatos))
-                    {
-                        //Enviar a notificación de correo:
-                        CambiarEstadoTicket(oTicketDatos, _oNotificacion);
-                    }
-                }
-                else
-                {
-                    //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id.ToString() + " no cuenta con todos los datos necesarios.");
-                    return;
-                }
-            }
-            else if(_cLinea == _cRehabilitacionLLPP)
-            {
-                if (ValidarDatosPoliza(oTicketDatos))
-                {
-                    if (!ReglasDeValidacionLLPP(oTicketDatos))
-                    {
-                        //Enviar a notificación de correo:
-                        CambiarEstadoTicket(oTicketDatos, _oNotificacion);
-                    }
-                }
-                else
-                {
-                    //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id.ToString() + " no cuenta con todos los datos necesarios.");
-                    return;
-                }
-            }
-            else if(_cLinea == _cRehabilitacionAlianzas)
-            {
-                if (ValidarDatosPoliza(oTicketDatos))
-                {
-                    if (!ReglasDeValidacionAlianzas(oTicketDatos))
+                    if (!ReglasRehabilitacionPolizaLLPP(oTicketDatos))
                     {
                         //Enviar a notificación de correo:
                         CambiarEstadoTicket(oTicketDatos, _oNotificacion);
@@ -150,11 +137,11 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                     return;
                 }
             }
-            else if(_cLinea == _cRehabilitacionRRGG)
+            else if (_cLinea == _cLineaAlianzas)
             {
                 if (ValidarDatosPoliza(oTicketDatos))
                 {
-                    if (!ReglasDeValidacionRRGG(oTicketDatos))
+                    if (!ReglasRehabilitacionPolizaAlianzas(oTicketDatos))
                     {
                         //Enviar a notificación de correo:
                         CambiarEstadoTicket(oTicketDatos, _oNotificacion);
@@ -163,13 +150,13 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                 else
                 {
                     //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id.ToString() + " no cuenta con todos los datos necesarios.");
+                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cuenta con todos los datos necesarios.");
                     return;
                 }
             }
             else
             {
-                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + oTicketDatos.Id.ToString() + " no pertenece a ninguna Línea de Negocio.");
+                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no pertenece a ninguna Línea de Negocio.");
             }
             CambiarEstadoTicket(oTicketDatos, _oPantallaValidacion);
         }
@@ -187,13 +174,14 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         }
 
         #region "REGLAS DE VALIDACIÓN"
-        private Boolean ReglasDeValidacionAutos(Ticket oTicketDatos)
+
+        private Boolean ReglasRehabilitacionPolizaLLPP(Ticket oTicketDatos)
         {
             try
             {
                 if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
                 {
-                    //REGLA: Que no tenga siniestros se valida en el sistema.
+                    //REGLA: Que no tenga siniestros.
                 }
                 else
                 {
@@ -207,13 +195,13 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
             return true;
         }
 
-        private Boolean ReglasDeValidacionLLPP(Ticket oTicketDatos)
+        private Boolean ReglasRehabilitacionPolizaAlianzas(Ticket oTicketDatos)
         {
             try
             {
                 if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
                 {
-                    //REGLA: Que no tenga siniestros se valida en el sistema.
+                    //REGLA: Que no tenga siniestros.
                 }
                 else
                 {
@@ -227,45 +215,6 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
             return true;
         }
 
-        private Boolean ReglasDeValidacionAlianzas(Ticket oTicketDatos)
-        {
-            try
-            {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
-                {
-                    //REGLA: Que no tenga siniestros se valida en el sistema.
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un error al validar reglas de Rehabilitación para " + _cLinea, Ex);
-            }
-            return true;
-        }
-
-        private Boolean ReglasDeValidacionRRGG(Ticket oTicketDatos)
-        {
-            try
-            {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
-                {
-                    //REGLA: Que no tenga siniestros se valida en el sistema.
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un error al validar reglas de Rehabilitación para " + _cLinea, Ex);
-            }
-            return true;
-        }
         #endregion
     }
 }
