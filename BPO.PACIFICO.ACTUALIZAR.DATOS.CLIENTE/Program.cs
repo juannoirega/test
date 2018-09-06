@@ -244,6 +244,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _Funciones.Esperar(3);
                 _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Update']/span[2]")).Click();
                 _Funciones.Esperar(3);
+                _Funciones.CerrarDriver(_driverGlobal);
 
                 _robot.SaveTicketNextState(ticket, Convert.ToInt32(_EstadoSiguiente));
 
@@ -251,7 +252,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             catch (Exception ex)
             {
 
-                throw;
+                _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_EstadoSiguiente)).Id);
             }
 
         }
