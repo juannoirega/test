@@ -102,7 +102,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         }
 
         //Obtiene los usuarios OnBase según Línea de negocio:
-        private string[] UsuariosOnBase(Ticket oTicketDatos, int nIndice = 1)
+        private string[] UsuariosOnBase(int nIndice = 1)
         {
             try
             {
@@ -131,7 +131,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 for (int i = 0; i < _nIntentosOnBase; i++)
                 {
                     _Funciones.InstanciarFirefoxDriver(ref _oDriver, _cRutaGeckodriver, _cRutaFirefox, _cBPMWebDriver, _cGeckodriver);
-                    UsuariosOnBase(oTicketDatos, nIndice);
+                    UsuariosOnBase(nIndice);
                     _Funciones.IngresarBPM(_oDriver, _cUrlOnBase, Usuarios[0], Usuarios[1]);
                     if (_Funciones.ExisteElemento(_oDriver, "controlBarMenuName", _nIntentosOnBase))
                     {

@@ -42,16 +42,24 @@ namespace Robot.Util.Nacar
 
         public void AbrirSelenium(ref IWebDriver _driver)
         {
-            _driver = new InternetExplorerDriver();
-            _driver.Manage().Window.Maximize();
+            try
+            {
+                _driver = new InternetExplorerDriver();
+                _driver.Manage().Window.Maximize();
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al iniciar navegador Internet Explorer: " + Ex.Message, Ex); }
         }
 
         public void NavegarUrlPolicyCenter(IWebDriver _driver, string url)
         {
-            _driver.Url = url;
-            _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
-            _driver.Manage().Window.Maximize();
-            Esperar(1);
+            try
+            {
+                _driver.Url = url;
+                _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
+                _driver.Manage().Window.Maximize();
+                Esperar();
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al ingresar a la dirección indicada: " + Ex.Message, Ex); }
         }
 
         public Ticket MesaDeControl(Ticket ticket, string motivo)
@@ -93,12 +101,15 @@ namespace Robot.Util.Nacar
 
         public void LoginPolicyCenter(IWebDriver _driver, string usuario, string contraseña)
         {
-            _driver.SwitchTo().Frame(_driver.FindElement(By.Id("top_frame")));
-
-            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
-            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
-            _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
-            Esperar(1);
+            try
+            {
+                _driver.SwitchTo().Frame(_driver.FindElement(By.Id("top_frame")));
+                _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:username")).SendKeys(usuario);
+                _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:password")).SendKeys(contraseña);
+                _driver.FindElement(By.Id("Login:LoginScreen:LoginDV:submit")).SendKeys(Keys.Enter);
+                Esperar();
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al iniciar sesión: " + Ex.Message, Ex); }
         }
         public void LoginPortalBcp(IWebDriver _driver, string usuario, string contraseña)
         {

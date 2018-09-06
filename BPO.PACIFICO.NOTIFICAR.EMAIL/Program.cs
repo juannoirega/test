@@ -82,7 +82,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //CAMPO QUE VIENE DE LOS ROBOT QUE INDICA QUE TIPO DE PLANTILLA USARA 
             _valoresTicket[2] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipoplantillaen).Value;
 
-            //Opteniendo el Nombre del Dominio Funcionanal para Actualizar plantilla
+            //Opteniendo el Nombre del Dominio Funcionanal para pasar al Siguiente Estado
             var container = ODataContextWrapper.GetContainer();
             TipoProceso = container.DomainValues.Where(c => c.Id == Convert.ToInt32(_valoresTicket[2])).FirstOrDefault();
 
@@ -120,7 +120,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
                 ticketValue.Add(_robot.GetDataQueryTicketValue().Where(t => t.TicketId == item.Id).OrderByDescending(t => t.Id).First());
             }
 
-            //Optener el Ultimo Tickets Adjuntar Documentos dependiendo el Tipo de Plantilla
+            //Optener el Ultimo Tickets Adjuntar Documentos
             var idticket = ticketValue.Where(t => t.Value == _valoresTicket[2]).OrderByDescending(t => t.Id).Select(t => new { t.TicketId }).FirstOrDefault();
 
             //Optener la Plantilla del ticketValue
@@ -196,27 +196,13 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             mail.Body = JsonCorreo.Body;
             mail.From = new MailAddress(_correoRobot);
             mail.IsBodyHtml = true;
-
-            //GetEncoding para Aceptar tilde y caracteres Especiales
+            //GetEncoding para ACeptar tilde y caracteres Especiales
             mail.BodyEncoding = Encoding.GetEncoding("iso-8859-1");
             mail.SubjectEncoding = Encoding.GetEncoding("iso-8859-1");
             mail.From = new MailAddress(_correoRobot);
-            
             //Adjuntar Documentos
-            List<string> ListaDocuemntos = new List<string>();
-            ListaDocuemntos.Add(@"\\PCLCEVE0Q6K\Content/Upload_Files/6/2018-09-06/3e96f340-289a-4f4c-bebc-f870894b8e3a_json_Anulacion_Conforme.TXT");
-            ListaDocuemntos.Add(@"\\PCLCEVE0Q6K\Content/Upload_Files/6/2018-09-06/3e96f340-289a-4f4c-bebc-f870894b8e3a_json_Anulacion_Conforme.TXT");
-
-            if (ListaDocuemntos != null)
-            {
-                foreach (string archivos in ListaDocuemntos)
-                {
-                    if(System.IO.File.Exists(archivos))
-                        mail.Attachments.Add(new Attachment(archivos));
-                }
-            }
-
-           
+            //string docume = @"C:\Users\ltrujill\Documents\JSON.txt";
+            //mail.Attachments.Add(new Attachment(docume));
 
             ////Un Correo
             //mail.To.Add(new MailAddress(_correoRobot));
@@ -276,7 +262,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
                 //Deserializando JSON en una CLase
                 JsonCorreo = JsonConvert.DeserializeObject<JsonCorreo>(_contenido);
 
-                //Almacenando Palabras que esten entre {XXXXXX} y asignando la palabras para reemplazar
+                //Almacenando Palabras que esten entre {XXX} y asignando la palabras para reemplazar
                 foreach (Match match in Regex.Matches(JsonCorreo.Body, @"\{([^{}\]]*)\}"))
                     if (match.Value.Length >= 11)
                         palabrasClaves.Add(new PalabrasClave() { clave = match.Value, palabra = _valoresTicket[1] });

@@ -143,18 +143,14 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 throw new Exception("Error al Verificar el tipo de Proceso", ex);
             }
 
-            if (_reprocesoContador > 0)
-            {
-                _reprocesoContador = 0;
-                _idEstadoRetorno = 0;
-                _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
-            }
-
             if (_buscarPolicyCenter)
             {
                 if (!_existeValorProducto)
                 {
                     BuscarPolicyCenter(ticket);
+                    _reprocesoContador = 0;
+                    _idEstadoRetorno = 0;
+                    _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                 }
             }
 
