@@ -121,10 +121,18 @@ namespace Robot.Util.Nacar
 
         public void BuscarPolizaPolicyCenter(IWebDriver _driver, string numeroPoliza)
         {
-            _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
-            _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
-            _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
-            Esperar(5);
+            try
+            {
+                _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
+                _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
+                _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
+                Esperar(5);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al buscar poliza en policycenter",ex);
+            }
+           
         }
 
         public void BuscarPolizaPortalBcp(IWebDriver _driver, string numeroPoliza)

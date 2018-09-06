@@ -37,7 +37,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private int _idProceso;
         #endregion
         #region VariablesGLoables
-        private string _numeroPoliza = string.Empty;
         private string _producto = string.Empty;
         private string _tipoProducto = string.Empty;
         private string _polizaInicioVigencia = string.Empty;
@@ -205,71 +204,17 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         }
         private void BuscarPolicyCenter(Ticket ticket)
         {
-            AbrirSelenium();
-            NavegarUrl();
-            Login();
-            BuscarPoliza(ticket);
+            _Funciones.AbrirSelenium(ref _driverGlobal);
+            _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _url);
+            _Funciones.LoginPolicyCenter(_driverGlobal, _usuario, _contraseña);
+            _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.poliza_nro).Value);
             ObtenerDatos(ticket);
             GrabarInformacion(ticket);
-        }
-        private void AbrirSelenium()
-        {
-            LogStartStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
-            try
-            {
-                _Funciones.AbrirSelenium(ref _driverGlobal);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Iniciar Internet Explorer", ex);
-            }
-
-        }
-        private void NavegarUrl()
-        {
-            LogStartStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-
-            try
-            {
-                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _url);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("No se pudo acceder al sitio policenter", ex);
-            }
-
-        }
-        private void Login()
-        {
-            LogStartStep(5);//id referencial msje Log "Iniciando login policenter"
-
-            try
-            {
-                _Funciones.LoginPolicyCenter(_driverGlobal, _usuario, _contraseña);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("No se pudo acceder al sistema policenter", ex);
-
-            }
-
-        }
-        private void BuscarPoliza(Ticket ticket)
-        {
-            LogStartStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
-
-            try
-            {
-                _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.poliza_nro).Value.ToString();
-
-                _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
-            }
-            catch (Exception ex) { throw new Exception("Error al buscar el numero de poliza", ex); }
         }
 
         private void ObtenerDatos(Ticket ticket)
         {
-            LogStartStep(5);//id referencial msje Log "Iniciando Busqueda de Datos PolicyCenter"
+            LogStartStep(56);
             string _idDesplegable = string.Empty;
 
             _producto = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
@@ -361,14 +306,17 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 _polizaNueva = _Funciones.VerificarValorGrilla(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "Tipo", "Renovación", ref count) == true ? false : true;
             }
 
-            _driverGlobal.FindElement(By.Id("PolicyFile:MenuLinks:PolicyFile_PolicyFile_RiskAnalysis")).Click();//Verificar falla click en la pestaña
-            _driverGlobal.FindElement(By.Id("PolicyFile_RiskAnalysis:PolicyFile_RiskAnalysisScreen:PolicyFile_RiskAnalysisCV:PolicyFile_ClaimsCardTab")).Click();
-            _siniestros = _Funciones.ObtenerJsonGrilla(_driverGlobal, "PolicyFile_RiskAnalysis:PolicyFile_RiskAnalysisScreen:PolicyFile_RiskAnalysisCV:ClaimsLV");
-
+            if (_Funciones.ExisteElementoXPath(_driverGlobal, "//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_RiskAnalysis']/div", 1))
+            {
+                _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_RiskAnalysis']/div")).Click();
+                _Funciones.Esperar(3);
+                _driverGlobal.FindElement(By.Id("PolicyFile_RiskAnalysis:PolicyFile_RiskAnalysisScreen:PolicyFile_RiskAnalysisCV:PolicyFile_ClaimsCardTab")).Click();
+                _siniestros = _Funciones.ObtenerJsonGrilla(_driverGlobal, "PolicyFile_RiskAnalysis:PolicyFile_RiskAnalysisScreen:PolicyFile_RiskAnalysisCV:ClaimsLV");
+            }
             if (_Funciones.ExisteElemento(_driverGlobal, "PolicyChangeWizard:LOBWizardStepGroup:PersonalVehicles", 1))
             {
                 _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PersonalVehicles")).Click();
-                _Funciones.Esperar(5);
+                _Funciones.Esperar(3);
                 _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:LineWizardStepSet:PAVehiclesScreen:PAVehiclesPanelSet:VehiclesListDetailPanel:VehiclesDetailsCV:AdditionalInterestCardTab")).Click();
                 _endosatarios = _Funciones.ObtenerJsonGrilla(_driverGlobal, "PolicyChangeWizard:LOBWizardStepGroup:LineWizardStepSet:PAVehiclesScreen:PAVehiclesPanelSet:VehiclesListDetailPanel:VehiclesDetailsCV:AdditionalInterestDetailsDV:AdditionalInterestLV");
             }
@@ -377,7 +325,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
         private void GrabarInformacion(Ticket ticket)
         {
-            LogStartStep(5);//id referencial msje Log "Iniciando Guardar informacion en el Ticket"
+            LogStartStep(57);
             try
             {
                 string[] ValorCampos = { _producto, _polizaInicioVigencia, _polizaFinVigencia, _polizaTipoVigencia, _polizaEstado,_numeroAsegurados, _numeroVehiculos,
@@ -395,7 +343,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocurrio un Error al grabar la informacion en el ticket", ex);
+                throw new Exception("Ocurrio un error al grabar los valores de la poliza en el ticket", ex);
             }
 
         }
