@@ -79,22 +79,35 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             ticket = _robot.Tickets.FirstOrDefault();
 
 
-
-            _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value;
-            _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
-
             //CAMPO QUE VIENE DE LOS ROBOT QUE INDICA QUE TIPO DE PLANTILLA USARA 
-            _valoresTicket[2] = "1037";
+            _valoresTicket[2] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipoplantillaen).Value;
 
+            //Opteniendo el Nombre del Dominio Funcionanal para pasar al Siguiente Estado
+            var container = ODataContextWrapper.GetContainer();
+            TipoProceso = container.DomainValues.Where(c => c.Id == Convert.ToInt32(_valoresTicket[2])).FirstOrDefault();
+
+            if(TipoProceso.Value == "Plantilla Conforme Anulación Póliza" || TipoProceso.Value == "Plantilla Rechazo Anulación Póliza")
+            {
+                _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value;
+                _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
+            }else if(TipoProceso.Value == "Plantilla Conforme Rehabilitación" || TipoProceso.Value == "Plantilla Rechazo Rehabilitación")
+            {
+                _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
+            }
+            else if(TipoProceso.Value == "Plantilla Conforme Actualización Datos" || TipoProceso.Value == "Plantilla Rechazo Actualización Datos")
+            {
+                _valoresTicket[0] = "";
+                _valoresTicket[1] = "";
+            }
+           
+            
             //Correos 
             _valoresTicket[3] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value;
             //Correos Copias
             _valoresTicket[4] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_en_copia).Value;
 
 
-            //Opteniendo el Nombre del Dominio Funcionanal para pasar al Siguiente Estado
-            var container = ODataContextWrapper.GetContainer();
-            TipoProceso = container.DomainValues.Where(c => c.Id == Convert.ToInt32(_valoresTicket[2])).FirstOrDefault();
+            
 
 
             //Optener todos lo Ticket del Workflow "Adjuntar Documentos"
