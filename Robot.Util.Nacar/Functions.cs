@@ -443,7 +443,7 @@ namespace Robot.Util.Nacar
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocurrio un error al obtener el valor en la grilla", ex);
+                throw new Exception("Ocurrio un error al obtener la data de la grilla", ex);
             }
 
             return sr.Serialize(ListaValoresGrilla);
