@@ -832,5 +832,32 @@ namespace Robot.Util.Nacar {
                 return ((int)(this["poliza_anu_motivo"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1097")]
+        public int listacampos {
+            get {
+                return ((int)(this["listacampos"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1099")]
+        public int dni {
+            get {
+                return ((int)(this["dni"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1100")]
+        public int ruc {
+            get {
+                return ((int)(this["ruc"]));
+            }
+        }
     }
 }

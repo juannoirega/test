@@ -339,6 +339,23 @@ namespace Robot.Util.Nacar
             return false;
         }
 
+        public Boolean ExisteElementoXPath(IWebDriver oDriver, string cIdElemento, int nIntentos)
+        {
+            for (int i = 0; i < nIntentos; i++)
+            {
+                try
+                {
+                    oDriver.FindElement(By.XPath(cIdElemento));
+                    return true;
+                }
+                catch (NoSuchElementException)
+                {
+                    Esperar();
+                }
+            }
+            return false;
+        }
+
         //Verifica que el formulario BPM se haya registrado correctamente:
         public Boolean VerificarRegistroBPM(IWebDriver oDriver)
         {
