@@ -12,7 +12,7 @@ using System.Threading;
 using Everis.Ees.Entities;
 using everis.Ees.Proxy.Services;
 using OpenQA.Selenium.Interactions;
-
+using System.Web.Script.Serialization;
 namespace Robot.Util.Nacar
 {
     public class Functions
@@ -157,10 +157,10 @@ namespace Robot.Util.Nacar
             }
             catch (Exception ex)
             {
-                throw new Exception (String.Format("Se produjo un error al tratar de obtener el elemento \"{0}\" por \"{1}\".", idElement, type), ex);
-            }       
+                throw new Exception(String.Format("Se produjo un error al tratar de obtener el elemento \"{0}\" por \"{1}\".", idElement, type), ex);
+            }
         }
-        
+
         public void SeleccionarCombo(IWebDriver _driver, string idElement, string valorComparar)
         {
             IList<IWebElement> oOption = _driver.FindElement(By.Id(idElement)).FindElements(By.XPath("id('" + idElement + "')/option"));
@@ -394,15 +394,16 @@ namespace Robot.Util.Nacar
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocurrio un error al buscar el valor en la grilla",ex);
+                throw new Exception("Ocurrio un error al buscar el valor en la grilla", ex);
             }
-     
+
             return _valorEncontrado;
         }
 
-        public List<string> obtenerValorGrilla(IWebDriver _driver,string idtabla)
+        public string ObtenerJsonGrilla(IWebDriver _driver, string idtabla)
         {
-            List<string> valor = new List<string>();
+            JavaScriptSerializer sr = new JavaScriptSerializer();
+            List<string> ListaValoresGrilla = new List<string>();
             try
             {
                 IList<IWebElement> _trColeccion = _driver.FindElement(By.Id(idtabla)).FindElements(By.XPath("id('" + idtabla + "')/tbody/tr"));
@@ -418,11 +419,9 @@ namespace Robot.Util.Nacar
                             _count++;
                             break;
                         }
-                        valor.Add(_td[j].Text);
-                        _count++;
+                        ListaValoresGrilla.Add(_td[j].Text);
                     }
-                    if (_count > 1)
-                        return valor;
+                    
                 }
             }
             catch (Exception ex)
@@ -430,7 +429,7 @@ namespace Robot.Util.Nacar
                 throw new Exception("Ocurrio un error al obtener el valor en la grilla", ex);
             }
 
-            return valor;
+            return sr.Serialize(ListaValoresGrilla);
         }
 
         public FunctionalDomains<List<DomainValue>> GetDomainValuesByParameters(Func<FunctionalDomains<List<DomainValue>>, FunctionalDomains<List<DomainValue>>> SearchDomain
@@ -492,13 +491,14 @@ namespace Robot.Util.Nacar
                 {
                     FieldId = eesFields.Default.id_estado_retorno,
                     TicketId = ticket.Id,
-                    Value = idEstadoRetorno.ToString(),
+                    Value = ticket.StateId.Value.ToString(),
                     CreationDate = DateTime.Now,
                     ClonedValueOrder = null
                 });
             }
             else
                 ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.id_estado_retorno).Value = idEstadoRetorno.ToString();
+
 
             return ticket;
         }

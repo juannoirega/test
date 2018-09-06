@@ -31,7 +31,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private string _procesoContact = string.Empty;
         private string _procesoInicio = string.Empty;
         private string _nombreProceso = string.Empty;
-        private int _estadoError;
+        private string _estadoError;
         private int _estadoFinal;
         private int _dominioProceso;
         private int _idProceso;
@@ -60,6 +60,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private string _numeroCuenta = string.Empty;
         private int _reprocesoContador = 0;
         private int _idEstadoRetorno = 0;
+        private int _idEstadoError = 0;
         //falta
         private string _anulacionMotivo = string.Empty;
         //JSON falta implementar
@@ -108,9 +109,8 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 {
                     LogFailStep(30, ex);
                     _reprocesoContador++;
-                    _idEstadoRetorno++;
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
-                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
+                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _idEstadoError).Id);
                 }
                 finally
                 {
@@ -129,16 +129,14 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 var container = ODataContextWrapper.GetContainer();
                 //poner parametro
                 List<Domain> dominios = container.Domains.Expand(dv => dv.DomainValues).Where(df => df.ParentId == _dominioProceso).ToList();
-
                 //poner parametro
                 int numero = dominios.FirstOrDefault(o => o.Name == "nombre").DomainValues.FirstOrDefault(o => o.Value == "Anulación de Póliza").LineNumber;
-                // FunctionalDomains<List<DomainValue>> objSearch4 = _Funciones.GetDomainValuesByParameters(_robot.SearchDomain, "Procesos Version Final", new string[,] { { "nombre", "Anulación de Póliza" }, { "activo", "1" } });
-                //cambiar id 18 referencial por el id del campo producto real
                 _existeValorProducto = ValidacionProducto(ticket);
                 //poner parametro para las buquesdas de dominio
                 _buscarPolicyCenter = ValidacionPoliCenter(dominios, numero);
                 _buscarContactManager = ValidacionContactManager(dominios, numero);
                 _idEstadoInicio = Convert.ToInt32(dominios.FirstOrDefault(o => o.Name == _procesoInicio).DomainValues.FirstOrDefault(o => o.LineNumber == numero).Value);
+                _idEstadoError = Convert.ToInt32(dominios.FirstOrDefault(o => o.Name == _estadoError).DomainValues.FirstOrDefault(o => o.LineNumber == numero).Value);
             }
             catch (Exception ex)
             {
@@ -197,7 +195,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         {
             try
             {
-                if (!String.IsNullOrEmpty(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 18).Value))
+                if (!String.IsNullOrEmpty(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.producto).Value))
                     return true;
                 else
                     return false;
@@ -262,7 +260,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {
-                _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.numero_de_poliza).Value.ToString();
+                _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.poliza_nro).Value.ToString();
 
                 _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
             }
@@ -368,7 +366,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PersonalVehicles")).Click();
                 _Funciones.Esperar(5);
                 _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:LineWizardStepSet:PAVehiclesScreen:PAVehiclesPanelSet:VehiclesListDetailPanel:VehiclesDetailsCV:AdditionalInterestCardTab")).Click();
-                var _valoresEndosatarios = _Funciones.obtenerValorGrilla(_driverGlobal, "PolicyChangeWizard:LOBWizardStepGroup:LineWizardStepSet:PAVehiclesScreen:PAVehiclesPanelSet:VehiclesListDetailPanel:VehiclesDetailsCV:AdditionalInterestDetailsDV:AdditionalInterestLV");
+                _endosatarios = _Funciones.ObtenerJsonGrilla(_driverGlobal, "PolicyChangeWizard:LOBWizardStepGroup:LineWizardStepSet:PAVehiclesScreen:PAVehiclesPanelSet:VehiclesListDetailPanel:VehiclesDetailsCV:AdditionalInterestDetailsDV:AdditionalInterestLV");
             }
 
         }
@@ -380,13 +378,13 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             {
                 string[] ValorCampos = { _producto, _polizaInicioVigencia, _polizaFinVigencia, _polizaTipoVigencia, _polizaEstado,_numeroAsegurados, _numeroVehiculos,
                                          _nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva),_tipoProducto,_polizaFechaEmision,_canalOrganizacion,_canalAgenteCodido,
-                _canalAgente,_canalCodigo,_canal,_servicioOrganizacion,_servicioAgenteCodigo,_servicioAgente,_servicioCanalCodigo,_servicioCanal,_numeroCuenta,_anulacionMotivo};
+                _canalAgente,_canalCodigo,_canal,_servicioOrganizacion,_servicioAgenteCodigo,_servicioAgente,_servicioCanalCodigo,_servicioCanal,_numeroCuenta,_anulacionMotivo,_endosatarios};
 
                 int[] IdCampos = { eesFields.Default.producto, eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia,eesFields.Default.tipo_vigencia,eesFields.Default.estado_poliza,
                 eesFields.Default.num_asegurados,eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado,eesFields.Default.poliza_nueva,
                 eesFields.Default.tipo_de_producto,eesFields.Default.poliza_fec_emision,eesFields.Default.canal_org,eesFields.Default.canal_agente_cod,eesFields.Default.canal_agente,
                 eesFields.Default.canal_cod,eesFields.Default.canal,eesFields.Default.servicio_org,eesFields.Default.servicio_agente_cod,eesFields.Default.servicio_agente,eesFields.Default.servicio_canal_cod,
-                eesFields.Default.servicio_canal,eesFields.Default.cuenta_nro,eesFields.Default.motivo_anular};
+                eesFields.Default.servicio_canal,eesFields.Default.cuenta_nro,eesFields.Default.motivo_anular,eesFields.Default.endosos};
 
                 for (int i = 0; i < ValorCampos.Length; i++)
                     ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = IdCampos[i], Value = ValorCampos[i] });
@@ -403,8 +401,8 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
             _usuario = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
             _contraseña = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
-            _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoErrorAP").ValueParam);
-            _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguienteAP").ValueParam);
+            //Estado Mesa Control validar Nombre cuando se cree el dominio Funcional
+            _estadoError = _robot.GetValueParamRobot("EstadoError").ValueParam;
             _dominioProceso = Convert.ToInt32(_robot.GetValueParamRobot("DominoProcesso").ValueParam);
             _procesoPolicyCenter = _robot.GetValueParamRobot("ProcessoPolicyCenter").ValueParam;
             _procesoContact = _robot.GetValueParamRobot("ProcessoContact").ValueParam;
