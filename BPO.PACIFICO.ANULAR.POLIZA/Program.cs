@@ -35,6 +35,8 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         #region VariablesGLoables
         private string _rutaDocumentos = string.Empty;
         private string _numeroOrdenTrabajo = string.Empty;
+        private int _plantillaConforme;
+        private int _plantillaRechazo;
         private int _reprocesoContador = 0;
         private int _idEstadoRetorno = 0;
         private static string _pasoRealizado = string.Empty;
@@ -77,8 +79,10 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 {
                     LogFailStep(30, ex);
                     _reprocesoContador++;
+                    GuardarIdPlantillaNotificacion(ticket, _plantillaRechazo);
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
+                    return;
                 }
                 finally
                 {
@@ -90,7 +94,6 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         {
             //falta verificar cual sera el id del campo que confirmara si es portalbc o no**reemplazar por el "1"
             //_esPortalBcp = ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 1).Value.ToString() == "True" ? true : false;
-
             if (!ValidarVacios(ticket))
             {
                 _Funciones.AbrirSelenium(ref _driverGlobal);
@@ -99,6 +102,8 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 BuscarPoliza(ticket);
                 AnularPoliza(ticket);
                 GuardarPdf(ticket);
+                GuardarIdPlantillaNotificacion(ticket, _plantillaConforme);
+                GuardarInformacionTicket(ticket);
                 if (_reprocesoContador > 0)
                 {
                     _reprocesoContador = 0;
@@ -108,6 +113,8 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 _robot.SaveTicketNextState(ticket, _estadoFinal);
             }
         }
+
+       
         private void AnularPoliza(Ticket ticket)
         {
             //if (_esPortalBcp)
@@ -116,7 +123,6 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
 
             AnularPolizaPolicyCenter(ticket);
         }
-
         private void NavegarUrl()
         {
             //if (_esPortalBcp)
@@ -136,7 +142,6 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             //}
 
         }
-
         private void Login()
         {
             //if (_esPortalBcp)
@@ -165,7 +170,6 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             //}
 
         }
-
         //private void AnularPolizaPortalBcp()
         //{
         //    try
@@ -185,49 +189,62 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         //}
         private void AnularPolizaPolicyCenter(Ticket ticket)
         {
+            LogStartStep(59);
             try
             {
                 _pasoRealizado = "Menu acciones";
                 _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
 
-                _pasoRealizado = "Menu opcion cancelar poliza";
-                _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
-                _Funciones.Esperar(5);
+                if (_Funciones.ExisteElemento(_driverGlobal, "PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy", 2))
+                {
+                    _pasoRealizado = "Menu opcion cancelar poliza";
+                    _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
+                    _Funciones.Esperar(5);
 
-                string _descripcionMotivo = "SE DEJA CONSTANCIA POR EL PRESENTE ENDOSO QUE, LA POLIZA DEL RUBRO QUEDA CANCELADA, NULA Y SIN VALOR PARA TODOS SUS EFECTOS A PARTIR DEL";
+                    string _descripcionMotivo = "SE DEJA CONSTANCIA POR EL PRESENTE ENDOSO QUE, LA POLIZA DEL RUBRO QUEDA CANCELADA, NULA Y SIN VALOR PARA TODOS SUS EFECTOS A PARTIR DEL";
 
-                _pasoRealizado = "Seleccionar combobox solictante";
-                _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Source", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.solicitante).Value)));
-                _Funciones.Esperar(2);
+                    _pasoRealizado = "Seleccionar combobox solictante";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Source", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.solicitante).Value)));
+                    _Funciones.Esperar(2);
 
-                _pasoRealizado = "Seleccionar combobox motivo anulación";
-                _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.motivo_anular).Value)));
-                _Funciones.Esperar(2);
-                _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo, " ", _Funciones.GetElementValue(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date")));
-                _Funciones.Esperar(3);
+                    _pasoRealizado = "Seleccionar combobox motivo anulación";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.motivo_anular).Value)));
+                    _Funciones.Esperar(2);
 
-                _pasoRealizado = "Seleccionar combobox forma de reembolso";
-                _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CalcMethod", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.forma_de_reembolso).Value)));
-                _Funciones.Esperar(2);
+                    _pasoRealizado = "Ingresar endoso anulacion";
+                    _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo, " ", _Funciones.GetElementValue(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date")));
+                    _Funciones.Esperar(3);
 
-                _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:NewCancellation")).Click();
-                _Funciones.Esperar(1);
+                    _pasoRealizado = "Seleccionar combobox forma de reembolso";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CalcMethod", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.forma_de_reembolso).Value)));
+                    _Funciones.Esperar(2);
 
-                _driverGlobal.FindElement(By.Id("CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions_arrow")).Click();
+                    _pasoRealizado = "Iniciar cancelacion";
+                    _driverGlobal.FindElement(By.XPath("//*[@id='StartCancellation:StartCancellationScreen:NewCancellation']/span[2]")).Click();
+                    _Funciones.Esperar(1);
 
-                _pasoRealizado = "Opcion Cancelar Poliza";
-                _driverGlobal.FindElement(By.Id("CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions:CancelNow")).Click();
-                _Funciones.Esperar(1);
+                    _driverGlobal.FindElement(By.XPath("//*[@id='CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions_arrow']")).Click();
+                    _Funciones.Esperar();
+                    _pasoRealizado = "Opcion Cancelar Poliza";
+                    _driverGlobal.FindElement(By.Id("CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions:CancelNow")).Click();
+                    _Funciones.Esperar();
 
-                _driverGlobal.SwitchTo().Alert().Accept();
-                _driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:JobCompleteDV:ViewPolicy")).Click();
+                    _driverGlobal.SwitchTo().Alert().Accept();
+                    _Funciones.Esperar();
+                    _driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:JobCompleteDV:ViewPolicy")).Click();
+                    _Funciones.Esperar(2);
+                    _numeroOrdenTrabajo = _Funciones.GetElementValue(_driverGlobal, "JobComplete:JobCompleteScreen:Message").Trim().Split(' ').LastOrDefault().Replace(").", " ").Trim();
+                    _Funciones.Esperar(2);
+                }
+                else
+                {
+                    _numeroOrdenTrabajo= ObtenerNOrdenTrabajo(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "N.° de orden de trabajo");
+                }
             }
             catch (Exception ex)
             {
-                LogFailStep(12, ex);
-                throw new Exception(ex.Message + " :" + _pasoRealizado, ex);
+                LogFailStep(12, ex); throw new Exception(ex.Message + " :" + _pasoRealizado, ex);
             }
-           
         }
         private bool ValidarVacios(Ticket oTicketDatos)
         {
@@ -241,46 +258,51 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         }
         private void GuardarPdf(Ticket ticket)
         {
-            try
+            LogStartStep(58);
+            _Funciones.Esperar(2);
+            if (_Funciones.ExisteElementoXPath(_driverGlobal, "//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_Documents']/div", 2))
             {
-                LogStartStep(58);
-                _Funciones.Esperar(2);
-                _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_Documents']")).SendKeys(Keys.Enter);
-                _Funciones.Esperar(2);
+                _pasoRealizado = "Herramientas Documentos";
+                _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_Documents']/div")).Click();
+                try
+                {
+                    _Funciones.Esperar(2);
 
-                int _posicionFila = -1;
-                _Funciones.VerificarValorGrilla(_driverGlobal, "PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV", "Nombre", "ACCOUNTHOLDER", ref _posicionFila);
-
-                _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV:" + _posicionFila + ":DocumentsLV_ViewLink_link']")).Click();
-                _Funciones.Esperar(2);
-
-                //Ruta donde se guardan los pdfs
-                DirectoryInfo directory = new DirectoryInfo(@"D:/Users/E05167/AppData/Local/Temp/Guidewire");
-
-                var listaArchivos = directory.GetDirectories().OrderByDescending(f => f.LastWriteTime).First();
-                var archivopdf = listaArchivos.GetFiles()[0].Name;
-
-                //ruta pdf generado
-                string origenArchivo = Path.Combine(listaArchivos.FullName, archivopdf);
-
-                //Ruta Local Destino
-                string rutaDestino = Path.Combine(_rutaDocumentos, archivopdf);
-
-                //Cantidad Documentos
-                int CantidadDocumentos = ticket.TicketValues.Where(t => t.FieldId == eesFields.Default.documentos).ToList().Count;
-
-                File.Copy(origenArchivo, rutaDestino);
-
-                ticket.TicketValues.Add(new TicketValue { Value = rutaDestino, ClonedValueOrder = CantidadDocumentos + 1, TicketId = ticket.Id, FieldId = eesFields.Default.documentos });
+                    int _posicionFila = -1;
+                    if (_Funciones.VerificarValorGrilla(_driverGlobal, "PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV", "Nombre", "ACCOUNTHOLDER", ref _posicionFila))
+                    {
+                        _pasoRealizado = "Ver pdf";
+                        _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV:" + _posicionFila + ":DocumentsLV_ViewLink_link']")).Click();
+                    }
+                    else
+                    {
+                        _posicionFila = -1;
+                        _pasoRealizado = "Buscar pdf";
+                        _driverGlobal.FindElement(By.Id("PolicyFile_Documents:Policy_DocumentsScreen:Policy_DocumentSearchDV:SearchAndResetInputSet:SearchLinksInputSet:Search_link")).Click();
+                        _Funciones.Esperar(3);
+                        _Funciones.VerificarValorGrilla(_driverGlobal, "PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV", "Nombre", "ACCOUNTHOLDER", ref _posicionFila);
+                        _pasoRealizado = "Ver pdf";
+                        _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV:" + _posicionFila + ":DocumentsLV_ViewLink_link']")).Click();
+                    }
+                    _Funciones.Esperar(2);
+                    //Ruta donde se guardan los pdfs
+                    _pasoRealizado = "Iniciando guardar pdf en directorio";
+                    DirectoryInfo directory = new DirectoryInfo(@"D:/Users/E05167/AppData/Local/Temp/Guidewire");
+                    var listaArchivos = directory.GetDirectories().OrderByDescending(f => f.LastWriteTime).First();
+                    var archivopdf = listaArchivos.GetFiles()[0].Name;
+                    //ruta pdf generado
+                    string origenArchivo = Path.Combine(listaArchivos.FullName, archivopdf);
+                    //Ruta Local Destino
+                    string rutaDestino = Path.Combine(_rutaDocumentos, archivopdf);
+                    //Cantidad Documentos
+                    int CantidadDocumentos = ticket.TicketValues.Where(t => t.FieldId == eesFields.Default.documentos).ToList().Count;
+                    File.Copy(origenArchivo, rutaDestino);
+                    ticket.TicketValues.Add(new TicketValue { Value = rutaDestino, ClonedValueOrder = CantidadDocumentos + 1, TicketId = ticket.Id, FieldId = eesFields.Default.documentos });
+                }
+                catch (Exception ex) { LogFailStep(12, ex); throw new Exception(ex.Message + " :" + _pasoRealizado, ex); }
             }
-
-            catch (Exception ex)
-            {
-                throw new Exception("Error al guardar el archivo pdf", ex);
-            }
-
+            else { throw new Exception("No se encontro la opcion documentos"); }
         }
-
         private void GetParameterRobots()
         {
             _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
@@ -291,7 +313,62 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             //_urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
             _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
             _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
+            _plantillaConforme = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaConforme").ValueParam);
+            _plantillaRechazo = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaRechazo").ValueParam);
             LogEndStep(4);
+        }
+        private void GuardarIdPlantillaNotificacion(Ticket ticket, int idPlantilla)
+        {
+            if (ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj) == null)
+            {
+                ticket.TicketValues.Add(new TicketValue
+                {
+                    FieldId = eesFields.Default.reproceso_contador,
+                    TicketId = ticket.Id,
+                    Value = idPlantilla.ToString(),
+                    CreationDate = DateTime.Now,
+                    ClonedValueOrder = null
+                });
+            }
+            else
+                ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj).Value = idPlantilla.ToString();
+        }
+        public string ObtenerNOrdenTrabajo(IWebDriver _driver, string idTabla, string cabecera)
+        {
+            string valor = string.Empty;
+            try
+            {
+                IList<IWebElement> _trColeccion = _driver.FindElement(By.Id(idTabla)).FindElements(By.XPath("id('" + idTabla + "')/tbody/tr"));
+                int _posicionCabecera = 0;
+                foreach (IWebElement item in _trColeccion)
+                {
+                    IList<IWebElement> _td = item.FindElements(By.XPath("td"));
+
+                    for (int j = 0; j < _td.Count; j++)
+                    {
+                        string _Cabecera = _td[j].Text;
+                        if (_Cabecera.Contains(cabecera))
+                        {
+                            _posicionCabecera = j;
+                            break;
+                        }
+                        if (_posicionCabecera > 0)
+                        {
+                            string _valorFila = _td[_posicionCabecera].Text;
+                            return valor = _valorFila;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrio un error al obtener el valor en la grilla", ex);
+            }
+            return valor;
+        }
+        private void GuardarInformacionTicket(Ticket ticket)
+        {
+            ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.num_orden_trabajo, Value = _numeroOrdenTrabajo });
         }
     }
 }

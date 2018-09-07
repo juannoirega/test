@@ -472,6 +472,7 @@ namespace Robot.Util.Nacar
             return sr.Serialize(ListaValoresGrilla);
         }
 
+
         public FunctionalDomains<List<DomainValue>> GetDomainValuesByParameters(Func<FunctionalDomains<List<DomainValue>>, FunctionalDomains<List<DomainValue>>> SearchDomain
                                                                                 , string nameFunctionalDomain
                                                                                 , string[,] parametersQueryable

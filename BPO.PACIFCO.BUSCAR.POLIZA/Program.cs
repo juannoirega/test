@@ -22,6 +22,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private static IWebDriver _driverGlobal = null;
         private static IWebElement element;
         private static Functions _Funciones;
+        private StateAction _estadoContact;
         //private static Functions _Funciones;
         #region ParametrosRobot
         private string _url = string.Empty;
@@ -67,6 +68,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private string _endosatarios = string.Empty;
         //
         private bool _polizaNueva = true;
+        private bool _finProcesoContact = false;
 
         //Pendiente
         private string _numeroVehiculos = "1";
@@ -142,13 +144,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 throw new Exception("Error al Verificar el tipo de Proceso", ex);
             }
 
-            if (_reprocesoContador > 0)
-            {
-                _reprocesoContador = 0;
-                _idEstadoRetorno = 0;
-                _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
-            }
-
             if (_buscarPolicyCenter)
             {
                 if (!_existeValorProducto)
@@ -159,13 +154,20 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             if (_buscarContactManager)
             {
                 List<StateAction> accionesEstado = _robot.GetNextStateAction(_robot.Tickets.FirstOrDefault());
-                StateAction siguienteEstado = accionesEstado.Where(se => se.ActionDescription == "Ir ContactManager").FirstOrDefault();
-                _robot.SaveTicketNextState(ticket, siguienteEstado.Id);
+                _estadoContact = accionesEstado.Where(se => se.ActionDescription == "Ir ContactManager").FirstOrDefault();
+                _finProcesoContact = true;
             }
-            else
+            if (_reprocesoContador > 0)
             {
-                _robot.SaveTicketNextState(ticket, _idEstadoInicio);
+                _reprocesoContador = 0;
+                _idEstadoRetorno = 0;
+                _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
             }
+
+            if (_finProcesoContact)
+                _robot.SaveTicketNextState(ticket, _estadoContact.Id);
+            else
+                _robot.SaveTicketNextState(ticket, _idEstadoInicio);
 
         }
         private bool ValidacionPoliCenter(List<Domain> dominios, int numero)
@@ -214,7 +216,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             ObtenerDatos(ticket);
             GrabarInformacion(ticket);
         }
-
         private void ObtenerDatos(Ticket ticket)
         {
             LogStartStep(56);
@@ -325,7 +326,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             }
 
         }
-
         private void GrabarInformacion(Ticket ticket)
         {
             LogStartStep(57);
@@ -350,7 +350,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             }
 
         }
-
         private void GetParameterRobots()
         {
             _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
