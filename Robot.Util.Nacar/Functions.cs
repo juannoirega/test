@@ -94,9 +94,13 @@ namespace Robot.Util.Nacar
 
         public void NavegarUrlPortalBcp(IWebDriver _driver, string url)
         {
-            _driver.Url = url;
-            _driver.Manage().Window.Maximize();
-            Esperar(1);
+            try
+            {
+                _driver.Url = url;
+                _driver.Manage().Window.Maximize();
+                Esperar(1);
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al ingresar al sitio portal bcp" ,Ex); }
         }
 
         public void LoginPolicyCenter(IWebDriver _driver, string usuario, string contraseña)
@@ -130,9 +134,9 @@ namespace Robot.Util.Nacar
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al buscar poliza en policycenter",ex);
+                throw new Exception("Error al buscar poliza en policycenter", ex);
             }
-           
+
         }
 
         public void BuscarPolizaPortalBcp(IWebDriver _driver, string numeroPoliza)
@@ -457,7 +461,7 @@ namespace Robot.Util.Nacar
                         }
                         ListaValoresGrilla.Add(_td[j].Text);
                     }
-                    
+
                 }
             }
             catch (Exception ex)
@@ -505,7 +509,7 @@ namespace Robot.Util.Nacar
             return valores;
         }
 
-        public Ticket GuardarValoresReprocesamiento(Ticket ticket, int reprocesoContador, int idEstadoRetorno)
+        public void GuardarValoresReprocesamiento(Ticket ticket, int reprocesoContador, int idEstadoRetorno)
         {
             if (ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.reproceso_contador) == null)
             {
@@ -534,9 +538,6 @@ namespace Robot.Util.Nacar
             }
             else
                 ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.id_estado_retorno).Value = idEstadoRetorno.ToString();
-
-
-            return ticket;
         }
     }
 }

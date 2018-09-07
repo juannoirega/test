@@ -33,9 +33,11 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         private int _estadoFinal;
         #endregion
         #region VariablesGLoables
-        private string _numeroPoliza = string.Empty;
         private string _rutaDocumentos = string.Empty;
         private string _numeroOrdenTrabajo = string.Empty;
+        private int _reprocesoContador = 0;
+        private int _idEstadoRetorno = 0;
+        private static string _pasoRealizado = string.Empty;
         //variable temporal
         //private static bool _esPortalBcp = false;
 
@@ -67,11 +69,15 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             {
                 try
                 {
+                    var valoresReprocesamiento = _Funciones.ObtenerValoresReprocesamiento(ticket);
+                    if (valoresReprocesamiento.Count > 0) { _reprocesoContador = valoresReprocesamiento[0]; _idEstadoRetorno = valoresReprocesamiento[1]; }
                     ProcesarTicket(ticket);
                 }
                 catch (Exception ex)
                 {
                     LogFailStep(30, ex);
+                    _reprocesoContador++;
+                    _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
                 }
                 finally
@@ -84,63 +90,49 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         {
             //falta verificar cual sera el id del campo que confirmara si es portalbc o no**reemplazar por el "1"
             //_esPortalBcp = ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 1).Value.ToString() == "True" ? true : false;
-            AbrirSelenium();
-            NavegarUrl();
-            Login();
-            BuscarPoliza(ticket);
-            AnularPoliza(ticket);
-            GuardarPdf(ticket);
+
+            if (!ValidarVacios(ticket))
+            {
+                _Funciones.AbrirSelenium(ref _driverGlobal);
+                NavegarUrl();
+                Login();
+                BuscarPoliza(ticket);
+                AnularPoliza(ticket);
+                GuardarPdf(ticket);
+                if (_reprocesoContador > 0)
+                {
+                    _reprocesoContador = 0;
+                    _idEstadoRetorno = 0;
+                    _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
+                }
+                _robot.SaveTicketNextState(ticket, _estadoFinal);
+            }
         }
         private void AnularPoliza(Ticket ticket)
         {
             //if (_esPortalBcp)
             //    AnularPolizaPortalBcp();
             //else
+
             AnularPolizaPolicyCenter(ticket);
         }
 
-
-        private void AbrirSelenium()
-        {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
-            try
-            {
-                _Funciones.AbrirSelenium(ref _driverGlobal);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Iniciar Internet Explorer", ex);
-            }
-            //LogInfoStep(6);//id referencial msje Log "Finalizando la carga Internet Explorer"
-
-        }
         private void NavegarUrl()
         {
             //if (_esPortalBcp)
             //{
-            //    try
-            //    {
-            //        //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+
+            //        LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
             //        _Funciones.NavegarUrlPortalBcp(_driverGlobal, _urlBcp);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        throw new Exception("No se puede acceder al sitio portal bcp", ex);
-            //    }
-            //    //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
+
+            //    LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
             //}
             //else
             //{
-            try
-            {
-                //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("No se puede acceder al sitio policycenter", ex);
-            }
-            //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
+
+            //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+            _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
+            //    LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
             //}
 
         }
@@ -149,164 +141,117 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         {
             //if (_esPortalBcp)
             //{
-            //    try
-            //    {
             //        //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
             //        _Funciones.LoginPortalBcp(_driverGlobal, _usuarioBcp, _contraseñaBcp);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        throw new Exception("No se puede acceder al sistema portal bcp", ex);
-            //    }
             //    //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
             //}
             //else
             //{
-            try
-            {
-                //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
-                _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("No se puede acceder al sistema policycenter", ex);
-            }
+            //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
+            _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
             //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
             //}
 
         }
         private void BuscarPoliza(Ticket ticket)
         {
-            _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.numero_de_poliza).Value.ToString();
-
             //if (_esPortalBcp)
             //{
-            //    try
-            //    {
-            //        //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
-            //        if (!string.IsNullOrEmpty(_numeroPoliza))
-            //        {
-            //            _Funciones.BuscarPolizaPortalBcp(_driverGlobal, _numeroPoliza);
-            //        }
-            //        //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        throw new Exception("Error al buscar el numero de poliza portal bcp", ex);
-            //    }
+            //    _Funciones.BuscarPolizaPortalBcp(_driverGlobal, ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.numero_de_poliza).Value);
             //}
             //else
             //{
-            try
-            {
-                //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
-                if (!string.IsNullOrEmpty(_numeroPoliza))
-                {
-                    _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
-                }
-                //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al buscar el numero de poliza policycenter", ex);
-            }
+            _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.numero_de_poliza).Value);
             //}
 
         }
 
-        private void AnularPolizaPortalBcp()
+        //private void AnularPolizaPortalBcp()
+        //{
+        //    try
+        //    {
+        //        _driverGlobal.FindElement(By.XPath("//img[contains(@id,'ctl00_ContentPlaceHolder1_gvPolizas_ctl03_imgVer')]")).Click();
+        //        _Funciones.Esperar(2);
+        //        _driverGlobal.FindElement(By.XPath("//*[@id='ctl00_ContentPlaceHolder1_ddlTipoMod']/option[2]")).Click();
+        //        _Funciones.Esperar(3);
+        //        _driverGlobal.FindElement(By.XPath("//*[@id='ctl00_ContentPlaceHolder1_ddlMotivo_03']/option[2]")).Click();
+        //        //Falta confirmar la anulacion de poliza portal bcp
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Error al anular la poliza en el sistema portal bcp", ex);
+        //    }
+
+        //}
+        private void AnularPolizaPolicyCenter(Ticket ticket)
         {
             try
             {
-                _driverGlobal.FindElement(By.XPath("//img[contains(@id,'ctl00_ContentPlaceHolder1_gvPolizas_ctl03_imgVer')]")).Click();
-                _Funciones.Esperar(2);
-                _driverGlobal.FindElement(By.XPath("//*[@id='ctl00_ContentPlaceHolder1_ddlTipoMod']/option[2]")).Click();
-                _Funciones.Esperar(3);
-                _driverGlobal.FindElement(By.XPath("//*[@id='ctl00_ContentPlaceHolder1_ddlMotivo_03']/option[2]")).Click();
-                //Falta confirmar la anulacion de poliza portal bcp
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al anular la poliza en el sistema portal bcp", ex);
-            }
-
-        }
-        private void AnularPolizaPolicyCenter(Ticket ticket)
-        {
-          
+                _pasoRealizado = "Menu acciones";
                 _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
+
+                _pasoRealizado = "Menu opcion cancelar poliza";
                 _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
                 _Funciones.Esperar(5);
 
-                string _solicitanteIdElement = "StartCancellation:StartCancellationScreen:CancelPolicyDV:Source";
-                string _motivoIdElement = "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2";
-                string _reembolsoIdElement = "StartCancellation:StartCancellationScreen:CancelPolicyDV:CalcMethod";
                 string _descripcionMotivo = "SE DEJA CONSTANCIA POR EL PRESENTE ENDOSO QUE, LA POLIZA DEL RUBRO QUEDA CANCELADA, NULA Y SIN VALOR PARA TODOS SUS EFECTOS A PARTIR DEL";
 
-
-                int _idDominioSolicitante = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.solicitante).Value.ToString());
-                int _idDominioMotivo = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.motivo_anular).Value.ToString());
-                int _idDominioReembolso = Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.forma_de_reembolso).Value.ToString());
-
-                string _textoDominioSolicitante = _Funciones.ObtenerValorDominio(ticket, _idDominioSolicitante);
-                _Funciones.SeleccionarCombo(_driverGlobal, _solicitanteIdElement, _textoDominioSolicitante.ToUpperInvariant());
+                _pasoRealizado = "Seleccionar combobox solictante";
+                _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Source", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.solicitante).Value)));
                 _Funciones.Esperar(2);
 
-                string _textoDominioMotivo = _Funciones.ObtenerValorDominio(ticket, _idDominioMotivo);
-                _Funciones.SeleccionarCombo(_driverGlobal, _motivoIdElement, _textoDominioMotivo.ToUpperInvariant());
+                _pasoRealizado = "Seleccionar combobox motivo anulación";
+                _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.motivo_anular).Value)));
                 _Funciones.Esperar(2);
+                _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo, " ", _Funciones.GetElementValue(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date")));
+                _Funciones.Esperar(3);
 
-                string _fechaEfectivaCancelacion = _Funciones.GetElementValue(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date");
-
-                _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo, " ", _fechaEfectivaCancelacion));
-                _Funciones.Esperar(2);
-
-                string _textoDominioReembolso = _Funciones.ObtenerValorDominio(ticket, _idDominioReembolso);
-                _Funciones.SeleccionarCombo(_driverGlobal, _reembolsoIdElement, _textoDominioReembolso.ToUpperInvariant());
+                _pasoRealizado = "Seleccionar combobox forma de reembolso";
+                _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CalcMethod", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.forma_de_reembolso).Value)));
                 _Funciones.Esperar(2);
 
                 _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:NewCancellation")).Click();
                 _Funciones.Esperar(1);
 
                 _driverGlobal.FindElement(By.Id("CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions_arrow")).Click();
+
+                _pasoRealizado = "Opcion Cancelar Poliza";
                 _driverGlobal.FindElement(By.Id("CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions:CancelNow")).Click();
                 _Funciones.Esperar(1);
 
                 _driverGlobal.SwitchTo().Alert().Accept();
                 _driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:JobCompleteDV:ViewPolicy")).Click();
-            
-           
-            try
-            {
-                var valores = _Funciones.obtenerValorGrilla(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV");
-                if (valores.Count > 0)
-                    _numeroOrdenTrabajo = valores[5];
-
-                if(!string.IsNullOrEmpty(_numeroOrdenTrabajo))
-                ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, Value = _numeroOrdenTrabajo, FieldId = eesFields.Default.num_orden_trabajo });
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al buscar numero de orden de trabajo", ex);
+                LogFailStep(12, ex);
+                throw new Exception(ex.Message + " :" + _pasoRealizado, ex);
             }
+           
+        }
+        private bool ValidarVacios(Ticket oTicketDatos)
+        {
+            try
+            {
+                int[] oCampos = new int[] { eesFields.Default.solicitante, eesFields.Default.motivo_anular, eesFields.Default.forma_de_reembolso };
 
+                return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al validar campos del Ticket: " + Convert.ToString(oTicketDatos.Id), Ex); }
         }
         private void GuardarPdf(Ticket ticket)
         {
             try
             {
+                LogStartStep(58);
                 _Funciones.Esperar(2);
                 _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_Documents']")).SendKeys(Keys.Enter);
                 _Funciones.Esperar(2);
 
-                string _idTabla = "PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV";
-                string _cabecera = "Nombre";
-                string _valorBuscar = "ACCOUNTHOLDER";
                 int _posicionFila = -1;
-                _Funciones.VerificarValorGrilla(_driverGlobal, _idTabla, _cabecera, _valorBuscar, ref _posicionFila);
-                string _filaArchivo = _posicionFila.ToString();
+                _Funciones.VerificarValorGrilla(_driverGlobal, "PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV", "Nombre", "ACCOUNTHOLDER", ref _posicionFila);
 
-                _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV:" + _filaArchivo + ":DocumentsLV_ViewLink_link']")).Click();
+                _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile_Documents:Policy_DocumentsScreen:DocumentsLV:" + _posicionFila + ":DocumentsLV_ViewLink_link']")).Click();
                 _Funciones.Esperar(2);
 
                 //Ruta donde se guardan los pdfs
@@ -334,38 +279,19 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 throw new Exception("Error al guardar el archivo pdf", ex);
             }
 
-            try
-            {
-                _robot.SaveTicketNextState(ticket, _estadoFinal);
-            }
-            catch (Exception ex)
-            {
-
-                throw new Exception("Ocurrio un error al avanzar al siguiente estado", ex);
-            }
-
         }
 
         private void GetParameterRobots()
         {
-            try
-            {
-                _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
-                _usuarioPolicyCenter = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
-                _contraseñaPolicyCenter = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
-                //_usuarioBcp = _robot.GetValueParamRobot("UsuarioBcp").ValueParam;
-                //_contraseñaBcp = _robot.GetValueParamRobot("PasswordBcp").ValueParam;
-                //_urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
-
-                _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
-                _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
-
-                LogEndStep(4);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Obtener los parametros del robot", ex);
-            }
+            _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
+            _usuarioPolicyCenter = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
+            _contraseñaPolicyCenter = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
+            //_usuarioBcp = _robot.GetValueParamRobot("UsuarioBcp").ValueParam;
+            //_contraseñaBcp = _robot.GetValueParamRobot("PasswordBcp").ValueParam;
+            //_urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
+            _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
+            _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
+            LogEndStep(4);
         }
     }
 }

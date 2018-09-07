@@ -154,10 +154,8 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 if (!_existeValorProducto)
                 {
                     BuscarPolicyCenter(ticket);
-
                 }
             }
-
             if (_buscarContactManager)
             {
                 List<StateAction> accionesEstado = _robot.GetNextStateAction(_robot.Tickets.FirstOrDefault());

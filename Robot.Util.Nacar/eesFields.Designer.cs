@@ -859,5 +859,14 @@ namespace Robot.Util.Nacar {
                 return ((int)(this["ruc"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1118")]
+        public int id_archivo_tipo_adj {
+            get {
+                return ((int)(this["id_archivo_tipo_adj"]));
+            }
+        }
     }
 }
