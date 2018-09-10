@@ -89,7 +89,7 @@ namespace Robot.Util.Nacar {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1032")]
-        public int admin {
+        public int estado_poliza {
             get {
                 return ((int)(this["estado_poliza"]));
             }
@@ -866,6 +866,60 @@ namespace Robot.Util.Nacar {
         public int id_archivo_tipo_adj {
             get {
                 return ((int)(this["id_archivo_tipo_adj"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1075")]
+        public int pais {
+            get {
+                return ((int)(this["pais"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1067")]
+        public int pais_de_procedencia {
+            get {
+                return ((int)(this["pais_de_procedencia"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1090")]
+        public int pais_del_telefono {
+            get {
+                return ((int)(this["pais_del_telefono"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1083")]
+        public int fecha_de_nacimiento {
+            get {
+                return ((int)(this["fecha_de_nacimiento"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        public int fecha_efectiva {
+            get {
+                return ((int)(this["fecha_efectiva"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1081")]
+        public int numero {
+            get {
+                return ((int)(this["numero"]));
             }
         }
     }

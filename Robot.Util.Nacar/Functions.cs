@@ -132,11 +132,7 @@ namespace Robot.Util.Nacar
                 _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
                 Esperar(5);
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al buscar poliza en policycenter", ex);
-            }
-
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al buscar póliza: " + Ex.Message, Ex); }
         }
 
         public void BuscarPolizaPortalBcp(IWebDriver _driver, string numeroPoliza)
@@ -539,6 +535,31 @@ namespace Robot.Util.Nacar
             }
             else
                 ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.id_estado_retorno).Value = idEstadoRetorno.ToString();
+        }
+
+        public void BuscarDocumentoPolicyCenter(IWebDriver oDriver, string cDocumento)
+        {
+            try
+            {
+                oDriver.FindElement(By.Id("TabBar:AccountTab_arrow")).Click();
+                if (cDocumento.Length == 8)
+                {
+                    //Buscar por DNI:
+                    oDriver.FindElement(By.Id("TabBar:AccountTab:AccountTab_DniSearchItemExt")).SendKeys(cDocumento + Keys.Enter);
+                }
+                else if (cDocumento.Length == 11)
+                {
+                    //Buscar por RUC:
+                    oDriver.FindElement(By.Id("TabBar:AccountTab:AccountTab_RucSearchItemExt")).SendKeys(cDocumento + Keys.Enter);
+                }
+                else
+                {
+                    //Buscar por Cuenta:
+                    oDriver.FindElement(By.Id("TabBar:AccountTab:AccountTab_AccountNumberSearchItem")).SendKeys(cDocumento + Keys.Enter);
+                }
+                Esperar(2);
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al buscar documento: " + Ex.Message, Ex); }
         }
     }
 }
