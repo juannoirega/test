@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 {
-     class Program : IRobot
+    class Program : IRobot
     {
         static BaseRobot<Program> _robot = null;
 
@@ -82,32 +82,33 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //CAMPO QUE VIENE DE LOS ROBOT QUE INDICA QUE TIPO DE PLANTILLA USARA 
             _valoresTicket[2] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipoplantillaen).Value;
 
-            //Opteniendo el Nombre del Dominio Funcionanal para pasar al Siguiente Estado
+            //Opteniendo el Nombre del Dominio Funcionanal para Actualizar plantilla
             var container = ODataContextWrapper.GetContainer();
             TipoProceso = container.DomainValues.Where(c => c.Id == Convert.ToInt32(_valoresTicket[2])).FirstOrDefault();
 
-            if(TipoProceso.Value == "Plantilla Conforme Anulación Póliza" || TipoProceso.Value == "Plantilla Rechazo Anulación Póliza")
+            if (TipoProceso.Value == "Plantilla Conforme Anulación Póliza" || TipoProceso.Value == "Plantilla Rechazo Anulación Póliza")
             {
                 _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value;
                 _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
-            }else if(TipoProceso.Value == "Plantilla Conforme Rehabilitación" || TipoProceso.Value == "Plantilla Rechazo Rehabilitación")
+            }
+            else if (TipoProceso.Value == "Plantilla Conforme Rehabilitación" || TipoProceso.Value == "Plantilla Rechazo Rehabilitación")
             {
                 _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
             }
-            else if(TipoProceso.Value == "Plantilla Conforme Actualización Datos" || TipoProceso.Value == "Plantilla Rechazo Actualización Datos")
+            else if (TipoProceso.Value == "Plantilla Conforme Actualización Datos" || TipoProceso.Value == "Plantilla Rechazo Actualización Datos")
             {
                 _valoresTicket[0] = "";
                 _valoresTicket[1] = "";
             }
-           
-            
+
+
             //Correos 
             _valoresTicket[3] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value;
             //Correos Copias
             _valoresTicket[4] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_en_copia).Value;
 
 
-            
+
 
 
             //Optener todos lo Ticket del Workflow "Adjuntar Documentos"
@@ -120,7 +121,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
                 ticketValue.Add(_robot.GetDataQueryTicketValue().Where(t => t.TicketId == item.Id).OrderByDescending(t => t.Id).First());
             }
 
-            //Optener el Ultimo Tickets Adjuntar Documentos
+            //Optener el Ultimo Tickets Adjuntar Documentos dependiendo el Tipo de Plantilla
             var idticket = ticketValue.Where(t => t.Value == _valoresTicket[2]).OrderByDescending(t => t.Id).Select(t => new { t.TicketId }).FirstOrDefault();
 
             //Optener la Plantilla del ticketValue
@@ -134,10 +135,10 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //Metodo Email
             EnviarEmail();
 
-           
 
 
-            cambiarEstado(TipoProceso.Value, ticket,"no","");
+
+            cambiarEstado(TipoProceso.Value, ticket, "no", "");
 
         }
 
@@ -149,7 +150,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             _valores[2] = _robot.GetValueParamRobot("FieldAdjuntarDocumentos").ValueParam;
             _valores[3] = _robot.GetValueParamRobot("EstadoAdjuntarDocumentos").ValueParam;
             _valores[4] = _robot.GetValueParamRobot("RutaArchivosPlantillas").ValueParam;
-         
+
 
             _valores[6] = _robot.GetValueParamRobot("EstadoErrorMA").ValueParam;
             _valores[7] = _robot.GetValueParamRobot("EstadoErrorMR").ValueParam;
@@ -196,13 +197,27 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             mail.Body = JsonCorreo.Body;
             mail.From = new MailAddress(_correoRobot);
             mail.IsBodyHtml = true;
-            //GetEncoding para ACeptar tilde y caracteres Especiales
+
+            //GetEncoding para Aceptar tilde y caracteres Especiales
             mail.BodyEncoding = Encoding.GetEncoding("iso-8859-1");
             mail.SubjectEncoding = Encoding.GetEncoding("iso-8859-1");
             mail.From = new MailAddress(_correoRobot);
+
             //Adjuntar Documentos
-            //string docume = @"C:\Users\ltrujill\Documents\JSON.txt";
-            //mail.Attachments.Add(new Attachment(docume));
+            List<string> ListaDocuemntos = new List<string>();
+            ListaDocuemntos.Add(@"\\PCLCEVE0Q6K\Content/Upload_Files/6/2018-09-06/3e96f340-289a-4f4c-bebc-f870894b8e3a_json_Anulacion_Conforme.TXT");
+            ListaDocuemntos.Add(@"\\PCLCEVE0Q6K\Content/Upload_Files/6/2018-09-06/3e96f340-289a-4f4c-bebc-f870894b8e3a_json_Anulacion_Conforme.TXT");
+
+            if (ListaDocuemntos != null)
+            {
+                foreach (string archivos in ListaDocuemntos)
+                {
+                    if (System.IO.File.Exists(archivos))
+                        mail.Attachments.Add(new Attachment(archivos));
+                }
+            }
+
+
 
             ////Un Correo
             //mail.To.Add(new MailAddress(_correoRobot));
@@ -240,14 +255,14 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
 
         }
-        
+
         public void LeerArchivo(string archivo)
         {
 
             try
             {
                 //Lleyendo el JSON
-                using (StreamReader lector = new StreamReader(String.Concat(@"",_valores[4],archivo,"")))
+                using (StreamReader lector = new StreamReader(String.Concat(@"", _valores[4], archivo, "")))
                 {
                     while (lector.Peek() > -1)
                     {
@@ -262,14 +277,14 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
                 //Deserializando JSON en una CLase
                 JsonCorreo = JsonConvert.DeserializeObject<JsonCorreo>(_contenido);
 
-                //Almacenando Palabras que esten entre {XXX} y asignando la palabras para reemplazar
+                //Almacenando Palabras que esten entre {XXXXXX} y asignando la palabras para reemplazar
                 foreach (Match match in Regex.Matches(JsonCorreo.Body, @"\{([^{}\]]*)\}"))
                     if (match.Value.Length >= 11)
                         palabrasClaves.Add(new PalabrasClave() { clave = match.Value, palabra = _valoresTicket[1] });
                     else
                         palabrasClaves.Add(new PalabrasClave() { clave = match.Value, palabra = _valoresTicket[0] });
-                
-                
+
+
                 //Reemplazar las palabras Claves para enviar Correos
                 foreach (PalabrasClave p in palabrasClaves)
                     JsonCorreo.Body = ReemplazarPalabras(JsonCorreo.Body, p.clave, p.palabra);
@@ -297,15 +312,15 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             return Regex.Replace(texto, @"(?:" + palabra + ")", "" + reemplazar + "");
         }
 
-        public void cambiarEstado(String TipoProceso, Ticket ticket,String error,String mensaje)
+        public void cambiarEstado(String TipoProceso, Ticket ticket, String error, String mensaje)
         {
             switch (TipoProceso)
             {
                 case "Plantilla Conforme Anulación Póliza":
-                    if(error=="si")
-                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId ==  Convert.ToInt32(_valores[6])).Id);
+                    if (error == "si")
+                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[6])).Id);
                     else
-                    _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[0]));
+                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[0]));
                     break;
                 case "Plantilla Rechazo Anulación Póliza":
                     if (error == "si")
