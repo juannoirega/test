@@ -42,6 +42,7 @@ namespace GmailQuickstart
         static void Main(string[] args)
         {
             _robot = new BaseRobot<Program>(args);
+            //_robot.IsGetTicketToLoad = false;
             _robot.Start();
         }
 
