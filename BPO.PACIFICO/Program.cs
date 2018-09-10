@@ -30,7 +30,8 @@ namespace GmailQuickstart
         static string[] Scopes = { GmailService.Scope.GmailReadonly };
         static string[] _palabras = new string[2];
         static string[] _valores = new string[10];
-        static string _userId = "soportecorredor_des@pacifico.com.pe";
+        //static string _userId = "soportecorredor_des@pacifico.com.pe";
+        static string _userId = "alnimax7@gmail.com";
         static List<string> _adjuntos = null;
         static int[] _fields = { eesFields.Default.cuerpo_de_email, eesFields.Default.asunto_de_email, eesFields.Default.estado_error, eesFields.Default.estado_hijo, eesFields.Default.estado_padre, eesFields.Default.fields, eesFields.Default.fecha_hora_de_email, eesFields.Default.email_solicitante, eesFields.Default.email_en_copia };
         static string ApplicationName = "Gmail API .NET Quickstart";
@@ -115,8 +116,10 @@ namespace GmailQuickstart
                 _listado = ListadoValoresDominios();
             }
             catch (Exception ex) { throw new Exception("No se pudo buscar los dominos funcionales" + ex.Message); }
+            
             // List Messages.
             IList<Message> messages = request.Execute().Messages;
+            IList<String> labelsRemove = new String[] { "UNREAD" };
 
             if (messages != null && messages.Count > 0)
             {
@@ -124,6 +127,9 @@ namespace GmailQuickstart
                 {
                     Message infoResponse = service.Users.Messages.Get(_userId, message.Id).Execute();
                     AcionRequest(infoResponse, service);
+
+                    //Marcar correo como leído:
+                    ModifyThread(service, message.ThreadId, message.LabelIds,labelsRemove);
 
                     _listado.Clear();
                 }
@@ -133,6 +139,21 @@ namespace GmailQuickstart
                 LogInfoStep(44);
             }
         }
+
+        //Modifica la etiqueta de correo como LEÍDO:
+        public static Google.Apis.Gmail.v1.Data.Thread ModifyThread(GmailService oService, string threadId, IList<String> labelsToAdd, IList<String> labelsToRemove)
+        {
+            ModifyThreadRequest modify = new ModifyThreadRequest();
+            modify.AddLabelIds = labelsToAdd;
+            modify.RemoveLabelIds = labelsToRemove;
+
+            try
+            {
+                return oService.Users.Threads.Modify(modify, _userId, threadId).Execute();
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error: " + Ex.Message, Ex); }
+        }
+
         //cada message tiene una acion de requerimento
         public void AcionRequest(Message infoResponse, GmailService service)
         {
@@ -144,9 +165,7 @@ namespace GmailQuickstart
                 try
                 {
                     _valores[6] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Date").Value;
-
                     _valores[7] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "From").Value;
-
                     _valores[1] = infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Subject").Value;
 
                     if (infoResponse.Payload.Headers.FirstOrDefault(o => o.Name == "Cc") != null)
@@ -177,22 +196,13 @@ namespace GmailQuickstart
                             _adjuntos = GetFiles(service, infoResponse.Payload.Parts, infoResponse.Id);
                         }
 
-
-
                     _valores[0] = DecodeBase64(body);
-
-
-
                     EvaluarPuntuacion(String.Concat(DecodeBase64(body), " ", _valores[1]), new Ticket { Priority = PriorityType.Media, RobotVirtualMachineId = null, StateId = null });
-
                     Array.Clear(_valores, 0, _valores.Length);
-
                 }
-
-
             }
-
         }
+
         // cada acion de requerimento pueede tener o no Adjuntos e hacer lo getfiles
         private List<string> GetFiles(GmailService service, IList<MessagePart> parts, string messageId)
         {
