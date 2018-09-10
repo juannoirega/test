@@ -89,7 +89,7 @@ namespace Robot.Util.Nacar {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1032")]
-        public int estado_poliza {
+        public int admin {
             get {
                 return ((int)(this["estado_poliza"]));
             }
