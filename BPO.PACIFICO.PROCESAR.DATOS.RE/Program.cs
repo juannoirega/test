@@ -117,7 +117,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         {
             //Campos para Validar:
             int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
-                                       eesFields.Default.motivo_rehabilitar, eesFields.Default.estado_poliza};
+                                       eesFields.Default.motivo_rehabilitar, eesFields.Default.poliza_est};
 
             //Valida Línea de la Póliza:
             if (_cLinea == _cLineaLLPP)
@@ -164,7 +164,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         private Boolean ValidarDatosPoliza(Ticket oTicketDatos)
         {
             int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
-                                       eesFields.Default.motivo_rehabilitar, eesFields.Default.estado_poliza};
+                                       eesFields.Default.motivo_rehabilitar, eesFields.Default.admin};
 
             if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
             {
@@ -179,7 +179,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
                 {
                     //REGLA: Que no tenga siniestros.
                 }
@@ -199,7 +199,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
                 {
                     //REGLA: Que no tenga siniestros.
                 }

@@ -22,7 +22,7 @@ namespace BPO.PACIFICO.REHABILITAR
         private static IWebDriver _driverGlobal = null;
         private static IWebElement element;
         private static Functions _Funciones;
-        
+
         #region ParametrosRobot
         private string _urlPolicyCenter = string.Empty;
         private string _usuarioPolicyCenter = string.Empty;
@@ -31,18 +31,8 @@ namespace BPO.PACIFICO.REHABILITAR
         private int _estadoFinal;
         #endregion
         #region VariablesGLoables
-        private string _numeroPoliza = string.Empty;
-        private string _producto = string.Empty;
-        private string _inicioVigencia = string.Empty;
-        private string _finVigencia = string.Empty;
-        private string _numeroAgente = string.Empty;
-        private string _agente = string.Empty;
-        private string _tipo = string.Empty;
-        private string _estado = string.Empty;
-        private string _tipoVigencia = string.Empty;
-        private string _numeroCanal = string.Empty;
-        private string _nombreContratante = string.Empty;
-        private string _nombreAsegurado = string.Empty;
+        private int _reprocesoContador = 0;
+        private int _idEstadoRetorno = 0;
         //private static string _numeroDniContratante = string.Empty;
         //Pendiente
         private string _numeroVehiculos = string.Empty;
@@ -71,108 +61,47 @@ namespace BPO.PACIFICO.REHABILITAR
             }
             catch (Exception ex)
             {
-                LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
+                LogFailStep(30, ex);
             }
 
             foreach (Ticket ticket in _robot.Tickets)
             {
                 try
                 {
+                    var valoresReprocesamiento = _Funciones.ObtenerValoresReprocesamiento(ticket);
+                    if (valoresReprocesamiento.Count > 0) { _reprocesoContador = valoresReprocesamiento[0]; _idEstadoRetorno = valoresReprocesamiento[1]; }
                     ProcesarTicket(ticket);
                 }
                 catch (Exception ex)
                 {
-                    LogFailProcess(Constants.MSG_ERROR_EVENT_PROCESS_KEY, ex);
-                    //Enviar a mesa control con mmensaje
-                    //capturar imagen
+                    LogFailStep(30, ex);
+                    _reprocesoContador++;
+                    _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
+                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
                 }
                 finally
                 {
-                    if (_driverGlobal != null)
-                        _driverGlobal.Quit();
-
-                    LogEndStep(Constants.MSG_PROCESS_ENDED_KEY);
+                    _Funciones.CerrarDriver(_driverGlobal);
                 }
             }
         }
 
         private void ProcesarTicket(Ticket ticket)
         {
-            AbrirSelenium();
-            NavegarUrl();
-            Login();
-            BuscarPoliza(ticket);
+            _Funciones.AbrirSelenium(ref _driverGlobal);
+            _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
+            _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
+            _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.poliza_nro).Value);
             RehabilitarPoliza(ticket);
-        }
-        
-        private void AbrirSelenium()
-        {
-            //LogInfoStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
-            try
+            if (_reprocesoContador > 0)
             {
-                _Funciones.AbrirSelenium(ref _driverGlobal);
+                _reprocesoContador = 0;
+                _idEstadoRetorno = 0;
+                _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Iniciar Internet Explorer", ex);
-            }
-            //LogInfoStep(6);//id referencial msje Log "Finalizando la carga Internet Explorer"
-
-        }
-        private void NavegarUrl()
-        {
-
-            try
-            {
-                //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("No se puede acceder al sitio policycenter", ex);
-            }
-            //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
-
-
+            _robot.SaveTicketNextState(ticket, _estadoFinal);
         }
 
-        private void Login()
-        {
-
-            try
-            {
-                //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
-                _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("No se puede acceder al sistema policycenter", ex);
-            }
-            //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
-
-
-        }
-        private void BuscarPoliza(Ticket ticket)
-        {
-            _numeroPoliza = ticket.TicketValues.FirstOrDefault(np => np.FieldId == 5).Value.ToString();
-
-
-            try
-            {
-                //LogInfoStep(5);//id referencial msje Log "Iniciando busqueda de poliza"
-                if (!string.IsNullOrEmpty(_numeroPoliza))
-                {
-                    _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, _numeroPoliza);
-                }
-                //LogInfoStep(5);//id referencial msje Log "Finalizando busqueda de poliza"
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al buscar el numero de poliza policycenter", ex);
-            }
-
-
-        }
         private void RehabilitarPoliza(Ticket ticket)
         {
             try
@@ -204,30 +133,16 @@ namespace BPO.PACIFICO.REHABILITAR
             {
                 throw new Exception("Error al Rehabilitar la poliza en el sistema policycenter", ex);
             }
-
-            try
-            {
-                _robot.SaveTicketNextState(ticket, _estadoFinal);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Ocurrio un Error al avanzar al siguiente estado - Rehabilitar Poliza", ex);
-            }
-        }   
+        }
 
         private void GetParameterRobots()
         {
-            try
-            {
-                _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
-                _usuarioPolicyCenter = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
-                _contraseñaPolicyCenter = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Obtener los parametros del robot", ex);
-            }
+            _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
+            _usuarioPolicyCenter = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
+            _contraseñaPolicyCenter = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
+            _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
+            _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
+            LogEndStep(4);
         }
     }
 }

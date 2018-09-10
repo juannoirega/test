@@ -175,7 +175,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             //Campos para Validar:
             int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
                                             eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
-                                            eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
+                                            eesFields.Default.poliza_est, eesFields.Default.tipo_vigencia};
 
             //Valida Línea de la Póliza:
             if (_cLinea == _cLineaAutos)
@@ -260,7 +260,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: VIGENTE. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: VIGENTE. 
                 {
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
@@ -320,7 +320,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: CANCELADA. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: CANCELADA. 
                 {
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
@@ -381,7 +381,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: CANCELADA. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: CANCELADA. 
                 {
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
@@ -442,7 +442,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.estado_poliza).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: CANCELADA. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: CANCELADA. 
                 {
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
