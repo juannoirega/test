@@ -125,7 +125,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         private void ProcesarTicket(Ticket oTicketDatos)
         {
             //Valida campos no vacíos:
-            if (!ValidarVacios(oTicketDatos))
+            if (ValidarVacios(oTicketDatos))
             {
                 int nIndice = 1;
                 for (int i = 0; i < _nIntentosOnBase; i++)
@@ -145,7 +145,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             else
             {
                 //Enviar a mesa de control:
-                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket no cuenta con todos los datos necesarios.");
+                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cuenta con todos los datos necesarios.");
             }
         }
 

@@ -26,7 +26,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private static IWebDriver _driverGlobal = null;
         private static string campo = string.Empty;
         private static string texto = string.Empty;
-        private static string Acceso = string.Empty;        
+        private static string Acceso = string.Empty;
         static string[] _valoresTickets = new string[10];
         static string[] _valoresTickets_Ident = new string[10];
         private string _urlContactManager = string.Empty;
@@ -36,7 +36,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private static int _nIdEstadoSiguiente; //Robot Crear Ticket Hijo
         private static int _nIntentosPolicyCenter;
         private static string _cUrlPolicyCenter = string.Empty;
-        private static string[] Usuarios; 
+        private static string _cComentariosAdicionales = string.Empty;
+        private static string[] _Usuarios;
         private static int _nIndice;
         private static string _cElemento = string.Empty;
         private static string _cLineaAutos = string.Empty;
@@ -77,7 +78,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     ProcesarTicket(oTicket);
                 }
                 catch (Exception Ex)
-                {  
+                {
                     CambiarEstadoTicket(oTicket, _oMesaControl, Ex.Message);
                     LogFailStep(30, Ex);
                     _Funciones.CerrarDriver(_driverGlobal);
@@ -101,8 +102,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _cUrlPolicyCenter = _oRobot.GetValueParamRobot("URLPolicyCenter").ValueParam;
                 _cLineaAutos = _oRobot.GetValueParamRobot("LineaAutos").ValueParam;
                 _cLineaRRGG = _oRobot.GetValueParamRobot("LineaRRGG").ValueParam;
+                _cComentariosAdicionales = _oRobot.GetValueParamRobot("ComentariosAdicionales").ValueParam;
             }
-            catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener parámetros del Robot: "+ Ex.Message, Ex); }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener parámetros del Robot: " + Ex.Message, Ex); }
         }
 
         //Envía el ticket al siguiente estado:
@@ -406,7 +408,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         private void PolicyCenter(Ticket oTicket)
         {
-            if (!ValidarVacios(oTicket))
+            if (ValidarVacios(oTicket))
             {
                 _nIndice = 1;
                 for (int i = 0; i < _nIntentosPolicyCenter; i++)
@@ -414,7 +416,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _Funciones.AbrirSelenium(ref _driverGlobal);
                     _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _cUrlPolicyCenter);
                     Credenciales();
-                    _Funciones.LoginPolicyCenter(_driverGlobal, Usuarios[0], Usuarios[1]);
+                    _Funciones.LoginPolicyCenter(_driverGlobal, _Usuarios[0], _Usuarios[1]);
                     if (_Funciones.ExisteElemento(_driverGlobal, "TabBar:PolicyTab_arrow", _nIntentosPolicyCenter))
                     {
                         break;
@@ -424,6 +426,11 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 }
                 ActualizarPolicyCenter(oTicket);
             }
+            else
+            {
+                //Enviar a mesa de control:
+                CambiarEstadoTicket(oTicket, _oMesaControl, "El ticket " + Convert.ToString(oTicket.Id) + " no cuenta con todos los datos necesarios.");
+            }
         }
 
         //Obtiene los usuarios con sus respectivas contraseñas:
@@ -432,8 +439,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             try
             {
                 //Usuario y contraseña de Autos:
-                Usuarios = _oRobot.GetValueParamRobot("AccesoPCyCM_" + _nIndice).ValueParam.Split(',');
-                return Usuarios;
+                _Usuarios = _oRobot.GetValueParamRobot("AccesoPCyCM_" + _nIndice).ValueParam.Split(',');
+                return _Usuarios;
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener datos de usuario: " + Ex.Message, Ex); }
         }
@@ -472,24 +479,157 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
                 //Formulario registro de endoso:
                 _cElemento = "Fecha efectiva del cambio";
-                _driverGlobal.FindElement(By.Id("StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:EffectiveDate")).
-                    SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_hora_de_email).Value);
+                //Validar fecha:
+                if (ValidarFechaSolicitud(oTicketDatos, Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_hora_de_email).Value)))
+                    _driverGlobal.FindElement(By.Id("StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:EffectiveDate")).
+                        SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_hora_de_email).Value);
 
                 if (_cLinea == _cLineaAutos)
                 {
+                    //Seleccionar tipo de complejidad:
                     _cElemento = "Tipo de Complejidad";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason", _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_producto).Value)));
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason", _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_producto).Value))); //Campo tipo de complejidad
+                    _Funciones.Esperar();
+
+                    //Seleccionar motivo del endoso:
+                    _cElemento = "Motivo del endoso";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Description", _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_anu_motivo).Value)));
+                    _Funciones.Esperar();
+
+                    //Ingresar comentarios adicionales:
+                    _cElemento = "Comentarios adicionales";
+                    _driverGlobal.FindElement(By.Id("StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Comments")).SendKeys(_cComentariosAdicionales);
+
+                    //Clic en Siguiente:
+                    _cElemento = "Botón Siguiente";
+                    _driverGlobal.FindElement(By.Id("StartPolicyChange:StartPolicyChangeScreen:NewPolicyChange")).Click();
+                    _Funciones.Esperar(10);
+
+                    //Clic en Nombre del asegurado:
+                    _cElemento = "Nombre del Asegurado";
+                    _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:Name")).Click();
+                    _Funciones.Esperar(7);
+
+                    //Método para actualizar datos:
+
+
+                    //Botón Cotización:
+                    _cElemento = "Botón Cotización";
+                    _driverGlobal.FindElement(By.Id("PolicyChangeWizard:OfferingScreen:JobWizardToolbarButtonSet:QuoteOrReview")).Click();
+                    _Funciones.Esperar(5);
                 }
                 else if (_cLinea == _cLineaRRGG)
                 {
+                    //Seleccionar tipo de endoso:
+                    _cElemento = "Tipo de endoso";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason", _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_proceso).Value)));
+                    _Funciones.Esperar();
 
+                    //Seleccionar subtipo de endoso:
+                    _cElemento = "Subtipo de endoso";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Description", _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_anu_motivo).Value)));
+                    _Funciones.Esperar();
+
+                    //Ingresar comentarios adicionales:
+                    _cElemento = "Comentarios adicionales";
+                    _driverGlobal.FindElement(By.Id("StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Comments")).SendKeys(_cComentariosAdicionales);
+
+                    //Clic en Siguiente:
+                    _cElemento = "Botón Siguiente";
+                    _driverGlobal.FindElement(By.Id("StartPolicyChange:StartPolicyChangeScreen:NewPolicyChange")).Click();
+                    _Funciones.Esperar(3);
+
+                    //Clic en Siguiente:
+                    _cElemento = "Botón Siguiente:";
+                    _driverGlobal.FindElement(By.Id("PolicyChangeWizard:Next")).Click();
+                    _Funciones.Esperar();
+
+                    //Clic en Nombre:
+                    _cElemento = "Nombre del Asegurado";
+                    _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:Name")).Click();
+                    _Funciones.Esperar(5);
+
+                    //Método para actualizar datos:
+
+
+                    //Clic en botón Cotización:
+                    _cElemento = "Botón Cotización";
+                    _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:JobWizardToolbarButtonSet:QuoteOrReview")).Click();
+                    _Funciones.Esperar(20);
                 }
+
+                //Modificar dirección:
+                if (Convert.ToString(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_calle).Value).Length > 0)
+                {
+                    _cElemento = "Tipo de calle:";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_StreetType",
+                        _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_calle).Value)));
+
+                    _cElemento = "Nombre de la calle:";
+                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_AddressLine1")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_de_la_calle).Value);
+
+                    _cElemento = "Número";
+                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_AddressLine2")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_dni).Value); //poner numero de la calle.
+
+                    _cElemento = "Referencia";
+                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_AddressLine2")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_de_la_calle).Value); //poner Referencia
+
+                    //Clic en botón Aceptar:
+                    _cElemento = "Botón Aceptar";
+                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Update")).Click();
+                    _Funciones.Esperar(3);
+                }
+
+
+                //Clic en botón Detalles:
+                _cElemento = "Botón Detalles";
+                _driverGlobal.FindElement(By.Id("UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton")).Click();
+                _Funciones.Esperar(2);
+
+                if (_Funciones.ExisteElemento(_driverGlobal, "PolicyChangeWizard:Job_RiskAnalysisScreen:RiskAnalysisCV:RiskEvaluationPanelSet:1:UWIssueRowSet:ShortDescription", 2))
+                {
+                    //Marcar check de aprobación:
+                    _cElemento = "Check bloqueante de cotización";
+                    _driverGlobal.FindElement(By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:RiskAnalysisCV:RiskEvaluationPanelSet:1:UWIssueRowSet:_Checkbox")).Click();
+
+                    //Clic en botón Aprobar:
+                    _cElemento = "Botón Aprobar";
+                    _driverGlobal.FindElement(By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:RiskAnalysisCV:RiskEvaluationPanelSet:Approve")).Click();
+                }
+
+
+
+
+                //Clic en Cambiar a:
+                _cElemento = "Cambiar a:";
+                _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:PolicyAddressDisplayAutoPersonalInputSet:ChangePolicyDeliveryAddressButton:ChangePolicyDeliveryAddressButtonMenuIcon")).Click();
+
+                //Clic en Editar dirección actual:
+                _cElemento = "Editar dirección actual";
+                _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:PolicyAddressDisplayAutoPersonalInputSet:ChangePolicyDeliveryAddressButton:EditDeliveryAddressMenuItem")).Click();
+
+                //Enviar Ticket al siguiente estado:
+                CambiarEstadoTicket(oTicketDatos, _oTicketHijo);
             }
             catch (Exception Ex)
             {
                 LogFailStep(12, Ex);
-                throw new Exception(Ex.Message + " :" +_cElemento, Ex);
+                throw new Exception(Ex.Message + " :" + _cElemento, Ex);
             }
+        }
+
+        //Valida si fecha de solicitud está dentro del rango de vigencia:
+        private Boolean ValidarFechaSolicitud(Ticket oTicketDatos, DateTime dFecha)
+        {
+            if (dFecha < Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.date_inicio_vigencia).Value))
+            {
+                return false;
+            }
+            else if (dFecha >= Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.date_fin_vigencia).Value))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
