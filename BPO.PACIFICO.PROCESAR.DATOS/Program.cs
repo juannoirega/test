@@ -167,7 +167,7 @@ namespace RobotProcesarTicket
                 // FunctionalDomains<List<DomainValue>> objLineas = _Funciones.GetDomainValuesByParameters(_oRobot.SearchDomain, _cDominioLineas, new string[,] { { _cDominioLineasCol3, oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_linea).Value } });
                 string motivoAnulacion = "(AX)";
                 string producto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.producto).Value;
-                string tipoProducto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_de_producto).Value;
+                string tipoProducto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.producto_tipo).Value;
                 if (_productosAutos.Where(o => o == producto).FirstOrDefault() != null)
                 {
                     _cLinea = "AUTOS";
@@ -220,7 +220,7 @@ namespace RobotProcesarTicket
         private void CondicionalesAnulacionPoliza(Ticket oTicketDatos)
         {
             //Campos para Validar:
-            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
+            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.asegurado_nombre, eesFields.Default.fecha_hora_de_email,
                                             eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
                                             eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
 
