@@ -25,10 +25,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("18")]
-        public int nombre_asegurado {
+        [global::System.Configuration.DefaultSettingValueAttribute("23")]
+        public int asegurado_nombre {
             get {
-                return ((int)(this["nombre_asegurado"]));
+                return ((int)(this["asegurado_nombre"]));
             }
         }
         
@@ -70,7 +70,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1034")]
+        [global::System.Configuration.DefaultSettingValueAttribute("21")]
         public int producto {
             get {
                 return ((int)(this["producto"]));
@@ -574,10 +574,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1101")]
-        public int tipo_de_producto {
+        [global::System.Configuration.DefaultSettingValueAttribute("22")]
+        public int producto_tipo {
             get {
-                return ((int)(this["tipo_de_producto"]));
+                return ((int)(this["producto_tipo"]));
             }
         }
         
@@ -619,7 +619,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1136")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int poliza_nro {
             get {
                 return ((int)(this["poliza_nro"]));
@@ -628,7 +628,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1117")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public int id_estado_retorno {
             get {
                 return ((int)(this["id_estado_retorno"]));
@@ -637,7 +637,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1116")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public int reproceso_contador {
             get {
                 return ((int)(this["reproceso_contador"]));
@@ -646,7 +646,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1137")]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
         public int poliza_est {
             get {
                 return ((int)(this["poliza_est"]));
@@ -655,7 +655,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1138")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
         public int poliza_fec_emision {
             get {
                 return ((int)(this["poliza_fec_emision"]));
@@ -664,7 +664,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1139")]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
         public int poliza_tipo_vig {
             get {
                 return ((int)(this["poliza_tipo_vig"]));
@@ -673,7 +673,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1140")]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
         public int poliza_fec_ini_vig {
             get {
                 return ((int)(this["poliza_fec_ini_vig"]));
@@ -682,7 +682,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1141")]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
         public int poliza_fec_fin_vig {
             get {
                 return ((int)(this["poliza_fec_fin_vig"]));
@@ -691,7 +691,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1119")]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
         public int canal_org {
             get {
                 return ((int)(this["canal_org"]));
@@ -700,7 +700,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1120")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public int canal_agente_cod {
             get {
                 return ((int)(this["canal_agente_cod"]));
@@ -709,7 +709,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1121")]
+        [global::System.Configuration.DefaultSettingValueAttribute("11")]
         public int canal_agente {
             get {
                 return ((int)(this["canal_agente"]));
@@ -718,7 +718,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1122")]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
         public int canal_cod {
             get {
                 return ((int)(this["canal_cod"]));
@@ -727,7 +727,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1124")]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
         public int servicio_org {
             get {
                 return ((int)(this["servicio_org"]));
@@ -736,7 +736,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1125")]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
         public int servicio_agente_cod {
             get {
                 return ((int)(this["servicio_agente_cod"]));
@@ -745,7 +745,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1126")]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
         public int servicio_agente {
             get {
                 return ((int)(this["servicio_agente"]));
@@ -754,7 +754,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1127")]
+        [global::System.Configuration.DefaultSettingValueAttribute("17")]
         public int servicio_canal_cod {
             get {
                 return ((int)(this["servicio_canal_cod"]));
@@ -763,7 +763,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1128")]
+        [global::System.Configuration.DefaultSettingValueAttribute("18")]
         public int servicio_canal {
             get {
                 return ((int)(this["servicio_canal"]));
@@ -772,7 +772,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1130")]
+        [global::System.Configuration.DefaultSettingValueAttribute("19")]
         public int cuenta_nro {
             get {
                 return ((int)(this["cuenta_nro"]));
@@ -781,7 +781,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1133")]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
         public int cuenta_nombre {
             get {
                 return ((int)(this["cuenta_nombre"]));
@@ -790,16 +790,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1134")]
-        public int nombre_de_asegurado {
-            get {
-                return ((int)(this["nombre_de_asegurado"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1132")]
+        [global::System.Configuration.DefaultSettingValueAttribute("24")]
         public int flg_nuevo {
             get {
                 return ((int)(this["flg_nuevo"]));
@@ -808,7 +799,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1131")]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
         public int siniestros {
             get {
                 return ((int)(this["siniestros"]));
@@ -817,7 +808,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1135")]
+        [global::System.Configuration.DefaultSettingValueAttribute("26")]
         public int endosos {
             get {
                 return ((int)(this["endosos"]));
@@ -826,7 +817,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1115")]
+        [global::System.Configuration.DefaultSettingValueAttribute("27")]
         public int poliza_anu_motivo {
             get {
                 return ((int)(this["poliza_anu_motivo"]));
@@ -920,6 +911,15 @@ namespace Robot.Util.Nacar {
         public int numero {
             get {
                 return ((int)(this["numero"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("28")]
+        public int error_des {
+            get {
+                return ((int)(this["error_des"]));
             }
         }
     }

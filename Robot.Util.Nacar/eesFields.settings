@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Robot.Util.Nacar" GeneratedClassName="eesFields">
   <Profiles />
   <Settings>
-    <Setting Name="nombre_asegurado" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">18</Value>
+    <Setting Name="asegurado_nombre" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">23</Value>
     </Setting>
     <Setting Name="nombre_contratante" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">19</Value>
@@ -18,7 +18,7 @@
       <Value Profile="(Default)">8</Value>
     </Setting>
     <Setting Name="producto" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1034</Value>
+      <Value Profile="(Default)">21</Value>
     </Setting>
     <Setting Name="vobo_producto" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1026</Value>
@@ -185,8 +185,8 @@
     <Setting Name="departamento" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1076</Value>
     </Setting>
-    <Setting Name="tipo_de_producto" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1101</Value>
+    <Setting Name="producto_tipo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">22</Value>
     </Setting>
     <Setting Name="tipo_de_interes" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1113</Value>
@@ -201,76 +201,73 @@
       <Value Profile="(Default)">1118</Value>
     </Setting>
     <Setting Name="poliza_nro" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1136</Value>
+      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="id_estado_retorno" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1117</Value>
+      <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="reproceso_contador" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1116</Value>
+      <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="poliza_est" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1137</Value>
+      <Value Profile="(Default)">4</Value>
     </Setting>
     <Setting Name="poliza_fec_emision" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1138</Value>
+      <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="poliza_tipo_vig" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1139</Value>
+      <Value Profile="(Default)">6</Value>
     </Setting>
     <Setting Name="poliza_fec_ini_vig" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1140</Value>
+      <Value Profile="(Default)">7</Value>
     </Setting>
     <Setting Name="poliza_fec_fin_vig" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1141</Value>
+      <Value Profile="(Default)">8</Value>
     </Setting>
     <Setting Name="canal_org" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1119</Value>
+      <Value Profile="(Default)">9</Value>
     </Setting>
     <Setting Name="canal_agente_cod" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1120</Value>
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="canal_agente" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1121</Value>
+      <Value Profile="(Default)">11</Value>
     </Setting>
     <Setting Name="canal_cod" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1122</Value>
+      <Value Profile="(Default)">12</Value>
     </Setting>
     <Setting Name="servicio_org" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1124</Value>
+      <Value Profile="(Default)">14</Value>
     </Setting>
     <Setting Name="servicio_agente_cod" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1125</Value>
+      <Value Profile="(Default)">15</Value>
     </Setting>
     <Setting Name="servicio_agente" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1126</Value>
+      <Value Profile="(Default)">16</Value>
     </Setting>
     <Setting Name="servicio_canal_cod" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1127</Value>
+      <Value Profile="(Default)">17</Value>
     </Setting>
     <Setting Name="servicio_canal" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1128</Value>
+      <Value Profile="(Default)">18</Value>
     </Setting>
     <Setting Name="cuenta_nro" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1130</Value>
+      <Value Profile="(Default)">19</Value>
     </Setting>
     <Setting Name="cuenta_nombre" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1133</Value>
-    </Setting>
-    <Setting Name="nombre_de_asegurado" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1134</Value>
+      <Value Profile="(Default)">20</Value>
     </Setting>
     <Setting Name="flg_nuevo" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1132</Value>
+      <Value Profile="(Default)">24</Value>
     </Setting>
     <Setting Name="siniestros" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1131</Value>
+      <Value Profile="(Default)">25</Value>
     </Setting>
     <Setting Name="endosos" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1135</Value>
+      <Value Profile="(Default)">26</Value>
     </Setting>
     <Setting Name="poliza_anu_motivo" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1115</Value>
+      <Value Profile="(Default)">27</Value>
     </Setting>
     <Setting Name="listacampos" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1097</Value>
@@ -301,6 +298,9 @@
     </Setting>
     <Setting Name="numero" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1081</Value>
+    </Setting>
+    <Setting Name="error_des" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">28</Value>
     </Setting>
   </Settings>
 </SettingsFile>

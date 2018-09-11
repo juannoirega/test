@@ -66,6 +66,7 @@ namespace BPO.PACIFICO.REHABILITAR
                     _Funciones.GuardarIdPlantillaNotificacion(ticket, _plantillaRechazo);
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
+                    return;
                 }
                 finally
                 {

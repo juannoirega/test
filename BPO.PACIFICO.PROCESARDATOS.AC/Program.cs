@@ -100,7 +100,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
         private void ProcesarTicket(Ticket oTicketDatos)
         {
             //Campos para Validar:
-            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
+            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.asegurado_nombre,
                                        eesFields.Default.motivo_rehabilitar, eesFields.Default.poliza_est};
 
             //Valida Línea de la Póliza:
@@ -181,7 +181,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
 
         private Boolean ValidarDatosPoliza(Ticket oTicketDatos)
         {
-            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
+            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.asegurado_nombre,
                                        eesFields.Default.motivo_rehabilitar, eesFields.Default.admin};
 
             if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))

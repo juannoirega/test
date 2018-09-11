@@ -105,6 +105,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                     _reprocesoContador++;
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _idEstadoError).Id);
+                    return;
                 }
                 finally
                 {
@@ -329,8 +330,8 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 _canalAgente,_canalCodigo,_canal,_servicioOrganizacion,_servicioAgenteCodigo,_servicioAgente,_servicioCanalCodigo,_servicioCanal,_numeroCuenta,_anulacionMotivo,_endosatarios,_siniestros};
 
                 int[] IdCampos = { eesFields.Default.producto, eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia,eesFields.Default.tipo_vigencia,eesFields.Default.poliza_est,
-                eesFields.Default.num_asegurados,eesFields.Default.num_vehiculos,eesFields.Default.nombre_contratante,eesFields.Default.nombre_asegurado,eesFields.Default.poliza_nueva,
-                eesFields.Default.tipo_de_producto,eesFields.Default.poliza_fec_emision,eesFields.Default.canal_org,eesFields.Default.canal_agente_cod,eesFields.Default.canal_agente,
+                eesFields.Default.num_asegurados,eesFields.Default.num_vehiculos,eesFields.Default.cuenta_nombre,eesFields.Default.asegurado_nombre,eesFields.Default.poliza_nueva,
+                eesFields.Default.producto_tipo,eesFields.Default.poliza_fec_emision,eesFields.Default.canal_org,eesFields.Default.canal_agente_cod,eesFields.Default.canal_agente,
                 eesFields.Default.canal_cod,eesFields.Default.canal,eesFields.Default.servicio_org,eesFields.Default.servicio_agente_cod,eesFields.Default.servicio_agente,eesFields.Default.servicio_canal_cod,
                 eesFields.Default.servicio_canal,eesFields.Default.cuenta_nro,eesFields.Default.motivo_anular,eesFields.Default.endosos,eesFields.Default.siniestros};
 
