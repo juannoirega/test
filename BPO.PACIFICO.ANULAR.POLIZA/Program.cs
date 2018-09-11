@@ -180,7 +180,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         //}
         private void AnularPolizaPolicyCenter(Ticket ticket)
         {
-            LogStartStep(59);
+            LogStartStep(45);
             try
             {
                 _pasoRealizado = "Menu acciones";
@@ -337,7 +337,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocurrio un error al obtener el valor en la grilla", ex);
+                throw new Exception("Ocurrio un error al obtener el numero de orden de trabajo", ex);
             }
             return valor;
         }

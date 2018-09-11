@@ -26,7 +26,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private string _procesoInicio = string.Empty;
         private string _nombreProceso = string.Empty;
         private string _estadoError;
-        private int _estadoFinal;
         private int _dominioProceso;
         private int _idProceso;
         #endregion
@@ -212,7 +211,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         }
         private void ObtenerDatos(Ticket ticket)
         {
-            LogStartStep(56);
+            LogStartStep(42);
             string _idDesplegable = string.Empty;
 
             _producto = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
@@ -322,7 +321,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         }
         private void GrabarInformacion(Ticket ticket)
         {
-            LogStartStep(57);
+            LogStartStep(43);
             try
             {
                 string[] ValorCampos = { _producto, _polizaInicioVigencia, _polizaFinVigencia, _polizaTipoVigencia, _polizaEstado,_numeroAsegurados, _numeroVehiculos,
