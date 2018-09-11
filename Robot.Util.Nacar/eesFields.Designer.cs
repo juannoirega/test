@@ -922,5 +922,32 @@ namespace Robot.Util.Nacar {
                 return ((int)(this["error_des"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1141")]
+        public int reglas_conforme {
+            get {
+                return ((int)(this["reglas_conforme"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1142")]
+        public int reglas_no_conforme {
+            get {
+                return ((int)(this["reglas_no_conforme"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1143")]
+        public int reglas_observacion {
+            get {
+                return ((int)(this["reglas_observacion"]));
+            }
+        }
     }
 }

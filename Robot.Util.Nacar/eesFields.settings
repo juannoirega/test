@@ -302,5 +302,14 @@
     <Setting Name="error_des" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">28</Value>
     </Setting>
+    <Setting Name="reglas_conforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1141</Value>
+    </Setting>
+    <Setting Name="reglas_no_conforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1142</Value>
+    </Setting>
+    <Setting Name="reglas_observacion" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1143</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
