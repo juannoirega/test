@@ -154,7 +154,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         {
             try
             {
-                int[] oCampos = new int[] { eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
+                int[] oCampos = new int[] { eesFields.Default.nombre_contratante, eesFields.Default.asegurado_nombre,
                                             eesFields.Default.email_solicitante, eesFields.Default.fecha_hora_de_email,
                                             eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia};
 
@@ -291,7 +291,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
             //Nombre del Asegurado:
             _cElemento = "Nombre Asegurado";
-            _oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_asegurado).Value.ToUpper());
+            _oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.asegurado_nombre).Value.ToUpper());
             //_oDriver.FindElement(By.Id("vser_nombrerazonsocialdelasegurado571_input")).SendKeys("CARLOS REYES");
 
             //Nro. Doc. Identidad:
