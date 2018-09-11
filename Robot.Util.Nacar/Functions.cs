@@ -561,5 +561,22 @@ namespace Robot.Util.Nacar
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al buscar documento: " + Ex.Message, Ex); }
         }
+
+        public void GuardarIdPlantillaNotificacion(Ticket ticket, int idPlantilla)
+        {
+            if (ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj) == null)
+            {
+                ticket.TicketValues.Add(new TicketValue
+                {
+                    FieldId = eesFields.Default.reproceso_contador,
+                    TicketId = ticket.Id,
+                    Value = idPlantilla.ToString(),
+                    CreationDate = DateTime.Now,
+                    ClonedValueOrder = null
+                });
+            }
+            else
+                ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj).Value = idPlantilla.ToString();
+        }
     }
 }

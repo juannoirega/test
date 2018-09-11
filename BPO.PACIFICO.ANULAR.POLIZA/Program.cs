@@ -79,7 +79,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 {
                     LogFailStep(30, ex);
                     _reprocesoContador++;
-                    GuardarIdPlantillaNotificacion(ticket, _plantillaRechazo);
+                    _Funciones.GuardarIdPlantillaNotificacion(ticket, _plantillaRechazo);
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
                     return;
@@ -102,7 +102,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 BuscarPoliza(ticket);
                 AnularPoliza(ticket);
                 GuardarPdf(ticket);
-                GuardarIdPlantillaNotificacion(ticket, _plantillaConforme);
+                _Funciones.GuardarIdPlantillaNotificacion(ticket, _plantillaConforme);
                 GuardarInformacionTicket(ticket);
                 if (_reprocesoContador > 0)
                 {
@@ -113,8 +113,6 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 _robot.SaveTicketNextState(ticket, _estadoFinal);
             }
         }
-
-       
         private void AnularPoliza(Ticket ticket)
         {
             //if (_esPortalBcp)
@@ -316,22 +314,6 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             _plantillaConforme = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaConforme").ValueParam);
             _plantillaRechazo = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaRechazo").ValueParam);
             LogEndStep(4);
-        }
-        private void GuardarIdPlantillaNotificacion(Ticket ticket, int idPlantilla)
-        {
-            if (ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj) == null)
-            {
-                ticket.TicketValues.Add(new TicketValue
-                {
-                    FieldId = eesFields.Default.reproceso_contador,
-                    TicketId = ticket.Id,
-                    Value = idPlantilla.ToString(),
-                    CreationDate = DateTime.Now,
-                    ClonedValueOrder = null
-                });
-            }
-            else
-                ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj).Value = idPlantilla.ToString();
         }
         public string ObtenerNOrdenTrabajo(IWebDriver _driver, string idTabla, string cabecera)
         {
