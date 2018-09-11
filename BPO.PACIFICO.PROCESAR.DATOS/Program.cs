@@ -1,19 +1,17 @@
-﻿using System;
+﻿using everis.Ees.Proxy.Core;
+using everis.Ees.Proxy.Services.Interfaces;
+using Everis.Ees.Entities;
+using Everis.Ees.Entities.Enums;
+using Robot.Util.Nacar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using everis.Ees.Proxy.Services.Interfaces;
-using everis.Ees.Proxy.Core;
-using Everis.Ees.Entities;
-using System.Threading;
-using Microsoft.VisualBasic;
-using Robot.Util.Nacar;
-using everis.Ees.Proxy.Services;
 
-namespace BPO.PACIFICO.PROCESARDATOS.AP
+namespace RobotProcesarTicket
 {
-    public class Program : IRobot
+    class Program : IRobot
     {
         #region "PARÁMETROS"
         private static BaseRobot<Program> _oRobot = null;
@@ -22,44 +20,66 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
         private static string _cPolizaEmision;
         private static string _cPolizaRenovacion;
         private static string _cEstadoAnulacion;
-        private static string _cEstadoRehabilitacion;
-        private static string _cEstadoActualizacion;
         private static string _cLinea = string.Empty;
-        private static int _nIdMesaControl;
-        private static int _nIdPantallaValidacion;
-        private static int _nIdNotificacion;
         private static string _cLineaAutos = string.Empty;
         private static string _cLineaLLPP = string.Empty;
         private static string _cLineaAlianzas = string.Empty;
         private static string _cLineaRRGG = string.Empty;
-        private static bool _bEnviarNotificacion;
-        private static string _cDominioLineas = string.Empty;
-        private static string _cDominioProcesos = string.Empty;
-        private static string _cDominioLineasCol3 = string.Empty;
         private static string _cProceso = string.Empty;
-        private static string[] Procesos;
+        private static string _cTratamientoManual = string.Empty;
+        private static string[] _procesos;
+        private List<string> _productosAutos = new List<string>();
+        private List<string> _productosRG = new List<string>();
+        private List<string> _productosAlianzas = new List<string>();
+        private List<string> _tProductosAlianzas = new List<string>();
+        private List<string> _tProductosLPersonales = new List<string>();
         private static StateAction _oMesaControl;
         private static StateAction _oPantallaValidacion;
         private static StateAction _oNotificacion;
         private static Functions _Funciones;
+        private string msgConforme = string.Empty;
+        private string msgNoConforme = string.Empty;
+        private string msgObservacion = string.Empty;
         #endregion
 
         static void Main(string[] args)
         {
             try
             {
-                _oRobot = new BaseRobot<BPO.PACIFICO.PROCESARDATOS.AP.Program>(args);
+                _oRobot = new BaseRobot<RobotProcesarTicket.Program>(args);
                 _Funciones = new Functions();
                 _oRobot.Start();
             }
             catch (Exception Ex) { Console.WriteLine(Ex.Message); }
+        }
+        protected void IniciarParametros()
+        {
+            _productosAutos.Add("Auto Modular");
+            _productosAutos.Add("Auto a Medida");
+            _productosAutos.Add("RCTPU (AX)");
+            _productosRG.Add("MI01");
+            _productosRG.Add("Hogar");
+            _productosRG.Add("Accidentes Personales");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 0210199");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 0020962");
+            _productosAlianzas.Add("PV02 (AX)");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 1001330");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 0024488");
+            _productosAlianzas.Add("MI BANCO (AX)");
+            _productosAlianzas.Add("PRE1 (AX)");
+            _tProductosAlianzas.Add("PRE2 (AX)");
+            _tProductosAlianzas.Add("PRE3");
+            _tProductosLPersonales.Add("VTAR");
+            _tProductosLPersonales.Add("VACC");
+            _tProductosLPersonales.Add("VDES");
+            _tProductosLPersonales.Add("PH01");
         }
 
         protected override void Start()
         {
             if (_oRobot.Tickets.Count < 1)
                 return;
-
+            IniciarParametros();
             ObtenerParametros();
             LogStartStep(4);
             Inicio();
@@ -67,11 +87,9 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             {
                 try
                 {
-                    _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdMesaControl);
-                    _cProceso = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_proceso).Value));
-                    _oPantallaValidacion = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdPantallaValidacion);
-                    _oNotificacion = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdNotificacion);
-                    ProcesosEndoso(oTicket);
+                    _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Enviar Mesa Control");
+                    _oPantallaValidacion = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Validar");
+                    _oNotificacion = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Enviar Rechazo");
                     ProcesarTicket(oTicket);
                 }
                 catch (Exception Ex)
@@ -81,6 +99,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                     return;
                 }
             }
+
         }
 
         private void Inicio()
@@ -96,40 +115,18 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             try
             {
                 //Parámetros del Robot Procesamiento de Datos:
-                _nDiasArrepentimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("DiasArrepentimiento").ValueParam);
-                _nDiasDesistimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("DiasDesistimiento").ValueParam);
-                _cPolizaEmision = _oRobot.GetValueParamRobot("Poliza_Tipo_1").ValueParam;
-                _cPolizaRenovacion = _oRobot.GetValueParamRobot("Poliza_Tipo_2").ValueParam;
-                _cEstadoAnulacion = _oRobot.GetValueParamRobot("EstadoAnulacion").ValueParam;
-                _cEstadoRehabilitacion = _oRobot.GetValueParamRobot("EstadoRehabilitacion").ValueParam;
-                _cEstadoActualizacion = _oRobot.GetValueParamRobot("EstadoActualizacion").ValueParam;
-                _nIdMesaControl = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoError").ValueParam);
-                _nIdPantallaValidacion = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoSiguiente").ValueParam);
-                _nIdNotificacion = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoNotificacion").ValueParam);
-                _cLineaAutos = _oRobot.GetValueParamRobot("LineaAutos").ValueParam;
-                _cLineaLLPP = _oRobot.GetValueParamRobot("LineaLLPP").ValueParam;
-                _cLineaAlianzas = _oRobot.GetValueParamRobot("LineaAlianzas").ValueParam;
-                _cLineaRRGG = _oRobot.GetValueParamRobot("LineaRRGG").ValueParam;
-                _bEnviarNotificacion = Convert.ToBoolean(Convert.ToInt64(_oRobot.GetValueParamRobot("EnviarNotificacion").ValueParam));
-                _cDominioLineas = _oRobot.GetValueParamRobot("DominioLineas").ValueParam;
-                _cDominioProcesos = _oRobot.GetValueParamRobot("DominioProcesos").ValueParam;
-                _cDominioLineasCol3 = _oRobot.GetValueParamRobot("DominioLineas_col3").ValueParam;
+                _nDiasArrepentimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolRenovadaAuto").ValueParam);
+                _nDiasDesistimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolNuevaAuto").ValueParam);
+                _cPolizaEmision = "EMISION";
+                _cPolizaRenovacion = "RENOVACION";
+                _cEstadoAnulacion = "VIGENTE";
+                _cLineaAutos = "AUTOS";
+                _cLineaLLPP = "LLPP";
+                _cLineaAlianzas = "ALIANZAS";
+                _cLineaRRGG = "RRGG ";
+                _procesos = _oRobot.GetValueParamRobot("reglaEstado").ValueParam.Split(',');
             }
             catch (Exception Ex) { LogFailStep(12, Ex); }
-        }
-
-        //Obtiene un arreglo con todos los procesos de endoso:
-        private string[] ProcesosEndoso(Ticket oTicketDatos)
-        {
-            try
-            {
-                Procesos =  _oRobot.GetValueParamRobot("Procesos").ValueParam.Split(',');
-                return Procesos;
-            }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un erro al obtener lista de procesos de endoso: " + Ex.Message, Ex);
-            }
         }
 
         //Envía el ticket al siguiente estado:
@@ -143,9 +140,23 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
         {
             ObtieneLineaDeNegocio(oTicketDatos);
             //Si es Anulación de Póliza:
-            
-           CondicionalesAnulacionPoliza(oTicketDatos);
-           
+
+            CondicionalesAnulacionPoliza(oTicketDatos);
+
+        }
+
+        //Metodo para generar los campos de  reglas
+        private void InsertarValoresReglas(Ticket oTicketDatos, string msgConforme, string msgNoConforme, string msgObservacion)
+        {
+            //Reglas Conforme
+            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.reglas_conforme, Value = msgConforme });
+
+            //Reglas No Conforme
+            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.reglas_no_conforme, Value = msgNoConforme });
+
+            //Reglas Observación
+            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.reglas_observacion, Value = msgObservacion });
+
         }
 
         //Anina: Método para determinar a qué Línea pertenece la póliza.
@@ -153,7 +164,43 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
         {
             try
             {
-                FunctionalDomains<List<DomainValue>> objLineas = _Funciones.GetDomainValuesByParameters(_oRobot.SearchDomain, _cDominioLineas, new string[,] { { _cDominioLineasCol3, oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_proceso).Value} });
+                // FunctionalDomains<List<DomainValue>> objLineas = _Funciones.GetDomainValuesByParameters(_oRobot.SearchDomain, _cDominioLineas, new string[,] { { _cDominioLineasCol3, oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_linea).Value } });
+                string motivoAnulacion = "(AX)";
+                string producto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.producto).Value;
+                string tipoProducto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_de_producto).Value;
+                if (_productosAutos.Where(o => o == producto).FirstOrDefault() != null)
+                {
+                    _cLinea = "AUTOS";
+
+                }
+                else if (_productosRG.Where(o => o == producto).FirstOrDefault() != null)
+                {
+                    _cLinea = "RRGG";
+                }
+                else if (_productosAlianzas.Where(o => o == producto).FirstOrDefault() != null)
+                {
+                    _cLinea = "ALIANZAS";
+                }
+                if (_tProductosAlianzas.Where(o => o == tipoProducto).FirstOrDefault() != null)
+                {
+                    _cLinea = "ALIANZAS";
+
+                }
+                else if (_tProductosLPersonales.Where(o => o == tipoProducto).FirstOrDefault() != null)
+                {
+                    _cLinea = "LLPP";
+                }
+                if (producto.Contains(motivoAnulacion))
+                {
+                    msgObservacion = "Se debe anular por lo acordado con el operador." + msgObservacion;
+                }
+                else if (tipoProducto.Contains(motivoAnulacion))
+                {
+                    msgObservacion = "Se debe anular por lo acordado con el operador." + msgObservacion;
+                }
+                //Reglas Conforme
+                oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.tipo_de_linea, Value = _cLinea });
+
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener Línea de Negocio: " + Ex.Message, Ex); }
         }
@@ -175,12 +222,12 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             //Campos para Validar:
             int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado, eesFields.Default.fecha_hora_de_email,
                                             eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
-                                            eesFields.Default.poliza_est, eesFields.Default.tipo_vigencia};
+                                            eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
 
             //Valida Línea de la Póliza:
             if (_cLinea == _cLineaAutos)
             {
-                if (ValidarDatosPoliza(oTicketDatos, oCampos))
+                if (!ValidarDatosPoliza(oTicketDatos, oCampos))
                 {
                     if (!ReglasAnulacionPolizaAutos(oTicketDatos))
                     {
@@ -195,45 +242,11 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                     return;
                 }
             }
-            else if (_cLinea == _cLineaLLPP)
+            else if ((_cLinea == _cLineaAlianzas) || (_cLinea == _cLineaAlianzas) || (_cLinea == _cLineaAlianzas))
             {
-                if (ValidarDatosPoliza(oTicketDatos, oCampos))
+                if (!ValidarDatosPoliza(oTicketDatos, oCampos))
                 {
-                    if (!ReglasAnulacionPolizaLLPP(oTicketDatos))
-                    {
-                        //Enviar a notificación de correo:
-                        CambiarEstadoTicket(oTicketDatos, _oNotificacion);
-                    }
-                }
-                else
-                {
-                    //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cuenta con todos los datos necesarios.");
-                    return;
-                }
-            }
-            else if (_cLinea == _cLineaAlianzas)
-            {
-                if (ValidarDatosPoliza(oTicketDatos, oCampos))
-                {
-                    if (!ReglasAnulacionPolizaAlianzas(oTicketDatos))
-                    {
-                        //Enviar a notificación de correo:
-                        CambiarEstadoTicket(oTicketDatos, _oNotificacion);
-                    }
-                }
-                else
-                {
-                    //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cuenta con todos los datos necesarios.");
-                    return;
-                }
-            }
-            else if (_cLinea == _cLineaRRGG)
-            {
-                if (ValidarDatosPoliza(oTicketDatos, oCampos))
-                {
-                    if (!ReglasAnulacionPolizaRRGG(oTicketDatos))
+                    if (!ReglasAnulacionOtrasLineas(oTicketDatos))
                     {
                         //Enviar a notificación de correo:
                         CambiarEstadoTicket(oTicketDatos, _oNotificacion);
@@ -251,58 +264,86 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
                 CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no pertenece a ninguna Línea de Negocio.");
             }
             CambiarEstadoTicket(oTicketDatos, _oPantallaValidacion);
-        }                
+        }
         #endregion
 
-        #region REGLAS DE VALIDACIÓN AUTOS
+        #region REGLAS DE VALIDACIÓN AUTOS            
         //Reglas de validación para la línea Autos:
         private Boolean ReglasAnulacionPolizaAutos(Ticket oTicketDatos)
         {
+
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: VIGENTE. 
+                string estadoPoliza = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.estado_poliza).Value;
+                Boolean _bFlagVigencia = (_procesos.Where(o => o == estadoPoliza).FirstOrDefault() == null);
+
+                if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
 
-                    
+                    msgConforme = "La poliza se encuentra en estado: " + estadoPoliza + ". " + msgConforme;
+                    //SE VERIFICA SINIESTRO
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.siniestros).Value != null)
+                    {
+                        msgConforme = "Se esta cumpliendo que la poliza no tiene siniestros. " + msgConforme;
+
+                    }
+                    else
+                    {
+                        msgNoConforme = "No se esta cumpliendo que la poliza no tiene siniestros. " + msgNoConforme;
+                    }
+
+                    //SE VERIFICA ENDOSOS
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.endosos).Value != null)
+                    {
+                        msgConforme = "Se esta cumpliendo que la poliza tiene endosos. " + msgConforme;
+                    }
+                    else
+                    {
+                        msgNoConforme = "No se esta cumpliendo que la poliza no tiene endosos. " + msgNoConforme;
+                    }
+
+
                     //VERIFICA QUE SEA EMISIÓN:
                     if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaEmision)
                     {
-                        if (nDiferencia.Days > _nDiasDesistimiento)
-                        {   
-                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante 
-                            //Verifica que tenga VoBo:
-                            //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
-                            //{
-                            //Con prorrateo:
+                        if (!(nDiferencia.Days > _nDiasDesistimiento))
+                        {
+                            msgConforme = "Se esta cumpliendo con la diferencia de dias de desestimiento. " + msgConforme;
                             oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "1" });
-                            //}
+                        }
+                        else
+                        {
+                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "0" });
+                            msgNoConforme = "No se esta cumpliendo con la diferencia de dias de desestimiento. " + msgNoConforme;
                         }
                     }
                     else if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaRenovacion)//Es renovación:
                     {
 
-                        if (nDiferencia.Days > _nDiasArrepentimiento)
+                        if (!(nDiferencia.Days > _nDiasArrepentimiento))
                         {
-                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
-                            //Verifica que tenga VoBo:
-                            //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
-                            //{
-                            //Con prorrateo:
+                            msgConforme = "Se esta cumpliendo con la diferencia de dias de desestimiento." + msgConforme;
                             oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "1" });
-                            //}
+                        }
+                        else
+                        {
+                            msgNoConforme = "No se esta cumpliendo con la diferencia de dias de desestimiento." + msgNoConforme;
+                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "0" });
                         }
                     }
                     else //No es ni Emisión ni Renovación:
                     {
-                        //Con devolución al 100%: 
                         oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "0" });
+                        InsertarValoresReglas(oTicketDatos, msgConforme, msgNoConforme, msgObservacion);
                         return false;
                     }
                 }
                 else
                 {
+                    msgNoConforme = " Se esta cumpliendo la regla por el hecho de que la poliza se encuentra en estado: " + estadoPoliza + msgNoConforme;
+                    InsertarValoresReglas(oTicketDatos, msgConforme, msgNoConforme, msgObservacion);
                     return false;
                 }
             }
@@ -310,59 +351,54 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             {
                 throw new Exception("Ocurrió un error al validar reglas de Anulación para " + _cLinea, Ex);
             }
+            InsertarValoresReglas(oTicketDatos, msgConforme, msgNoConforme, msgObservacion);
             return true;
-        } 
+        }
+
         #endregion
 
-        #region REGLAS DE VALIDACIÓN LÍNEAS PERSONALES
+        #region REGLAS DE VALIDACIÓN DE LALS OTRAS LÍNEAS
         //Reglas de validación para la línea Líneas Personales:
-        private Boolean ReglasAnulacionPolizaLLPP(Ticket oTicketDatos)
+        private Boolean ReglasAnulacionOtrasLineas(Ticket oTicketDatos)
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: CANCELADA. 
+                string estadoPoliza = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.estado_poliza).Value;
+                Boolean _bFlagVigencia = (_procesos.Where(o => o == estadoPoliza).FirstOrDefault() == null);
+
+                if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
 
-                   
-                    //VERIFICA QUE SEA EMISIÓN:
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaEmision)
+                    msgConforme = "La poliza se encuentra en estado: " + estadoPoliza + ". " + msgConforme;
+                    //SE VERIFICA SINIESTRO
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.siniestros).Value != null)
                     {
-                        if (nDiferencia.Days > _nDiasDesistimiento)
-                        {
-                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
-                            //Verifica que tenga VoBo:
-                            //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
-                            //{
-                            //Con prorrateo:
-                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "true" });
-                            //}
-                        }
-                    }
-                    else if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaRenovacion)//Es renovación:
-                    {
+                        msgConforme = "Se esta cumpliendo que la poliza no tiene siniestros. " + msgConforme;
 
-                        if (nDiferencia.Days > _nDiasArrepentimiento)
-                        {
-                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
-                            //Verifica que tenga VoBo:
-                            //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
-                            //{
-                            //Con prorrateo:
-                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "true" });
-                            //}
-                        }
                     }
-                    else //No es ni Emisión ni Renovación:
-                    { 
-                        //Con devolución al 100%: 
-                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "false" });
-                        return false;
+                    else
+                    {
+                        msgNoConforme = "No se esta cumpliendo que la poliza no tiene siniestros. " + msgNoConforme;
                     }
+
+                    if (!(nDiferencia.Days > _nDiasDesistimiento))
+                    {
+                        msgConforme = "Se esta cumpliendo con la diferencia de dias de desestimiento. " + msgConforme;
+                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "1" });
+                    }
+                    else
+                    {
+                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "0" });
+                        msgNoConforme = "No se esta cumpliendo con la diferencia de dias de desestimiento. " + msgNoConforme;
+                    }
+
                 }
                 else
                 {
+                    msgNoConforme = " Se esta cumpliendo la regla por el hecho de que la poliza se encuentra en estado: " + estadoPoliza + msgNoConforme;
+                    InsertarValoresReglas(oTicketDatos, msgConforme, msgNoConforme, msgObservacion);
                     return false;
                 }
             }
@@ -370,130 +406,12 @@ namespace BPO.PACIFICO.PROCESARDATOS.AP
             {
                 throw new Exception("Ocurrió un error al validar reglas de Anulación para " + _cLinea, Ex);
             }
+            InsertarValoresReglas(oTicketDatos, msgConforme, msgNoConforme, msgObservacion);
             return true;
-        }
-         
-        #endregion
 
-        #region REGLAS DE VALIDACIÓN BANCA Y ALIANZAS
-        //Reglas de validación para la línea B&A:
-        private Boolean ReglasAnulacionPolizaAlianzas(Ticket oTicketDatos)
-        {
-            try
-            {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: CANCELADA. 
-                {
-                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
-                                            - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
-
-                    //VERIFICA QUE SEA EMISIÓN:
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaEmision)
-                    {
-                        if (nDiferencia.Days > _nDiasDesistimiento)
-                        {
-                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
-                            //Verifica que tenga VoBo:
-                            //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
-                            //{
-                            //Con prorrateo:
-                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "true" });
-                            //}
-                        }
-                    }
-                    else if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaRenovacion)//Es renovación:
-                    {
-
-                        if (nDiferencia.Days > _nDiasArrepentimiento)
-                        {
-                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
-                            //Verifica que tenga VoBo:
-                            //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
-                            //{
-                            //Con prorrateo:
-                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "true" });
-                            //}
-                        }
-                    }
-                    else //No es ni Emisión ni Renovación:
-                    {
-                        //Con devolución al 100%: 
-                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "false" });
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un error al validar reglas de Anulación para " + _cLinea, Ex);
-            }
-            return true;
         }
 
-         
         #endregion
 
-        #region REGLAS DE VALIDACIÓN RIESGOS GENERALES
-        //Reglas de validación para la línea Riesgos Generales:
-        private Boolean ReglasAnulacionPolizaRRGG(Ticket oTicketDatos)
-        {
-            try
-            {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoAnulacion) //Estado: CANCELADA. 
-                {
-                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
-                                            - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
-
-                   
-                    //VERIFICA QUE SEA EMISIÓN:
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaEmision)
-                    {
-                        if (nDiferencia.Days > _nDiasDesistimiento)
-                        {
-                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
-                            //Verifica que tenga VoBo:
-                            //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
-                            //{
-                            //Con prorrateo:
-                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "true" });
-                            //}
-                        }
-                    }
-                    else if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaRenovacion)//Es renovación:
-                    {
-
-                        if (nDiferencia.Days > _nDiasArrepentimiento)
-                        {
-                            //Se comenta esto porque se determino que la verifiacion se veria mâs adelante
-                            //Verifica que tenga VoBo:
-                            //if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.vobo_producto).Value.Length <= 0)
-                            //{
-                            //Con prorrateo:
-                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "true" });
-                            //}
-                        }
-                    }
-                    else //No es ni Emisión ni Renovación:
-                    {
-                        //Con devolución al 100%: 
-                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "false" });
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un error al validar reglas de Anulación para " + _cLinea, Ex);
-            }
-            return true;
-        } 
-        #endregion
     }
 }
