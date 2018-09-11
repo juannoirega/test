@@ -30,8 +30,7 @@ namespace GmailQuickstart
         static string[] Scopes = { GmailService.Scope.GmailReadonly };
         static string[] _palabras = new string[2];
         static string[] _valores = new string[10];
-        //static string _userId = "soportecorredor_des@pacifico.com.pe";
-        static string _userId = "alnimax7@gmail.com";
+        static string _userId = "soportecorredor_des@pacifico.com.pe";
         static List<string> _adjuntos = null;
         static int[] _fields = { eesFields.Default.cuerpo_de_email, eesFields.Default.asunto_de_email, eesFields.Default.estado_error, eesFields.Default.estado_hijo, eesFields.Default.estado_padre, eesFields.Default.fields, eesFields.Default.fecha_hora_de_email, eesFields.Default.email_solicitante, eesFields.Default.email_en_copia };
         static string ApplicationName = "Gmail API .NET Quickstart";
