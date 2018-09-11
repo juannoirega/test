@@ -1,18 +1,10 @@
-﻿using everis.Ees.Proxy;
-using everis.Ees.Proxy.Core;
+﻿using everis.Ees.Proxy.Core;
 using everis.Ees.Proxy.Services.Interfaces;
 using Everis.Ees.Entities;
 using OpenQA.Selenium;
-using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Remote;
 using Robot.Util.Nacar;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BPO.PACIFICO.REHABILITAR
 {
@@ -33,10 +25,6 @@ namespace BPO.PACIFICO.REHABILITAR
         #region VariablesGLoables
         private int _reprocesoContador = 0;
         private int _idEstadoRetorno = 0;
-        //private static string _numeroDniContratante = string.Empty;
-        //Pendiente
-        private string _numeroVehiculos = string.Empty;
-        private string _numeroAsegurados = string.Empty;
         private int _plantillaConforme;
         private int _plantillaRechazo;
         #endregion
