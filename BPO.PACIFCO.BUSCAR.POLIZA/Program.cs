@@ -124,7 +124,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 //poner parametro
                 List<Domain> dominios = container.Domains.Expand(dv => dv.DomainValues).Where(df => df.ParentId == _dominioProceso).ToList();
                 //poner parametro
-                int numero = dominios.FirstOrDefault(o => o.Name == "nombre").DomainValues.FirstOrDefault(o => o.Value == "Anulación de Póliza").LineNumber;
+                int numero = dominios.FirstOrDefault(o => o.Name == "nombre").DomainValues.FirstOrDefault(o => o.Value == _nombreProceso).LineNumber;
                 _existeValorProducto = ValidacionProducto(ticket);
                 //poner parametro para las buquesdas de dominio
                 _buscarPolicyCenter = ValidacionPoliCenter(dominios, numero);
@@ -147,7 +147,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             if (_buscarContactManager)
             {
                 List<StateAction> accionesEstado = _robot.GetNextStateAction(_robot.Tickets.FirstOrDefault());
-                _estadoContact = accionesEstado.Where(se => se.ActionDescription == "Ir ContactManager").FirstOrDefault();
+                _estadoContact = accionesEstado.Where(se => se.ActionDescription == "Avanzar").FirstOrDefault();
                 _finProcesoContact = true;
             }
             if (_reprocesoContador > 0)
@@ -347,13 +347,13 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             _url = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
             _usuario = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
             _contraseña = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
-            //Estado Mesa Control validar Nombre cuando se cree el dominio Funcional
-            _estadoError = _robot.GetValueParamRobot("EstadoError").ValueParam;
+            _estadoError = _robot.GetValueParamRobot("ProcesoMesaControl").ValueParam;
             _dominioProceso = Convert.ToInt32(_robot.GetValueParamRobot("DominoProcesso").ValueParam);
             _procesoPolicyCenter = _robot.GetValueParamRobot("ProcessoPolicyCenter").ValueParam;
             _procesoContact = _robot.GetValueParamRobot("ProcessoContact").ValueParam;
             _procesoInicio = _robot.GetValueParamRobot("ProcessoInicio").ValueParam;
             _nombreProceso = _robot.GetValueParamRobot("NombreProcesso").ValueParam;
+            //Verificar como se trabajara este parametro
             _idProceso = Convert.ToInt32(_robot.GetValueParamRobot("IdProceso").ValueParam);
             LogEndStep(4);
         }
