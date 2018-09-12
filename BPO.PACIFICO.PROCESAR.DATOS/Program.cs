@@ -222,7 +222,7 @@ namespace RobotProcesarTicket
             //Campos para Validar:
             int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.asegurado_nombre, eesFields.Default.fecha_hora_de_email,
                                             eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
-                                            eesFields.Default.estado_poliza, eesFields.Default.tipo_vigencia};
+                                            eesFields.Default.poliza_est, eesFields.Default.tipo_vigencia};
 
             //Valida Línea de la Póliza:
             if (_cLinea == _cLineaAutos)
@@ -274,7 +274,7 @@ namespace RobotProcesarTicket
 
             try
             {
-                string estadoPoliza = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.estado_poliza).Value;
+                string estadoPoliza = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_est).Value;
                 Boolean _bFlagVigencia = (_procesos.Where(o => o == estadoPoliza).FirstOrDefault() == null);
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
@@ -363,7 +363,7 @@ namespace RobotProcesarTicket
         {
             try
             {
-                string estadoPoliza = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.estado_poliza).Value;
+                string estadoPoliza = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_est).Value;
                 Boolean _bFlagVigencia = (_procesos.Where(o => o == estadoPoliza).FirstOrDefault() == null);
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 

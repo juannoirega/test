@@ -116,7 +116,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         private void ProcesarTicket(Ticket oTicketDatos)
         {
             //Campos para Validar:
-            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
+            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.asegurado_nombre,
                                        eesFields.Default.motivo_rehabilitar, eesFields.Default.poliza_est};
 
             //Valida Línea de la Póliza:
@@ -163,8 +163,8 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
 
         private Boolean ValidarDatosPoliza(Ticket oTicketDatos)
         {
-            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.nombre_asegurado,
-                                       eesFields.Default.motivo_rehabilitar, eesFields.Default.admin};
+            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.asegurado_nombre,
+                                       eesFields.Default.motivo_rehabilitar, eesFields.Default.poliza_est};
 
             if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
             {
@@ -179,7 +179,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_est).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
                 {
                     //REGLA: Que no tenga siniestros.
                 }
@@ -199,7 +199,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_est).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
                 {
                     //REGLA: Que no tenga siniestros.
                 }

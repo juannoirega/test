@@ -182,7 +182,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
         private Boolean ValidarDatosPoliza(Ticket oTicketDatos)
         {
             int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.asegurado_nombre,
-                                       eesFields.Default.motivo_rehabilitar, eesFields.Default.admin};
+                                       eesFields.Default.motivo_rehabilitar, eesFields.Default.poliza_est};
 
             if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
             {
@@ -197,7 +197,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoActualizacion) //Estado: VIGENTE. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_est).Value.ToUpperInvariant() == _cEstadoActualizacion) //Estado: VIGENTE. 
                 {
                     //REGLA: Que RUC o DNI coincidan con datos de la póliza.
                 }
@@ -218,7 +218,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoActualizacion) //Estado: VIGENTE. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_est).Value.ToUpperInvariant() == _cEstadoActualizacion) //Estado: VIGENTE. 
                 {
                     //REGLA: Que RUC exista en SUNAT. (Fuera de alcance).
                 }
@@ -239,7 +239,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoActualizacion) //Estado: VIGENTE. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_est).Value.ToUpperInvariant() == _cEstadoActualizacion) //Estado: VIGENTE. 
                 {
                     //REGLA: Que RUC o DNI coincidan con datos de la póliza.
                 }
@@ -260,7 +260,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.admin).Value.ToUpperInvariant() == _cEstadoActualizacion) //Estado: VIGENTE. 
+                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_est).Value.ToUpperInvariant() == _cEstadoActualizacion) //Estado: VIGENTE. 
                 {
                     //REGLA: Que RUC o DNI coincidan con datos de la póliza.
                 }
