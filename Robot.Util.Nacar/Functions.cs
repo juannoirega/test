@@ -100,7 +100,7 @@ namespace Robot.Util.Nacar
                 _driver.Manage().Window.Maximize();
                 Esperar(1);
             }
-            catch (Exception Ex) { throw new Exception("Ocurrió un error al ingresar al sitio portal bcp" ,Ex); }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al ingresar al sitio portal bcp", Ex); }
         }
 
         public void LoginPolicyCenter(IWebDriver _driver, string usuario, string contraseña)
@@ -341,7 +341,7 @@ namespace Robot.Util.Nacar
         }
 
         //Anina: Verifica si existe elemento web.
-        public Boolean ExisteElemento(IWebDriver oDriver, string cIdElemento, int nIntentos)
+        public Boolean ExisteElemento(IWebDriver oDriver, string cIdElemento, int nIntentos = 1)
         {
             for (int i = 0; i < nIntentos; i++)
             {
@@ -577,6 +577,40 @@ namespace Robot.Util.Nacar
             }
             else
                 ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj).Value = idPlantilla.ToString();
+        }
+
+        //Anina: Aceptar mensaje web emergente.
+        public void VentanaMensajeWeb(IWebDriver oDriver)
+        {
+            try { oDriver.SwitchTo().Alert().Accept(); } catch (Exception Ex) { throw new Exception("Ocurrió un error: " + Ex.Message, Ex); }
+        }
+
+        public String ObtenerNOrdenTrabajo(IWebDriver oDriver, string idTabla, string nombreCabecera)
+        {
+            try
+            {
+                IList<IWebElement> trColeccion = oDriver.FindElement(By.Id(idTabla)).FindElements(By.XPath("id('" + idTabla + "')/tbody/tr"));
+                int posicionCabecera = 0;
+                foreach (IWebElement item in trColeccion)
+                {
+                    IList<IWebElement> tdColeccion = item.FindElements(By.XPath("td"));
+
+                    for (int j = 0; j < tdColeccion.Count; j++)
+                    {
+                        if (tdColeccion[j].Text.Contains(nombreCabecera))
+                        {
+                            posicionCabecera = j;
+                            break;
+                        }
+                        if (posicionCabecera > 0)
+                        {
+                            return tdColeccion[posicionCabecera].Text;
+                        }
+                    }
+                }
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener número de orden de trabajo: " + Ex.Message, Ex); }
+            return string.Empty;
         }
     }
 }

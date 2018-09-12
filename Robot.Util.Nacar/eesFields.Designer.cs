@@ -115,15 +115,6 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1038")]
-        public int num_vehiculos {
-            get {
-                return ((int)(this["num_vehiculos"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("24")]
         public int numero_de_dni {
             get {
@@ -943,10 +934,19 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1039")]
-        public int num_asegurados {
+        [global::System.Configuration.DefaultSettingValueAttribute("1086")]
+        public int nombre_comercial {
             get {
-                return ((int)(this["num_asegurados"]));
+                return ((int)(this["nombre_comercial"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1082")]
+        public int referencia {
+            get {
+                return ((int)(this["referencia"]));
             }
         }
         

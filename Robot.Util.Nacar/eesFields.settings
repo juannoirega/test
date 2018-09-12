@@ -32,9 +32,6 @@
     <Setting Name="tipo_vigencia" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1033</Value>
     </Setting>
-    <Setting Name="num_vehiculos" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1038</Value>
-    </Setting>
     <Setting Name="numero_de_dni" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">24</Value>
     </Setting>
@@ -308,8 +305,11 @@
     <Setting Name="actividad_economica" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1095</Value>
     </Setting>
-    <Setting Name="num_asegurados" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1039</Value>
+    <Setting Name="nombre_comercial" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1086</Value>
+    </Setting>
+    <Setting Name="referencia" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1082</Value>
     </Setting>
     <Setting Name="correo_personal" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1084</Value>
