@@ -266,7 +266,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             //Ingresar número de vehículos y asegurados:
             _cElemento = "Número Unidades/Asegurados/Bienes";
             _oDriver.FindElement(By.Id("nrounidnroasegnrocertinrobienes_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a =>
-                            a.FieldId == (oTicketDatos.TicketValues.FirstOrDefault(b => b.FieldId == eesFields.Default.tipo_de_linea).Value == _cLineaPorDefecto ? eesFields.Default.num_vehiculos : eesFields.Default.num_asegurados)).Value);
+                            a.FieldId == (oTicketDatos.TicketValues.FirstOrDefault(b => b.FieldId == eesFields.Default.tipo_de_linea).Value == _cLineaPorDefecto ? 1 : 1)).Value);
             //_oDriver.FindElement(By.Id("nrounidnroasegnrocertinrobienes_input")).SendKeys("2");           
 
             //Ingresa Nro. de Póliza:
