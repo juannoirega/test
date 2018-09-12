@@ -949,5 +949,89 @@ namespace Robot.Util.Nacar {
                 return ((int)(this["num_asegurados"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1084")]
+        public int correo_personal {
+            get {
+                return ((int)(this["correo_personal"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1092")]
+        public int indicativo_codigo_de_area {
+            get {
+                return ((int)(this["indicativo_codigo_de_area"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1093")]
+        public int telefono_de_casa {
+            get {
+                return ((int)(this["telefono_de_casa"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1082")]
+        public int referencia {
+            get {
+                return ((int)(this["referencia"]));
+            }
+            set {
+                this["referencia"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1088")]
+        public int sexo {
+            get {
+                return ((int)(this["sexo"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1089")]
+        public int estado_civil {
+            get {
+                return ((int)(this["estado_civil"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1087")]
+        public int prefijo {
+            get {
+                return ((int)(this["prefijo"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1086")]
+        public int nombre_comercial {
+            get {
+                return ((int)(this["nombre_comercial"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1094")]
+        public int fecha_de_inicio_de_actividades {
+            get {
+                return ((int)(this["fecha_de_inicio_de_actividades"]));
+            }
+        }
     }
 }

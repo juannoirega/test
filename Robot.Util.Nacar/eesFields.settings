@@ -311,5 +311,32 @@
     <Setting Name="num_asegurados" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1039</Value>
     </Setting>
+    <Setting Name="correo_personal" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1084</Value>
+    </Setting>
+    <Setting Name="indicativo_codigo_de_area" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1092</Value>
+    </Setting>
+    <Setting Name="telefono_de_casa" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1093</Value>
+    </Setting>
+    <Setting Name="referencia" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1082</Value>
+    </Setting>
+    <Setting Name="sexo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1088</Value>
+    </Setting>
+    <Setting Name="estado_civil" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1089</Value>
+    </Setting>
+    <Setting Name="prefijo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1087</Value>
+    </Setting>
+    <Setting Name="nombre_comercial" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1086</Value>
+    </Setting>
+    <Setting Name="fecha_de_inicio_de_actividades" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1094</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
