@@ -931,5 +931,23 @@ namespace Robot.Util.Nacar {
                 return ((int)(this["actividad_economica"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1086")]
+        public int nombre_comercial {
+            get {
+                return ((int)(this["nombre_comercial"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1082")]
+        public int referencia {
+            get {
+                return ((int)(this["referencia"]));
+            }
+        }
     }
 }

@@ -229,7 +229,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 }
                 else
                 {
-                    _numeroOrdenTrabajo= ObtenerNOrdenTrabajo(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "N.° de orden de trabajo");
+                    _numeroOrdenTrabajo= _Funciones.ObtenerNOrdenTrabajo(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "N.° de orden de trabajo");
                 }
             }
             catch (Exception ex)
@@ -294,6 +294,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             }
             else { throw new Exception("No se encontro la opcion documentos"); }
         }
+
         private void GetParameterRobots()
         {
             _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
@@ -308,39 +309,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             _plantillaRechazo = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaRechazo").ValueParam);
             LogEndStep(4);
         }
-        public string ObtenerNOrdenTrabajo(IWebDriver _driver, string idTabla, string cabecera)
-        {
-            string valor = string.Empty;
-            try
-            {
-                IList<IWebElement> _trColeccion = _driver.FindElement(By.Id(idTabla)).FindElements(By.XPath("id('" + idTabla + "')/tbody/tr"));
-                int _posicionCabecera = 0;
-                foreach (IWebElement item in _trColeccion)
-                {
-                    IList<IWebElement> _td = item.FindElements(By.XPath("td"));
 
-                    for (int j = 0; j < _td.Count; j++)
-                    {
-                        string _Cabecera = _td[j].Text;
-                        if (_Cabecera.Contains(cabecera))
-                        {
-                            _posicionCabecera = j;
-                            break;
-                        }
-                        if (_posicionCabecera > 0)
-                        {
-                            string _valorFila = _td[_posicionCabecera].Text;
-                            return valor = _valorFila;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Ocurrio un error al obtener el numero de orden de trabajo", ex);
-            }
-            return valor;
-        }
         private void GuardarInformacionTicket(Ticket ticket)
         {
             ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.num_orden_trabajo, Value = _numeroOrdenTrabajo });

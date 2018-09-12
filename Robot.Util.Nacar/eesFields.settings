@@ -305,5 +305,11 @@
     <Setting Name="actividad_economica" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1095</Value>
     </Setting>
+    <Setting Name="nombre_comercial" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1086</Value>
+    </Setting>
+    <Setting Name="referencia" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1082</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

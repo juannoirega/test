@@ -45,6 +45,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private static string _cLineaAlianzas = string.Empty;
         private static string _cLineaLLPP = string.Empty;
         private static string _cLinea = string.Empty;
+        private static string _nombreCabecera = string.Empty;
+        private static string _cNombreOferta = string.Empty;
         List<TicketValue> ticketValue = null;
         private static Functions _Funciones;
         private static StateAction _oMesaControl;
@@ -101,6 +103,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _cLineaAlianzas = _oRobot.GetValueParamRobot("LineaAlianzas").ValueParam;
                 _cLineaLLPP = _oRobot.GetValueParamRobot("LineaLLPP").ValueParam;
                 _cComentariosAdicionales = _oRobot.GetValueParamRobot("ComentariosAdicionales").ValueParam;
+                _nombreCabecera = _oRobot.GetValueParamRobot("NombreCabeceraEndoso").ValueParam;
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener parámetros del Robot: " + Ex.Message, Ex); }
         }
@@ -455,7 +458,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             try
             {
-                int[] oCampos = new int[] { eesFields.Default.nombre_contratante, eesFields.Default.asegurado_nombre,
+                int[] oCampos = new int[] { eesFields.Default.asegurado_nombre,
                                             eesFields.Default.email_solicitante, eesFields.Default.fecha_hora_de_email,
                                             eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia};
 
@@ -475,21 +478,27 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     //Busca datos de Póliza por Nro. de Póliza:
                     _cElemento = "Buscar póliza";
                     _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_nro).Value);
+
+                    //Obtener nombre de la oferta:
+                    _cNombreOferta = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering")).Text;
+
                     IniciarCambioPoliza(oTicketDatos);
                     FormularioCambioPoliza(oTicketDatos);
-                    SeleccionarOferta(oTicketDatos);
-
-                    //Clic en Nombre del asegurado:
-                    _cElemento = "Nombre del Asegurado";
-                    _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:Name")).Click();
-                    _Funciones.Esperar(7);
+                    if (_cNombreOferta.Length > 0) { SeleccionarOferta(oTicketDatos); }
 
                     //Método para actualizar datos:
-                    FormularioEditarCuenta(oTicketDatos);
-
+                    if(Convert.ToBoolean(Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_contacto).Value)))
+                    {
+                        //Es persona:
+                        FormularioEditarCuentaPersona(oTicketDatos);
+                    }else { FormularioEditarCuentaEmpresa(oTicketDatos); }
+                    
                     if (AnalisisDeRiesgos())
                     {
                         ConfirmarTrabajo();
+
+                        //Obtener orden de trabajo del endoso realizado:
+                        _Funciones.ObtenerNOrdenTrabajo(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", _nombreCabecera);
                     }
                     else
                     {
@@ -498,6 +507,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                         _driverGlobal.FindElement(By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:WithdrawJob")).Click();
                         _Funciones.VentanaMensajeWeb(_driverGlobal);
                         _Funciones.Esperar(6);
+
+                        CambiarEstadoTicket(oTicketDatos, _oMesaControl, "Ocurrió un error al registrar endoso para " + _cLinea);
                     }
                 }
                 else if (_cLinea == _cLineaRRGG)
@@ -544,7 +555,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:Name")).Click();
                     _Funciones.Esperar(8);
 
-                    FormularioEditarCuenta(oTicketDatos);
+                    FormularioEditarCuentaPersona(oTicketDatos);
 
                     if (AnalisisDeRiesgos())
                     {
@@ -562,10 +573,10 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 else if (_cLinea == _cLineaLLPP)
                 {
                     IniciarCambioPoliza(oTicketDatos, false);
-                    FormularioEditarCuenta(oTicketDatos);
+                    FormularioEditarCuentaPersona(oTicketDatos);
 
                     //Verificar si los datos son correctos:
-                    if (_Funciones.ExisteElemento(_driverGlobal, "EditAccountPopup:EditAccountScreen:_msgs_msgs", 2)) { FormularioEditarCuenta(oTicketDatos); }
+                    if (_Funciones.ExisteElemento(_driverGlobal, "EditAccountPopup:EditAccountScreen:_msgs_msgs", 2)) { FormularioEditarCuentaPersona(oTicketDatos); }
                 }
             }
             catch (Exception Ex) { LogFailStep(12, Ex); throw new Exception(Ex.Message + " :" + _cElemento, Ex); }
@@ -653,7 +664,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 {
                     //Seleccionar oferta:
                     _cElemento = "Seleccionar oferta";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "PolicyChangeWizard:OfferingScreen:OfferingSelection", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == 3).Value);
+                    _Funciones.SeleccionarCombo(_driverGlobal, "PolicyChangeWizard:OfferingScreen:OfferingSelection", _cNombreOferta);
 
                     //Clic en Siguiente:
                     _cElemento = "Botón siguiente";
@@ -806,6 +817,11 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             try
             {
+                //Clic en Nombre del asegurado:
+                _cElemento = "Nombre del Asegurado";
+                _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:Name")).Click();
+                _Funciones.Esperar(7);
+
                 if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.pais_de_procedencia).Value.Length > 0)
                 {
                     //País de procedencia:
@@ -821,7 +837,12 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:PolicyContactRoleNameInputSet:CompanyName")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.razon_social).Value);
                 }
 
-                //Nombre comercial:
+                if(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_comercial).Value.Length > 0)
+                {
+                    //Nombre comercial:
+                    _cElemento = "Nombre comercial";
+                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:PolicyContactRoleNameInputSet:CommercialNameExt")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_comercial).Value);
+                }
 
                 if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.sector_economico).Value.Length > 0)
                 {
@@ -838,17 +859,99 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _Funciones.SeleccionarCombo(_driverGlobal, "EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:PolicyContactRoleNameInputSet:EconomicActivity", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.actividad_economica).Value);
                 }
 
-                //Por confirmar Teléfono principal:
-
-                if(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.pais_del_telefono).Value.Length > 0)
+                //Dirección:
+                if(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_direccion).Value.Length > 0)
                 {
-                    //Código país:
-                    _cElemento = "Código país";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:PolicyContactRoleNameInputSet:PhoneContactInputSet:CountryWorkTelephone", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.pais_del_telefono).Value);
+                    //Tipo de dirección:
+                    _cElemento = "Tipo de dirección";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_AddressType", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_direccion).Value);
+                }
+
+                if(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.pais).Value.Length > 0)
+                {
+                    //País:
+                    _cElemento = "País";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_Country", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.pais).Value);
                     _Funciones.Esperar(3);
                 }
 
-                if()
+                if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.departamento).Value.Length > 0)
+                {
+                    //Departamento:
+                    _cElemento = "Departamento";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_Department", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.departamento).Value);
+                    _Funciones.Esperar(3);
+                }
+
+                if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.provincia).Value.Length > 0)
+                {
+                    //Provincia:
+                    _cElemento = "Provincia";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_Province", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.provincia).Value);
+                    _Funciones.Esperar(3);
+                }
+
+                if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.distrito).Value.Length > 0)
+                {
+                    //Distrito:
+                    _cElemento = "Distrito";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_District", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.distrito).Value);
+                    _Funciones.Esperar(4);
+                }
+
+                if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_calle).Value.Length > 0)
+                {
+                    //Tipo de calle:
+                    _cElemento = "Tipo de calle";
+                    _Funciones.SeleccionarCombo(_driverGlobal, "EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_StreetType", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_calle).Value);
+                    _Funciones.Esperar(4);
+                }
+
+                if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_de_la_calle).Value.Length > 0)
+                {
+                    //Nombre de la calle:
+                    _cElemento = "Nombre de la calle";
+                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_AddressLine1")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_de_la_calle).Value);
+                }
+
+                if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero).Value.Length > 0)
+                {
+                    //Número:
+                    _cElemento = "Número";
+                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_AddressLine2")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero).Value);
+                }
+
+                if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.referencia).Value.Length > 0)
+                {
+                    //Referencia:
+                    _cElemento = "Referencia";
+                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_AddressLine3")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.referencia).Value);
+                }
+
+                //Finalizar formulario:
+                //Clic en botón Aceptar:
+                _cElemento = "Botón Aceptar";
+                _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Update")).Click();
+                _Funciones.Esperar(5);
+
+                if(_Funciones.ExisteElemento(_driverGlobal, "EditPolicyContactRolePopup:ContactDetailScreen:_msgs_msgs"))
+                {
+                    //Clic en Cancelar:
+                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Cancel")).Click();
+                    _Funciones.Esperar(4);
+                    FormularioEditarCuentaEmpresa(oTicketDatos);
+                }else
+                {
+                    //Clic en Cotización:
+                    _cElemento = "Botón Cotización";
+                    _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:JobWizardToolbarButtonSet:QuoteOrReview")).Click();
+                    _Funciones.Esperar(8);
+
+                    //Clic en botón Detalles:
+                    _cElemento = "Botón Detalles";
+                    _driverGlobal.FindElement(By.Id("UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton")).Click();
+                    _Funciones.Esperar(2);
+                }
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error en formulario Editar Cuenta: " + Ex.Message + " " + _cElemento, Ex); }
         }
@@ -968,16 +1071,23 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_AddressLine2")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero).Value);
                 }
 
+                if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.referencia).Value.Length > 0)
+                {
+                    //Referencia:
+                    _cElemento = "Referencia";
+                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_AddressLine3")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.referencia).Value);
+                }
+
                 //Finalizar formulario:
                 //Clic en botón Aceptar:
                 _cElemento = "Botón Aceptar";
                 _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Update")).Click();
-                _Funciones.Esperar(3);
+                _Funciones.Esperar(10);
 
                 //Clic en Cotización:
                 _cElemento = "Botón Cotización";
                 _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:JobWizardToolbarButtonSet:QuoteOrReview")).Click();
-                _Funciones.Esperar(10);
+                _Funciones.Esperar(8);
 
                 //Clic en botón Detalles:
                 _cElemento = "Botón Detalles";
@@ -1030,7 +1140,13 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 //Clic en Cotización:
                 _cElemento = "Botón Cotización";
                 _driverGlobal.FindElement(By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:QuoteOrReview")).Click();
-                _Funciones.Esperar(10);
+                _Funciones.Esperar(8);
+
+                //Pendiente confirmar botón Reescribir prima y comisiones:
+                if (true)
+                {
+
+                }
 
                 //Clic en Confirmar trabajo:
                 _cElemento = "Botón Confirmar trabajo";
