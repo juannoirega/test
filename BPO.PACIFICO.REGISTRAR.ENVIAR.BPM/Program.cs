@@ -154,7 +154,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         {
             try
             {
-                int[] oCampos = new int[] { eesFields.Default.nombre_contratante, eesFields.Default.asegurado_nombre,
+                int[] oCampos = new int[] { eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre,
                                             eesFields.Default.email_solicitante, eesFields.Default.fecha_hora_de_email,
                                             eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia};
 
@@ -285,7 +285,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             //_oDriver.FindElement(By.Id("vigenciaendoso_fin_input")).SendKeys("15/08/2025" + Keys.Tab);            
 
             //Nombre del Contratante:
-            _oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value.ToUpper());
+            _oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.cuenta_nombre).Value.ToUpper());
             //_oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys("CARLOS REYES");
             _cElemento = "Nombre Contratante";
 

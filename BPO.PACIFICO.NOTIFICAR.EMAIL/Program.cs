@@ -88,7 +88,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
             if (TipoProceso.Value == "Plantilla Conforme Anulación Póliza" || TipoProceso.Value == "Plantilla Rechazo Anulación Póliza")
             {
-                _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_contratante).Value;
+                _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.cuenta_nombre).Value;
                 _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
             }
             else if (TipoProceso.Value == "Plantilla Conforme Rehabilitación" || TipoProceso.Value == "Plantilla Rechazo Rehabilitación")

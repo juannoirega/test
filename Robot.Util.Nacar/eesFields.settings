@@ -5,9 +5,6 @@
     <Setting Name="asegurado_nombre" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">23</Value>
     </Setting>
-    <Setting Name="nombre_contratante" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">19</Value>
-    </Setting>
     <Setting Name="tipo_poliza" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">26</Value>
     </Setting>
@@ -23,26 +20,17 @@
     <Setting Name="vobo_producto" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1026</Value>
     </Setting>
-    <Setting Name="estado_poliza" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1032</Value>
-    </Setting>
     <Setting Name="fecha_hora_de_email" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">15</Value>
     </Setting>
     <Setting Name="canal" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1123</Value>
+      <Value Profile="(Default)">13</Value>
     </Setting>
     <Setting Name="agente" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="num_agente" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1036</Value>
-    </Setting>
     <Setting Name="tipo_vigencia" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1033</Value>
-    </Setting>
-    <Setting Name="num_asegurados" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1039</Value>
     </Setting>
     <Setting Name="num_vehiculos" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1038</Value>
@@ -310,6 +298,18 @@
     </Setting>
     <Setting Name="reglas_observacion" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1143</Value>
+    </Setting>
+    <Setting Name="sector_economico" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1096</Value>
+    </Setting>
+    <Setting Name="razon_social" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1085</Value>
+    </Setting>
+    <Setting Name="actividad_economica" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1095</Value>
+    </Setting>
+    <Setting Name="num_asegurados" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1039</Value>
     </Setting>
   </Settings>
 </SettingsFile>

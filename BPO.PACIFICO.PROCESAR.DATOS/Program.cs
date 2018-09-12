@@ -220,7 +220,7 @@ namespace RobotProcesarTicket
         private void CondicionalesAnulacionPoliza(Ticket oTicketDatos)
         {
             //Campos para Validar:
-            int[] oCampos = new int[] {eesFields.Default.nombre_contratante, eesFields.Default.asegurado_nombre, eesFields.Default.fecha_hora_de_email,
+            int[] oCampos = new int[] {eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre, eesFields.Default.fecha_hora_de_email,
                                             eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
                                             eesFields.Default.poliza_est, eesFields.Default.tipo_vigencia};
 
