@@ -19,6 +19,7 @@ namespace BPO.PACIFICO.REHABILITAR
         private string _urlPolicyCenter = string.Empty;
         private string _usuarioPolicyCenter = string.Empty;
         private string _contraseñaPolicyCenter = string.Empty;
+        private string _pasoRealizado = string.Empty;
         private int _estadoError;
         private int _estadoFinal;
         #endregion
@@ -96,24 +97,31 @@ namespace BPO.PACIFICO.REHABILITAR
 
         private void RehabilitarPoliza(Ticket ticket)
         {
-            LogStartStep(2);//Falta crear mensaje id referencial
+            LogStartStep(44);
             try
             {
                 _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
                 if (_Funciones.ExisteElemento(_driverGlobal, "PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ReinstatePolicy", 2))
                 {
+                    _pasoRealizado = "Pestaña rehabilitar";
                     _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ReinstatePolicy")).Click();
                     _Funciones.Esperar(5);
 
                     string _descripcionMotivo = "";
 
+                    _pasoRealizado = "Seleccionar motivo rehabilitar";
                     _Funciones.SeleccionarCombo(_driverGlobal, "ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:ReinstatePolicyDV:Reason", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.motivo_rehabilitar).Value)));
                     _Funciones.Esperar(2);
 
+                    _pasoRealizado = "Ingresar descripcion";
                     _driverGlobal.FindElement(By.Id("ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:ReinstatePolicyDV:ReasonDescription")).SendKeys(_descripcionMotivo);
                     _Funciones.Esperar(2);
+
+                    _pasoRealizado = "Boton cotizacion";
                     _driverGlobal.FindElement(By.XPath("//*[@id='ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:JobWizardToolbarButtonSet:QuoteOrReview']/span[2]")).Click();
                     _Funciones.Esperar(2);
+
+                    _pasoRealizado = "Boton rehabilitar";
                     _driverGlobal.FindElement(By.Id("ReinstatementWizard:ReinstatementWizard_QuoteScreen:JobWizardToolbarButtonSet:Reinstate")).Click();
                     _Funciones.Esperar(1);
                     _driverGlobal.SwitchTo().Alert().Accept();
@@ -121,16 +129,27 @@ namespace BPO.PACIFICO.REHABILITAR
 
                     if (_Funciones.ExisteElementoXPath(_driverGlobal, "//*[@id='UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton']/span[2]", 2))
                     {
+                        _pasoRealizado = "Boton detalle";
                         _driverGlobal.FindElement(By.XPath("//*[@id='UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton']/span[2]")).Click();
                         _Funciones.Esperar(3);
+
+                        _pasoRealizado = "Check requiere rehabilitacion";
                         _driverGlobal.FindElement(By.Id("ReinstatementWizard:Job_RiskAnalysisScreen:RiskAnalysisCV:RiskEvaluationPanelSet:1:UWIssueRowSet:_Checkbox")).Click();
                         _Funciones.Esperar(2);
+
+                        _pasoRealizado = "Boton aprobar";
                         _driverGlobal.FindElement(By.XPath("//*[@id='ReinstatementWizard:Job_RiskAnalysisScreen:RiskAnalysisCV:RiskEvaluationPanelSet:Approve']/span[2]")).Click();
                         _Funciones.Esperar(2);
+
+                        _pasoRealizado = "Check permitir edicion";
                         _driverGlobal.FindElement(By.Id("RiskApprovalDetailsPopup:0:IssueDetailsDV:UWApprovalLV:EditBeforeBind_true")).Click();
                         _Funciones.Esperar(3);
+
+                        _pasoRealizado = "Boton aceptar";
                         _driverGlobal.FindElement(By.XPath("//*[@id='RiskApprovalDetailsPopup:Update']/span[2]")).Click();
                         _Funciones.Esperar(2);
+
+                        _pasoRealizado = "Boton rehabilitar";
                         _driverGlobal.FindElement(By.Id("ReinstatementWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:Reinstate")).Click();
                         _driverGlobal.SwitchTo().Alert().Accept();
                     }
@@ -144,7 +163,7 @@ namespace BPO.PACIFICO.REHABILITAR
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al Rehabilitar la poliza en el sistema policycenter", ex);
+                LogFailStep(12, ex); throw new Exception(ex.Message + " :" + _pasoRealizado, ex);
             }
         }
 
