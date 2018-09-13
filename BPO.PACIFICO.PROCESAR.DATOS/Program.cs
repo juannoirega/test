@@ -220,7 +220,7 @@ namespace RobotProcesarTicket
         private void CondicionalesAnulacionPoliza(Ticket oTicketDatos)
         {
             //Campos para Validar:
-            int[] oCampos = new int[] {eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre, eesFields.Default.email_fecha_hora,
+            int[] oCampos = new int[] {eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre, eesFields.Default.fec_solicitud,
                                        eesFields.Default.tipo_poliza,eesFields.Default.poliza_fec_ini_vig,eesFields.Default.poliza_fec_fin_vig,
                                        eesFields.Default.poliza_est, eesFields.Default.poliza_tipo_vig};
 
@@ -279,7 +279,7 @@ namespace RobotProcesarTicket
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
-                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fec_s).Value)
+                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fec_solicitud).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value);
 
                     msgConforme = "La poliza se encuentra en estado: " + estadoPoliza + ". " + msgConforme;
@@ -368,7 +368,7 @@ namespace RobotProcesarTicket
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
-                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.email_fecha_hora).Value)
+                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fec_solicitud).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value);
 
                     msgConforme = "La poliza se encuentra en estado: " + estadoPoliza + ". " + msgConforme;
