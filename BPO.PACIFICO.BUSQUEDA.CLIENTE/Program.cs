@@ -231,52 +231,52 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             try
             {
                 //Nacionalidad
-                InsertarValoresFielt(ticket, 1066, optenerNacionalidad());
+                InsertarValoresFielt(ticket, eesFields.Default.nacionalidad, optenerNacionalidad());
                 //País de procedencia
-                InsertarValoresFielt(ticket, 1067, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:CountryOfOriginExt"));
+                InsertarValoresFielt(ticket, eesFields.Default.pais_de_procedencia, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:CountryOfOriginExt"));
 
 
                 if (_valoresTickets[0] != "")
                 {
                     //Nombre (s)
-                    InsertarValoresFielt(ticket, 1068, ExtraerDatosXPath(0, 4, "textBox"));
+                    InsertarValoresFielt(ticket, eesFields.Default.nombre, ExtraerDatosXPath(0, 4, "textBox"));
                     //Apellido Paterno
-                    InsertarValoresFielt(ticket, 1070, ExtraerDatosXPath(0, 5, "textBox"));
+                    InsertarValoresFielt(ticket, eesFields.Default.apellido_paterno, ExtraerDatosXPath(0, 5, "textBox"));
                     //Apellido Materno
-                    InsertarValoresFielt(ticket, 1069, ExtraerDatosXPath(0, 6, "textBox"));
-                    //Apellido Materno
-                    InsertarValoresFielt(ticket, 1072, ExtraerDatosXPath(0, 8, "textBox"));
+                    InsertarValoresFielt(ticket, eesFields.Default.apellido_materno, ExtraerDatosXPath(0, 6, "textBox"));
+                    //eesFields.Default.
+                    InsertarValoresFielt(ticket, eesFields.Default.nombre_corto, ExtraerDatosXPath(0, 8, "textBox"));
                     //Prefijo
-                    InsertarValoresFielt(ticket, 1087, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:Prefix"));
+                    InsertarValoresFielt(ticket, eesFields.Default.prefijo, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:Prefix"));
                     //Fecha de nacimiento
-                    InsertarValoresFielt(ticket, 1083, ExtraerDatosXPath(5, 5, "textBox"));
+                    InsertarValoresFielt(ticket, eesFields.Default.fecha_de_nacimiento, ExtraerDatosXPath(5, 5, "textBox"));
                     //Sexo
-                    InsertarValoresFielt(ticket, 1088, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPersonVendorInputSet:Gender"));
+                    InsertarValoresFielt(ticket, eesFields.Default.sexo, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPersonVendorInputSet:Gender"));
                     //Estado civil                                         
-                    InsertarValoresFielt(ticket, 1089, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPersonVendorInputSet:MaritalStatus"));
+                    InsertarValoresFielt(ticket, eesFields.Default.estado_civil, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPersonVendorInputSet:MaritalStatus"));
                     //Correo Personal;                                     
-                    InsertarValoresFielt(ticket, 1084, ExtraerDatosXPath(0, 41, "textBox"));
+                    InsertarValoresFielt(ticket, eesFields.Default.correo_personal, ExtraerDatosXPath(0, 41, "textBox"));
                     //Distrito
-                    InsertarValoresFielt(ticket, 1078, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_District"));
+                    InsertarValoresFielt(ticket, eesFields.Default.distrito, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_District"));
 
                 }
 
                 if (_valoresTickets[1] != "")
                 {
                     //Razón Social
-                    InsertarValoresFielt(ticket, 1085, ExtraerDatosXPath(0, 4, "textBox"));
+                    InsertarValoresFielt(ticket, eesFields.Default.razon_social, ExtraerDatosXPath(0, 4, "textBox"));
                     //Nombre comercial 
-                    InsertarValoresFielt(ticket, 1086, ExtraerDatosXPath(0, 5, "textBox"));
+                    InsertarValoresFielt(ticket, eesFields.Default.nombre_comercial, ExtraerDatosXPath(0, 5, "textBox"));
                     //Fecha de inicio de Actividades;
-                    InsertarValoresFielt(ticket, 1094, ExtraerDatosXPath(6, 5, "textBox"));
+                    InsertarValoresFielt(ticket, eesFields.Default.fecha_de_inicio_de_actividades, ExtraerDatosXPath(6, 5, "textBox"));
                     //Actividad económica
-                    InsertarValoresFielt(ticket, 1095, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:EconomicSectorActivityInputSet:EconomicSubSectorExt"));
+                    InsertarValoresFielt(ticket, eesFields.Default.actividad_economica, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:EconomicSectorActivityInputSet:EconomicSubSectorExt"));
                     //Sector Económico                                     
-                    InsertarValoresFielt(ticket, 1096, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:EconomicSectorActivityInputSet:EconomicSectorExt"));
+                    InsertarValoresFielt(ticket, eesFields.Default.sector_economico, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:EconomicSectorActivityInputSet:EconomicSectorExt"));
                     //Correo Personal;
-                    InsertarValoresFielt(ticket, 1084, ExtraerDatosXPath(0, 38, "textBox"));
+                    InsertarValoresFielt(ticket, eesFields.Default.correo_personal, ExtraerDatosXPath(0, 38, "textBox"));
                     //Distrito
-                    InsertarValoresFielt(ticket, 1078, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:abc"));
+                    InsertarValoresFielt(ticket, eesFields.Default.distrito, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:abc"));
 
                 }
 
@@ -285,26 +285,26 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 //InsertarValoresFielt(ticket, 1067, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPhoneDetailsInputSet:PrimaryPhone"));
 
                 //País del teléfono
-                InsertarValoresFielt(ticket, 1090, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPhoneDetailsInputSet:CellPhoneCountry"));
+                InsertarValoresFielt(ticket, eesFields.Default.pais_del_telefono, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPhoneDetailsInputSet:CellPhoneCountry"));
                 //Indicativo(código de área)                           
-                InsertarValoresFielt(ticket, 1092, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPhoneDetailsInputSet:HomeAreaCodeExtPeru"));
+                InsertarValoresFielt(ticket, eesFields.Default.indicativo_codigo_de_area, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPhoneDetailsInputSet:HomeAreaCodeExtPeru"));
                 //Teléfono de Casa  
-                InsertarValoresFielt(ticket, 1093, ExtraerDatosXPath(0, 18, "textBox"));
+                InsertarValoresFielt(ticket, eesFields.Default.telefono_de_casa, ExtraerDatosXPath(0, 18, "textBox"));
 
                 //País
-                InsertarValoresFielt(ticket, 1075, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Country"));
+                InsertarValoresFielt(ticket, eesFields.Default.pais, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Country"));
                 //Departamento                                       
-                InsertarValoresFielt(ticket, 1076, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Department"));
+                InsertarValoresFielt(ticket, eesFields.Default.departamento, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Department"));
                 //Provincia
-                InsertarValoresFielt(ticket, 1077, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Province"));
+                InsertarValoresFielt(ticket, eesFields.Default.provincia, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Province"));
                 //Tipo de calle                                     
-                InsertarValoresFielt(ticket, 1079, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_StreetType"));
+                InsertarValoresFielt(ticket, eesFields.Default.tipo_de_calle, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_StreetType"));
                 //Nombre de la calle                                     
-                InsertarValoresFielt(ticket, 1080, ExtraerDatosXPath(0, 53, "textBox"));
+                InsertarValoresFielt(ticket, eesFields.Default.nombre_de_la_calle, ExtraerDatosXPath(0, 53, "textBox"));
                 //Número
-                InsertarValoresFielt(ticket, 1081, ExtraerDatosXPath(0, 54, "textBox"));
+                InsertarValoresFielt(ticket, 1081, ExtraerDatosXPath(0, eesFields.Default.numero, "textBox"));
                 //Referencia
-                InsertarValoresFielt(ticket, 1082, ExtraerDatosXPath(0, 55, "textBox"));
+                InsertarValoresFielt(ticket, 1082, ExtraerDatosXPath(0, eesFields.Default.referencia, "textBox"));
 
                 _robot.SaveTicketNextState(ticket, Convert.ToInt32(_EstadoSiguiente));
             }
