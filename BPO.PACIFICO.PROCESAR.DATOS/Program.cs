@@ -199,7 +199,7 @@ namespace RobotProcesarTicket
                     msgObservacion = "Se debe anular por lo acordado con el operador." + msgObservacion;
                 }
                 //Reglas Conforme
-                oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.tipo_de_linea, Value = _cLinea });
+                oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.linea, Value = _cLinea });
 
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener Línea de Negocio: " + Ex.Message, Ex); }

@@ -250,10 +250,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("27")]
-        public int tipo_de_linea {
+        [global::System.Configuration.DefaultSettingValueAttribute("32")]
+        public int linea {
             get {
-                return ((int)(this["tipo_de_linea"]));
+                return ((int)(this["linea"]));
             }
         }
         

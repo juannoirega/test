@@ -64,7 +64,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 {
                     _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdEstadoError);
                     _oRegistro = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdEstadoFinal);
-                    _cLineaTicket = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_linea).Value));
+                    _cLineaTicket = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.linea).Value));
                     ProcesarTicket(oTicket);
                 }
                 catch (Exception Ex)
@@ -234,7 +234,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             _oDriver.FindElement(By.XPath("//*[@id='linea_negocio']/button")).Click();
             _Funciones.Esperar();
             _cElemento = "Línea de Negocio";
-            string cLinea = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_linea).Value));
+            string cLinea = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.linea).Value));
             _Funciones.SeleccionarListBox(_oDriver, "//body/ul[2]/li/a", cLinea);
 
             //Selecciona Producto:
@@ -266,7 +266,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             //Ingresar número de vehículos y asegurados:
             _cElemento = "Número Unidades/Asegurados/Bienes";
             _oDriver.FindElement(By.Id("nrounidnroasegnrocertinrobienes_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a =>
-                            a.FieldId == (oTicketDatos.TicketValues.FirstOrDefault(b => b.FieldId == eesFields.Default.tipo_de_linea).Value == _cLineaPorDefecto ? 1 : 1)).Value);
+                            a.FieldId == (oTicketDatos.TicketValues.FirstOrDefault(b => b.FieldId == eesFields.Default.linea).Value == _cLineaPorDefecto ? 1 : 1)).Value);
             //_oDriver.FindElement(By.Id("nrounidnroasegnrocertinrobienes_input")).SendKeys("2");           
 
             //Ingresa Nro. de Póliza:
