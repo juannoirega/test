@@ -155,7 +155,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             try
             {
                 int[] oCampos = new int[] { eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre,
-                                            eesFields.Default.email_solicitante, eesFields.Default.fecha_hora_de_email,
+                                            eesFields.Default.email_de, eesFields.Default.fecha_hora_de_email,
                                             eesFields.Default.poliza_fec_ini_vig, eesFields.Default.poliza_fec_fin_vig};
 
                 return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
@@ -304,7 +304,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
             //Email de Notificación:
             _cElemento = "Email Principal para notificación";
-            _oDriver.FindElement(By.Id("emailnotificacionprincipal_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value);
+            _oDriver.FindElement(By.Id("emailnotificacionprincipal_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_de).Value);
             //_oDriver.FindElement(By.Id("emailnotificacionprincipal_input")).SendKeys("algunos_son_malos@pacificoseguros.com.pe");
 
             //Adjuntar documentos:
@@ -317,7 +317,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
             //Email de solicitante:
             _cElemento = "Email de solicitante";
-            if (_oDriver.FindElement(By.Id("emailsolicitante_input")).Text.Length == 0) _oDriver.FindElement(By.Id("emailsolicitante_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value);
+            if (_oDriver.FindElement(By.Id("emailsolicitante_input")).Text.Length == 0) _oDriver.FindElement(By.Id("emailsolicitante_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_de).Value);
             //if (_oDriver.FindElement(By.Id("emailsolicitante_input")).Text.Length == 0) _oDriver.FindElement(By.Id("emailsolicitante_input")).SendKeys("algunos_son_malos@pacificoseguros.com.pe");
 
             //Guardar y enviar:

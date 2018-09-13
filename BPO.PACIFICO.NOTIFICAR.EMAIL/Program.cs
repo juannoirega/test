@@ -103,7 +103,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
 
             //Correos 
-            _valoresTicket[3] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_solicitante).Value;
+            _valoresTicket[3] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_de).Value;
             //Correos Copias
             _valoresTicket[4] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_cc).Value;
 

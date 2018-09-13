@@ -241,10 +241,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("13")]
-        public int email_solicitante {
+        [global::System.Configuration.DefaultSettingValueAttribute("44")]
+        public int email_de {
             get {
-                return ((int)(this["email_solicitante"]));
+                return ((int)(this["email_de"]));
             }
         }
         
