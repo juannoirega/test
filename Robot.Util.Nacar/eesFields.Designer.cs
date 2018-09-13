@@ -107,9 +107,9 @@ namespace Robot.Util.Nacar {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("41")]
-        public int asunto_de_email {
+        public int email_asunto {
             get {
-                return ((int)(this["asunto_de_email"]));
+                return ((int)(this["email_asunto"]));
             }
         }
         

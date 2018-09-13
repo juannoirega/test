@@ -29,7 +29,7 @@
     <Setting Name="numero_de_dni" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">24</Value>
     </Setting>
-    <Setting Name="asunto_de_email" Type="System.Int32" Scope="Application">
+    <Setting Name="email_asunto" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">41</Value>
     </Setting>
     <Setting Name="aplica_prorrata" Type="System.Int32" Scope="Application">
