@@ -96,7 +96,7 @@
       <Value Profile="(Default)">1051</Value>
     </Setting>
     <Setting Name="observacion" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1037</Value>
+      <Value Profile="(Default)">58</Value>
     </Setting>
     <Setting Name="upload_file" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1042</Value>

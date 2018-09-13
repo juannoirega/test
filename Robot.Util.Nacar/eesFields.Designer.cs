@@ -304,7 +304,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1037")]
+        [global::System.Configuration.DefaultSettingValueAttribute("58")]
         public int observacion {
             get {
                 return ((int)(this["observacion"]));
