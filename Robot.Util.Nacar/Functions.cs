@@ -612,5 +612,34 @@ namespace Robot.Util.Nacar
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener número de orden de trabajo: " + Ex.Message, Ex); }
             return string.Empty;
         }
+
+        public int ObtenerFilasTablaHTML(IWebDriver oDriver, string idTabla, string nombreCabecera = "")
+        {
+            try
+            {
+                IList<IWebElement> oFilas = oDriver.FindElement(By.Id(idTabla)).FindElements(By.XPath("id('" + idTabla + "')/tbody/tr"));
+                int posicionCabecera = 0;
+
+                foreach (IWebElement nItem in oFilas)
+                {
+                    IList<IWebElement> oCeldas = nItem.FindElements(By.XPath("td"));
+
+                    for (int j = 0; j < oCeldas.Count; j++)
+                    {
+                        if (oCeldas[j].Text.Contains(nombreCabecera))
+                        {
+                            posicionCabecera = j;
+                            break;
+                        }
+                        if (posicionCabecera > 0)
+                        {
+                            return 0;
+                        }
+                    }
+                }
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener número de filas: " + Ex.Message, Ex); }
+            return 0;
+        }
     }
 }
