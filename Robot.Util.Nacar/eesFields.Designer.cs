@@ -178,19 +178,19 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1029")]
-        public int estado_hijo {
+        [global::System.Configuration.DefaultSettingValueAttribute("52")]
+        public int id_est_hijo {
             get {
-                return ((int)(this["estado_hijo"]));
+                return ((int)(this["id_est_hijo"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1027")]
-        public int estado_padre {
+        [global::System.Configuration.DefaultSettingValueAttribute("54")]
+        public int id_est_padre {
             get {
-                return ((int)(this["estado_padre"]));
+                return ((int)(this["id_est_padre"]));
             }
         }
         
