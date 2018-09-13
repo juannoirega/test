@@ -968,18 +968,6 @@ namespace Robot.Util.Nacar {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1082")]
-        public int referencia1 {
-            get {
-                return ((int)(this["referencia1"]));
-            }
-            set {
-                this["referencia1"] = value;
-            }
-        }
-        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1088")]
@@ -1004,15 +992,6 @@ namespace Robot.Util.Nacar {
         public int prefijo {
             get {
                 return ((int)(this["prefijo"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1086")]
-        public int nombre_comercial1 {
-            get {
-                return ((int)(this["nombre_comercial1"]));
             }
         }
         
