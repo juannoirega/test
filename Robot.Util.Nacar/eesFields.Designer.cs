@@ -205,7 +205,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1030")]
+        [global::System.Configuration.DefaultSettingValueAttribute("51")]
         public int fields {
             get {
                 return ((int)(this["fields"]));
