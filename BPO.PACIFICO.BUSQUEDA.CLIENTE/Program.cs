@@ -92,9 +92,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private void AccedientoContactManager(Ticket ticket)
         {
             //Opteniendo DNI
-            _valoresTickets[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.dni).Value;
+            _valoresTickets[0] = ticket.TicketValues.First(a => a.FieldId == eesFields.Default.dni).Value;
             //Opteniendo RUC
-            _valoresTickets[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.ruc).Value;
+            _valoresTickets[1] = ticket.TicketValues.First(a => a.FieldId == eesFields.Default.ruc).Value;
 
 
             String mensajeError_Xpath = "//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div";
@@ -188,7 +188,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             if (indicador == 1)
             {
+                _Funciones.Esperar(2);
                 IngresarTextoSelect("ABContactSearch:ABContactSearchScreen:ContactSearchDV:ContactSubtype", "Persona");
+                _Funciones.Esperar(2);
                 IngresarTextoSelect("ABContactSearch:ABContactSearchScreen:ContactSearchDV:PrimaryOfficialIDTypeExt", "DNI");
                 _Funciones.Esperar(2);
                 _driverGlobal.FindElement(By.Id("ABContactSearch:ABContactSearchScreen:ContactSearchDV:TaxID")).SendKeys(Keys.Control + "e");
@@ -200,7 +202,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             }
             else
             {
+                _Funciones.Esperar(2);
                 IngresarTextoSelect("ABContactSearch:ABContactSearchScreen:ContactSearchDV:ContactSubtype", "Empresa");
+                _Funciones.Esperar(2);
                 IngresarTextoSelect("ABContactSearch:ABContactSearchScreen:ContactSearchDV:PrimaryOfficialIDTypeExt", "RUC");
                 _Funciones.Esperar(2);
                 _driverGlobal.FindElement(By.Id("ABContactSearch:ABContactSearchScreen:ContactSearchDV:TaxID")).SendKeys(Keys.Control + "e");
@@ -226,7 +230,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             try
             {
-
+                //Nacionalidad
+                InsertarValoresFielt(ticket, 1066, optenerNacionalidad());
                 //País de procedencia
                 InsertarValoresFielt(ticket, 1067, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:CountryOfOriginExt"));
 
@@ -234,7 +239,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 if (_valoresTickets[0] != "")
                 {
                     //Nombre (s)
-                    InsertarValoresFielt(ticket, 1084, ExtraerDatosXPath(0, 4, "textBox"));
+                    InsertarValoresFielt(ticket, 1068, ExtraerDatosXPath(0, 4, "textBox"));
                     //Apellido Paterno
                     InsertarValoresFielt(ticket, 1070, ExtraerDatosXPath(0, 5, "textBox"));
                     //Apellido Materno
@@ -283,19 +288,18 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 InsertarValoresFielt(ticket, 1090, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPhoneDetailsInputSet:CellPhoneCountry"));
                 //Indicativo(código de área)                           
                 InsertarValoresFielt(ticket, 1092, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPhoneDetailsInputSet:HomeAreaCodeExtPeru"));
-                //Teléfono de Casa  ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPhoneDetailsInputSet:OtherAreaCodeExtPeru
+                //Teléfono de Casa  
                 InsertarValoresFielt(ticket, 1093, ExtraerDatosXPath(0, 18, "textBox"));
 
                 //País
                 InsertarValoresFielt(ticket, 1075, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Country"));
-                //Departamento                                         ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Country
+                //Departamento                                       
                 InsertarValoresFielt(ticket, 1076, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Department"));
                 //Provincia
                 InsertarValoresFielt(ticket, 1077, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Province"));
-                //Tipo de calle                                         ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_District
+                //Tipo de calle                                     
                 InsertarValoresFielt(ticket, 1079, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_StreetType"));
-                //Nombre de la calle                                   ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_StreetType
-                //                                                     ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_StreetType     
+                //Nombre de la calle                                     
                 InsertarValoresFielt(ticket, 1080, ExtraerDatosXPath(0, 53, "textBox"));
                 //Número
                 InsertarValoresFielt(ticket, 1081, ExtraerDatosXPath(0, 54, "textBox"));
@@ -408,13 +412,43 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         }
 
-        public void CambiarNacionalidad(string Texto)
+        public String optenerNacionalidad()
         {
-            if (Texto == "Peruano (a)")
-                _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail: ABContactDetailScreen:ContactBasicsDV: NationalityExt_N']")).Click();
-            else
-                _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV:NationalityExt_E']")).Click();
+            IWebElement element;
+
+            try
+            {
+                element = _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV:NationalityExt_N']"));
+                if (element.Selected)
+                    return "Peruano (a)";
+            }
+            catch (Exception ex)
+            {
+
+                return "";
+            }
+
+            try
+            {
+                element = _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV:NationalityExt_E']"));
+                if (element.Selected)
+                    return "Extranjero (a)";
+            }
+            catch (Exception ex)
+            {
+
+                return "";
+            }
+
+
+            return "";
+
+
+            //else
+            //    .Click();
         }
+
+
 
         public void IngresarTextoSelect(String name, String texto)
         {
@@ -431,9 +465,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         }
 
+     
 
 
 
     }
 }
-
