@@ -222,7 +222,7 @@ namespace RobotProcesarTicket
             //Campos para Validar:
             int[] oCampos = new int[] {eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre, eesFields.Default.fecha_hora_de_email,
                                             eesFields.Default.tipo_poliza,eesFields.Default.poliza_fec_ini_vig,eesFields.Default.poliza_fec_fin_vig,
-                                            eesFields.Default.poliza_est, eesFields.Default.tipo_vigencia};
+                                            eesFields.Default.poliza_est, eesFields.Default.poliza_tipo_vig};
 
             //Valida Línea de la Póliza:
             if (_cLinea == _cLineaAutos)

@@ -88,15 +88,6 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1033")]
-        public int tipo_vigencia {
-            get {
-                return ((int)(this["tipo_vigencia"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("24")]
         public int numero_de_dni {
             get {
