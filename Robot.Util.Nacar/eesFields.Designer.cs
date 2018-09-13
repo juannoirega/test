@@ -943,15 +943,6 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1082")]
-        public int referencia {
-            get {
-                return ((int)(this["referencia"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1084")]
         public int correo_personal {
             get {
@@ -980,12 +971,12 @@ namespace Robot.Util.Nacar {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1082")]
-        public int referencia {
+        public int referencia1 {
             get {
-                return ((int)(this["referencia"]));
+                return ((int)(this["referencia1"]));
             }
             set {
-                this["referencia"] = value;
+                this["referencia1"] = value;
             }
         }
         
@@ -1019,9 +1010,9 @@ namespace Robot.Util.Nacar {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1086")]
-        public int nombre_comercial {
+        public int nombre_comercial1 {
             get {
-                return ((int)(this["nombre_comercial"]));
+                return ((int)(this["nombre_comercial1"]));
             }
         }
         
@@ -1031,6 +1022,18 @@ namespace Robot.Util.Nacar {
         public int fecha_de_inicio_de_actividades {
             get {
                 return ((int)(this["fecha_de_inicio_de_actividades"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1082")]
+        public int referencia {
+            get {
+                return ((int)(this["referencia"]));
+            }
+            set {
+                this["referencia"] = value;
             }
         }
     }
