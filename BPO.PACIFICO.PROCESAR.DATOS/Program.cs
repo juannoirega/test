@@ -87,9 +87,9 @@ namespace RobotProcesarTicket
             {
                 try
                 {
-                    _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Enviar Mesa Control");
+                    _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Mesa de Control");
                     _oPantallaValidacion = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Validar");
-                    _oNotificacion = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Enviar Rechazo");
+                    _oNotificacion = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Rechazar");
                     ProcesarTicket(oTicket);
                 }
                 catch (Exception Ex)
@@ -221,7 +221,7 @@ namespace RobotProcesarTicket
         {
             //Campos para Validar:
             int[] oCampos = new int[] {eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre, eesFields.Default.fecha_hora_de_email,
-                                            eesFields.Default.tipo_poliza,eesFields.Default.date_inicio_vigencia,eesFields.Default.date_fin_vigencia,
+                                            eesFields.Default.tipo_poliza,eesFields.Default.poliza_fec_ini_vig,eesFields.Default.poliza_fec_fin_vig,
                                             eesFields.Default.poliza_est, eesFields.Default.tipo_vigencia};
 
             //Valida Línea de la Póliza:
@@ -280,7 +280,7 @@ namespace RobotProcesarTicket
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
-                                            - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
+                                            - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value);
 
                     msgConforme = "La poliza se encuentra en estado: " + estadoPoliza + ". " + msgConforme;
                     //SE VERIFICA SINIESTRO
@@ -369,7 +369,7 @@ namespace RobotProcesarTicket
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
                     TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fecha_hora_de_email).Value)
-                                            - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.date_inicio_vigencia).Value);
+                                            - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value);
 
                     msgConforme = "La poliza se encuentra en estado: " + estadoPoliza + ". " + msgConforme;
                     //SE VERIFICA SINIESTRO

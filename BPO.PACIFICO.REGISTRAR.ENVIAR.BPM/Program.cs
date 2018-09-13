@@ -156,7 +156,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             {
                 int[] oCampos = new int[] { eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre,
                                             eesFields.Default.email_solicitante, eesFields.Default.fecha_hora_de_email,
-                                            eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia};
+                                            eesFields.Default.poliza_fec_ini_vig, eesFields.Default.poliza_fec_fin_vig};
 
                 return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
             }
@@ -276,12 +276,12 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
             //Fecha vigencia inicio:
             _cElemento = "Fecha Inicio";
-            _oDriver.FindElement(By.Id("vigenciaendoso_inicio_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.date_inicio_vigencia).Value);
+            _oDriver.FindElement(By.Id("vigenciaendoso_inicio_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_fec_ini_vig).Value);
             //_oDriver.FindElement(By.Id("vigenciaendoso_inicio_input")).SendKeys("15/08/2018");
 
             //Fecha vigencia fin:
             _cElemento = "Fecha Fin";
-            _oDriver.FindElement(By.Id("vigenciaendoso_fin_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.date_fin_vigencia).Value + Keys.Tab);
+            _oDriver.FindElement(By.Id("vigenciaendoso_fin_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_fec_fin_vig).Value + Keys.Tab);
             //_oDriver.FindElement(By.Id("vigenciaendoso_fin_input")).SendKeys("15/08/2025" + Keys.Tab);            
 
             //Nombre del Contratante:

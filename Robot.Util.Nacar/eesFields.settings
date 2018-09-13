@@ -8,12 +8,6 @@
     <Setting Name="tipo_poliza" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">26</Value>
     </Setting>
-    <Setting Name="date_inicio_vigencia" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">9</Value>
-    </Setting>
-    <Setting Name="date_fin_vigencia" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">8</Value>
-    </Setting>
     <Setting Name="producto" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">21</Value>
     </Setting>
@@ -117,7 +111,7 @@
       <Value Profile="(Default)">1054</Value>
     </Setting>
     <Setting Name="forma_de_reembolso" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">16</Value>
+      <Value Profile="(Default)">36</Value>
     </Setting>
     <Setting Name="email_dirigido" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1035</Value>
@@ -264,7 +258,7 @@
       <Value Profile="(Default)">1100</Value>
     </Setting>
     <Setting Name="id_archivo_tipo_adj" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1118</Value>
+      <Value Profile="(Default)">37</Value>
     </Setting>
     <Setting Name="pais" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1075</Value>
