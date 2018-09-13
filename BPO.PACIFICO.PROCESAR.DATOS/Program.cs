@@ -16,10 +16,7 @@ namespace RobotProcesarTicket
         #region "PARÁMETROS"
         private static BaseRobot<Program> _oRobot = null;
         private static int _nDiasArrepentimiento;
-        private static int _nDiasDesistimiento;
-        private static string _cPolizaEmision;
-        private static string _cPolizaRenovacion;
-        private static string _cEstadoAnulacion;
+        private static int _nDiasDesistimiento;   
         private static string _cLinea = string.Empty;
         private static string _cLineaAutos = string.Empty;
         private static string _cLineaLLPP = string.Empty;
@@ -116,10 +113,7 @@ namespace RobotProcesarTicket
             {
                 //Parámetros del Robot Procesamiento de Datos:
                 _nDiasArrepentimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolRenovadaAuto").ValueParam);
-                _nDiasDesistimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolNuevaAuto").ValueParam);
-                _cPolizaEmision = "EMISION";
-                _cPolizaRenovacion = "RENOVACION";
-                _cEstadoAnulacion = "VIGENTE";
+                _nDiasDesistimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolNuevaAuto").ValueParam); 
                 _cLineaAutos = "AUTOS";
                 _cLineaLLPP = "LLPP";
                 _cLineaAlianzas = "ALIANZAS";
@@ -220,9 +214,9 @@ namespace RobotProcesarTicket
         private void CondicionalesAnulacionPoliza(Ticket oTicketDatos)
         {
             //Campos para Validar:
-            int[] oCampos = new int[] {eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre, eesFields.Default.email_fecha_hora,
-                                            eesFields.Default.tipo_poliza,eesFields.Default.poliza_fec_ini_vig,eesFields.Default.poliza_fec_fin_vig,
-                                            eesFields.Default.poliza_est, eesFields.Default.poliza_tipo_vig};
+            int[] oCampos = new int[] {eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre, eesFields.Default.fec_solicitud,
+                                       eesFields.Default.flg_nuevo,eesFields.Default.poliza_fec_ini_vig,eesFields.Default.poliza_fec_fin_vig,
+                                       eesFields.Default.poliza_est, eesFields.Default.poliza_tipo_vig};
 
             //Valida Línea de la Póliza:
             if (_cLinea == _cLineaAutos)
@@ -279,7 +273,7 @@ namespace RobotProcesarTicket
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
-                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.email_fecha_hora).Value)
+                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fec_solicitud).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value);
 
                     msgConforme = "La poliza se encuentra en estado: " + estadoPoliza + ". " + msgConforme;
@@ -306,7 +300,7 @@ namespace RobotProcesarTicket
 
 
                     //VERIFICA QUE SEA EMISIÓN:
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaEmision)
+                    if (Convert.ToInt32 (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.flg_nuevo).Value)  == 1)
                     {
                         if (!(nDiferencia.Days > _nDiasDesistimiento))
                         {
@@ -319,7 +313,7 @@ namespace RobotProcesarTicket
                             msgNoConforme = "No se esta cumpliendo con la diferencia de dias de desestimiento. " + msgNoConforme;
                         }
                     }
-                    else if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.tipo_poliza).Value.ToUpperInvariant() == _cPolizaRenovacion)//Es renovación:
+                    else //Es renovación:
                     {
 
                         if (!(nDiferencia.Days > _nDiasArrepentimiento))
@@ -333,12 +327,7 @@ namespace RobotProcesarTicket
                             oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "0" });
                         }
                     }
-                    else //No es ni Emisión ni Renovación:
-                    {
-                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "0" });
-                        InsertarValoresReglas(oTicketDatos, msgConforme, msgNoConforme, msgObservacion);
-                        return false;
-                    }
+                    
                 }
                 else
                 {
@@ -368,7 +357,7 @@ namespace RobotProcesarTicket
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
-                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.email_fecha_hora).Value)
+                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fec_solicitud).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value);
 
                     msgConforme = "La poliza se encuentra en estado: " + estadoPoliza + ". " + msgConforme;
