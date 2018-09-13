@@ -327,7 +327,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 string[] ValorCampos = { _producto, _polizaInicioVigencia, _polizaFinVigencia, _polizaTipoVigencia, _polizaEstado,_nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva),_tipoProducto,
                 _polizaFechaEmision,_canalOrganizacion,_canalAgenteCodido,_canalAgente,_canalCodigo,_canal,_servicioOrganizacion,_servicioAgenteCodigo,_servicioAgente,_servicioCanalCodigo,_servicioCanal,_numeroCuenta,_anulacionMotivo,_endosatarios,_siniestros};
 
-                int[] IdCampos = { eesFields.Default.producto, eesFields.Default.poliza_fec_ini_vig, eesFields.Default.poliza_fec_fin_vig,eesFields.Default.tipo_vigencia,eesFields.Default.poliza_est,
+                int[] IdCampos = { eesFields.Default.producto, eesFields.Default.poliza_fec_ini_vig, eesFields.Default.poliza_fec_fin_vig,eesFields.Default.poliza_tipo_vig,eesFields.Default.poliza_est,
                 eesFields.Default.cuenta_nombre,eesFields.Default.asegurado_nombre,eesFields.Default.poliza_nueva,
                 eesFields.Default.producto_tipo,eesFields.Default.poliza_fec_emision,eesFields.Default.canal_org,eesFields.Default.canal_agente_cod,eesFields.Default.canal_agente,
                 eesFields.Default.canal_cod,eesFields.Default.canal,eesFields.Default.servicio_org,eesFields.Default.servicio_agente_cod,eesFields.Default.servicio_agente,eesFields.Default.servicio_canal_cod,
