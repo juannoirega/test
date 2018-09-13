@@ -195,11 +195,11 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                     string _descripcionMotivo = "SE DEJA CONSTANCIA POR EL PRESENTE ENDOSO QUE, LA POLIZA DEL RUBRO QUEDA CANCELADA, NULA Y SIN VALOR PARA TODOS SUS EFECTOS A PARTIR DEL";
 
                     _pasoRealizado = "Seleccionar combobox solictante";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Source", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.solicitante).Value)));
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Source", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.anulacion_solicitante).Value)));
                     _Funciones.Esperar(2);
 
                     _pasoRealizado = "Seleccionar combobox motivo anulación";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.motivo_anular).Value)));
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.poliza_anu_motivo).Value)));
                     _Funciones.Esperar(2);
 
                     _pasoRealizado = "Ingresar endoso anulacion";
@@ -241,7 +241,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         {
             try
             {
-                int[] oCampos = new int[] { eesFields.Default.solicitante, eesFields.Default.motivo_anular, eesFields.Default.forma_de_reembolso };
+                int[] oCampos = new int[] { eesFields.Default.anulacion_solicitante, eesFields.Default.poliza_anu_motivo, eesFields.Default.forma_de_reembolso };
 
                 return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
             }

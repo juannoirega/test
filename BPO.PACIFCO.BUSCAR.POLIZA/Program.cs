@@ -331,7 +331,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 eesFields.Default.cuenta_nombre,eesFields.Default.asegurado_nombre,eesFields.Default.poliza_nueva,
                 eesFields.Default.producto_tipo,eesFields.Default.poliza_fec_emision,eesFields.Default.canal_org,eesFields.Default.canal_agente_cod,eesFields.Default.canal_agente,
                 eesFields.Default.canal_cod,eesFields.Default.canal,eesFields.Default.servicio_org,eesFields.Default.servicio_agente_cod,eesFields.Default.servicio_agente,eesFields.Default.servicio_canal_cod,
-                eesFields.Default.servicio_canal,eesFields.Default.cuenta_nro,eesFields.Default.motivo_anular,eesFields.Default.endosos,eesFields.Default.siniestros};
+                eesFields.Default.servicio_canal,eesFields.Default.cuenta_nro,eesFields.Default.poliza_anu_motivo,eesFields.Default.endosos,eesFields.Default.siniestros};
 
                 for (int i = 0; i < ValorCampos.Length; i++)
                     ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = IdCampos[i], Value = ValorCampos[i] });

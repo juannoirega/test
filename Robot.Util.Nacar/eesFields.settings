@@ -86,11 +86,8 @@
     <Setting Name="trazabilidad" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1059</Value>
     </Setting>
-    <Setting Name="motivo_anular" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">11</Value>
-    </Setting>
-    <Setting Name="solicitante" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1051</Value>
+    <Setting Name="anulacion_solicitante" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">63</Value>
     </Setting>
     <Setting Name="observacion" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">58</Value>

@@ -277,19 +277,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("11")]
-        public int motivo_anular {
+        [global::System.Configuration.DefaultSettingValueAttribute("63")]
+        public int anulacion_solicitante {
             get {
-                return ((int)(this["motivo_anular"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1051")]
-        public int solicitante {
-            get {
-                return ((int)(this["solicitante"]));
+                return ((int)(this["anulacion_solicitante"]));
             }
         }
         
