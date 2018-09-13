@@ -307,6 +307,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
             _plantillaConforme = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaConforme").ValueParam);
             _plantillaRechazo = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaRechazo").ValueParam);
+            _rutaDocumentos = _robot.GetValueParamRobot("RutaDocumentos").ValueParam;
             LogEndStep(4);
         }
 
