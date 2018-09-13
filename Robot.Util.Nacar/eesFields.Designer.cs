@@ -880,7 +880,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1141")]
+        [global::System.Configuration.DefaultSettingValueAttribute("33")]
         public int reglas_conforme {
             get {
                 return ((int)(this["reglas_conforme"]));
@@ -889,7 +889,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1142")]
+        [global::System.Configuration.DefaultSettingValueAttribute("34")]
         public int reglas_no_conforme {
             get {
                 return ((int)(this["reglas_no_conforme"]));
@@ -898,7 +898,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1143")]
+        [global::System.Configuration.DefaultSettingValueAttribute("35")]
         public int reglas_observacion {
             get {
                 return ((int)(this["reglas_observacion"]));
