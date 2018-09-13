@@ -349,10 +349,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1035")]
-        public int email_dirigido {
+        [global::System.Configuration.DefaultSettingValueAttribute("46")]
+        public int email_para {
             get {
-                return ((int)(this["email_dirigido"]));
+                return ((int)(this["email_para"]));
             }
         }
         

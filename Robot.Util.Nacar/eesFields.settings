@@ -110,8 +110,8 @@
     <Setting Name="forma_de_reembolso" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">36</Value>
     </Setting>
-    <Setting Name="email_dirigido" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1035</Value>
+    <Setting Name="email_para" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">46</Value>
     </Setting>
     <Setting Name="nombre" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1068</Value>

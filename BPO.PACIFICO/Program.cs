@@ -367,7 +367,7 @@ namespace GmailQuickstart
             for (int cont = 0; _fields.Length > cont; cont++)
                 ticket.TicketValues.Add(new TicketValue { Value = _valores[cont], ClonedValueOrder = null, TicketId = ticket.Id, FieldId = _fields[cont] });
 
-            ticket.TicketValues.Add(new TicketValue { Value = _userId, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.email_dirigido });
+            ticket.TicketValues.Add(new TicketValue { Value = _userId, ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.email_para });
         }
 
         public bool AdicionarNumeroPolizaoDnioRuc(Ticket ticket, string texto)
