@@ -988,5 +988,14 @@ namespace Robot.Util.Nacar {
                 this["referencia"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("31")]
+        public int fec_solicitud {
+            get {
+                return ((int)(this["fec_solicitud"]));
+            }
+        }
     }
 }

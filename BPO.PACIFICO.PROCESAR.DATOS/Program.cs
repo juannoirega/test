@@ -221,8 +221,8 @@ namespace RobotProcesarTicket
         {
             //Campos para Validar:
             int[] oCampos = new int[] {eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre, eesFields.Default.email_fecha_hora,
-                                            eesFields.Default.tipo_poliza,eesFields.Default.poliza_fec_ini_vig,eesFields.Default.poliza_fec_fin_vig,
-                                            eesFields.Default.poliza_est, eesFields.Default.poliza_tipo_vig};
+                                       eesFields.Default.tipo_poliza,eesFields.Default.poliza_fec_ini_vig,eesFields.Default.poliza_fec_fin_vig,
+                                       eesFields.Default.poliza_est, eesFields.Default.poliza_tipo_vig};
 
             //Valida Línea de la Póliza:
             if (_cLinea == _cLineaAutos)
@@ -279,7 +279,7 @@ namespace RobotProcesarTicket
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
-                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.email_fecha_hora).Value)
+                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fec_s).Value)
                                             - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value);
 
                     msgConforme = "La poliza se encuentra en estado: " + estadoPoliza + ". " + msgConforme;
