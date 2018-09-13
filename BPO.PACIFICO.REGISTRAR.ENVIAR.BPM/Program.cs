@@ -155,7 +155,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             try
             {
                 int[] oCampos = new int[] { eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre,
-                                            eesFields.Default.email_de, eesFields.Default.fecha_hora_de_email,
+                                            eesFields.Default.email_de, eesFields.Default.email_fecha_hora,
                                             eesFields.Default.poliza_fec_ini_vig, eesFields.Default.poliza_fec_fin_vig};
 
                 return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
@@ -221,7 +221,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
             //Ingresa fecha hora de email:
             _cElemento = "Fecha y hora de solicitud";
-            _oDriver.FindElement(By.Id("fechayhoraderecepción_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_hora_de_email).Value);
+            _oDriver.FindElement(By.Id("fechayhoraderecepción_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_fecha_hora).Value);
             //_oDriver.FindElement(By.Id("fechayhoraderecepción_input")).SendKeys("14/08/2018 10:20:15" + Keys.Tab);
 
             //Selecciona tipo de solicitud:

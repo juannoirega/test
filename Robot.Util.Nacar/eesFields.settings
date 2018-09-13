@@ -14,8 +14,8 @@
     <Setting Name="vobo_producto" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1026</Value>
     </Setting>
-    <Setting Name="fecha_hora_de_email" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">15</Value>
+    <Setting Name="email_fecha_hora" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">45</Value>
     </Setting>
     <Setting Name="canal" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">13</Value>

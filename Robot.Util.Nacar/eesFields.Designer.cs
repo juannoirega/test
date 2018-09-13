@@ -61,10 +61,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
-        public int fecha_hora_de_email {
+        [global::System.Configuration.DefaultSettingValueAttribute("45")]
+        public int email_fecha_hora {
             get {
-                return ((int)(this["fecha_hora_de_email"]));
+                return ((int)(this["email_fecha_hora"]));
             }
         }
         
