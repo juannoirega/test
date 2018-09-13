@@ -250,10 +250,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("12")]
-        public int email_en_copia {
+        [global::System.Configuration.DefaultSettingValueAttribute("42")]
+        public int email_cc {
             get {
-                return ((int)(this["email_en_copia"]));
+                return ((int)(this["email_cc"]));
             }
         }
         
