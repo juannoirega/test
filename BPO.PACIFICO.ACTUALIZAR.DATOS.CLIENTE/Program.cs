@@ -460,7 +460,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             {
                 int[] oCampos = new int[] { eesFields.Default.asegurado_nombre,
                                             eesFields.Default.email_solicitante, eesFields.Default.fecha_hora_de_email,
-                                            eesFields.Default.date_inicio_vigencia, eesFields.Default.date_fin_vigencia};
+                                            eesFields.Default.poliza_fec_ini_vig, eesFields.Default.poliza_fec_fin_vig};
 
                 return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
             }
@@ -678,11 +678,11 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         //Valida si fecha de solicitud está dentro del rango de vigencia:
         private Boolean ValidarFechaSolicitud(Ticket oTicketDatos, DateTime dFecha)
         {
-            if (dFecha < Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.date_inicio_vigencia).Value))
+            if (dFecha < Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_fec_ini_vig).Value))
             {
                 return false;
             }
-            else if (dFecha >= Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.date_fin_vigencia).Value))
+            else if (dFecha >= Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_fec_fin_vig).Value))
             {
                 return false;
             }
