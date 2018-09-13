@@ -155,10 +155,6 @@ namespace BPO.PACIFICO.REHABILITAR
                     }
 
                 }
-                else
-                {
-                    throw new Exception("Error no se encuentra la opcion Rehabilitar, verifique si la poliza ya fue rehabilitada");
-                }
 
             }
             catch (Exception ex)
