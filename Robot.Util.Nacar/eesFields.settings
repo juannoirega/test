@@ -29,9 +29,6 @@
     <Setting Name="email_asunto" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">41</Value>
     </Setting>
-    <Setting Name="aplica_prorrata" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1040</Value>
-    </Setting>
     <Setting Name="num_orden_trabajo" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">20</Value>
     </Setting>
