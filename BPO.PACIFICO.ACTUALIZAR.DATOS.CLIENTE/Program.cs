@@ -492,7 +492,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                         //Cancelar cotización:
                         _cElemento = "Cancelar cotización";
                         _driverGlobal.FindElement(By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:WithdrawJob")).Click();
-                        _Funciones.VentanaMensajeWeb(_driverGlobal);
+                        _Funciones.VerificarVentanaAlerta(_driverGlobal);
                         _Funciones.Esperar(10);
                     }
                 }
@@ -521,7 +521,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                         //Cancelar cotización:
                         _cElemento = "Cancelar cotización";
                         _driverGlobal.FindElement(By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:WithdrawJob")).Click();
-                        _Funciones.VentanaMensajeWeb(_driverGlobal);
+                        _Funciones.VerificarVentanaAlerta(_driverGlobal);
                         _Funciones.Esperar(10);
                     }
                 }
@@ -536,7 +536,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
                     IniciarCambioPoliza(oTicketDatos);
                     FormularioCambioPoliza(oTicketDatos);
-                    _Funciones.VentanaMensajeWeb(_driverGlobal);
+                    _Funciones.VerificarVentanaAlerta(_driverGlobal);
                     _Funciones.Esperar(10);
 
                     if (!String.IsNullOrWhiteSpace(_cNombreOferta)) { SeleccionarOferta(oTicketDatos); }
@@ -552,7 +552,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                         //Cancelar cotización:
                         _cElemento = "Cancelar cotización";
                         _driverGlobal.FindElement(By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:WithdrawJob")).Click();
-                        _Funciones.VentanaMensajeWeb(_driverGlobal);
+                        _Funciones.VerificarVentanaAlerta(_driverGlobal);
                         _Funciones.Esperar(10);
                     }
                 }
@@ -1117,7 +1117,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 //Clic en Confirmar trabajo:
                 _cElemento = "Botón Confirmar trabajo";
                 _driverGlobal.FindElement(By.Id("PolicyChangeWizard:PolicyChangeWizard_QuoteScreen:JobWizardToolbarButtonSet:BindPolicyChange")).Click();
-                _Funciones.VentanaMensajeWeb(_driverGlobal);
+                _Funciones.VerificarVentanaAlerta(_driverGlobal);
                 _Funciones.Esperar(8);
 
                 if (_Funciones.ExisteElemento(_driverGlobal, "JobComplete:JobCompleteScreen:Message"))

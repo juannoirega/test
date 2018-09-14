@@ -343,13 +343,17 @@ namespace Robot.Util.Nacar
         }
 
         //Anina: Verifica si existe elemento web.
-        public Boolean ExisteElemento(IWebDriver oDriver, string cIdElemento, int nIntentos = 1)
+        public Boolean ExisteElemento(IWebDriver oDriver, string cIdElemento, int nIntentos = 1, bool bId = true)
         {
             for (int i = 0; i < nIntentos; i++)
             {
                 try
                 {
-                    if (oDriver.FindElement(By.Id(cIdElemento)).Displayed) { return true; }
+                    if (bId)
+                    {
+                        if (oDriver.FindElement(By.Id(cIdElemento)).Displayed) { return true; }
+                    }else { if (oDriver.FindElement(By.XPath(cIdElemento)).Displayed) { return true; } }
+                    
                 }
                 catch (NoSuchElementException)
                 {
@@ -376,22 +380,18 @@ namespace Robot.Util.Nacar
             return false;
         }
 
-        //Verifica que el formulario BPM se haya registrado correctamente:
-        public Boolean VerificarRegistroBPM(IWebDriver oDriver)
+        //Verifica si ventana de alerta existe o no:
+        public Boolean VerificarVentanaAlerta(IWebDriver oDriver)
         {
             try
             {
-                if (oDriver.SwitchTo().Alert().ToString().Length > 0)
-                {
-                    oDriver.SwitchTo().Alert().Accept();
-                    return false;
-                }
+                if (oDriver.SwitchTo().Alert().ToString().Length > 0) { oDriver.SwitchTo().Alert().Accept(); return true; }
             }
-            catch (Exception)
+            catch (NoSuchElementException)
             {
                 Esperar();
             }
-            return true;
+            return false;
         }
 
         public bool VerificarValorGrilla(IWebDriver _driver, string idTabla, string cabecera, string valorBuscar, ref int posicionFila)
@@ -578,12 +578,6 @@ namespace Robot.Util.Nacar
             }
             else
                 ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj).Value = idPlantilla.ToString();
-        }
-
-        //Anina: Aceptar mensaje web emergente.
-        public void VentanaMensajeWeb(IWebDriver oDriver)
-        {
-            try { oDriver.SwitchTo().Alert().Accept(); } catch (Exception Ex) { throw new Exception("Ocurrió un error: " + Ex.Message, Ex); }
         }
 
         public String ObtenerNOrdenTrabajo(IWebDriver oDriver, string idTabla, string nombreCabecera)
