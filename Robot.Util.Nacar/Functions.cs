@@ -636,5 +636,28 @@ namespace Robot.Util.Nacar
         {
             return Regex.Replace(cTexto, @"[^\d]", "");
         }
+
+        public String ObtenerValorCeldaTabla(IWebDriver oDriver, string cIdTabla,int nIndexFila, int nIndexCelda)
+        {
+            try
+            {
+                IList<IWebElement> oFilas = oDriver.FindElement(By.Id(cIdTabla)).FindElements(By.XPath("id('" + cIdTabla + "')/tbody/tr"));
+
+                for (int i = 0; i < oFilas.Count; i++)
+                {
+                    IList<IWebElement> oCeldas = oFilas[i].FindElements(By.XPath("td"));
+
+                    for (int j = 1; j < oCeldas.Count; j++)
+                    {
+                        if (i == nIndexFila)
+                        {
+                            return oCeldas[nIndexCelda].Text;
+                        }
+                    }
+                }
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener valor de celda: " + Ex.Message, Ex); }
+            return string.Empty;
+        }
     }
 }
