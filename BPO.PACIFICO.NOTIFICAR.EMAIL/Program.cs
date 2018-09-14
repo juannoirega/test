@@ -32,7 +32,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
         static string[] _valores = new string[15];
         static string[] _valoresTicket = new string[6];
         string _contenido = String.Empty;
-        string _correoRobot = "soportecorredor_des@pacifico.com.pe";
+        string _correoRobot = "bponaa@gmail.com";
         string _rutaPlantilla = String.Empty;
         static string[] Scopes = { GmailService.Scope.GmailModify };
         static string ApplicationName = "Gmail API .NET Quickstart";
