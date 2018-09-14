@@ -86,16 +86,16 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             var container = ODataContextWrapper.GetContainer();
             TipoProceso = container.DomainValues.Where(c => c.Id == Convert.ToInt32(_valoresTicket[2])).FirstOrDefault();
 
-            if (TipoProceso.Value == "Plantilla Conforme Anulación Póliza" || TipoProceso.Value == "Plantilla Rechazo Anulación Póliza")
+            if (TipoProceso.Value == "Plantilla Correo Anulación Conforme" || TipoProceso.Value == "Plantilla Correo Anulación Rechazo")
             {
                 _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.cuenta_nombre).Value;
                 _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
             }
-            else if (TipoProceso.Value == "Plantilla Conforme Rehabilitación" || TipoProceso.Value == "Plantilla Rechazo Rehabilitación")
+            else if (TipoProceso.Value == "Plantilla Correo Rehabilitación Conforme" || TipoProceso.Value == "Plantilla Correo Rehabilitación Rechazo")
             {
                 _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
             }
-            else if (TipoProceso.Value == "Plantilla Conforme Actualización Datos" || TipoProceso.Value == "Plantilla Rechazo Actualización Datos")
+            else if (TipoProceso.Value == "Plantilla Correo Actualización Datos Cliente Conforme" || TipoProceso.Value == "Plantilla Correo Actualización Datos Cliente Rechazo")
             {
                 _valoresTicket[0] = "";
                 _valoresTicket[1] = "";
