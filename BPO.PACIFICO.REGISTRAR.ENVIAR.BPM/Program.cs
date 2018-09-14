@@ -259,7 +259,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 _cElemento = "Motivo de Anulación";
                 _oDriver.FindElement(By.XPath("//*[@id='motivo_anulacion']/button")).Click();
                 _Funciones.Esperar();
-                string cMotivo = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.motivo_anular).Value));
+                string cMotivo = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_anu_motivo).Value));
                 _Funciones.SeleccionarListBox(_oDriver, "//body/ul[5]/li/a", cMotivo);
             }
 

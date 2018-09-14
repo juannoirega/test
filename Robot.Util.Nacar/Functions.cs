@@ -13,6 +13,8 @@ using Everis.Ees.Entities;
 using everis.Ees.Proxy.Services;
 using OpenQA.Selenium.Interactions;
 using System.Web.Script.Serialization;
+using System.Text.RegularExpressions;
+
 namespace Robot.Util.Nacar
 {
     public class Functions
@@ -347,8 +349,7 @@ namespace Robot.Util.Nacar
             {
                 try
                 {
-                    oDriver.FindElement(By.Id(cIdElemento));
-                    return true;
+                    if (oDriver.FindElement(By.Id(cIdElemento)).Displayed) { return true; }
                 }
                 catch (NoSuchElementException)
                 {
@@ -557,7 +558,7 @@ namespace Robot.Util.Nacar
                     //Buscar por Cuenta:
                     oDriver.FindElement(By.Id("TabBar:AccountTab:AccountTab_AccountNumberSearchItem")).SendKeys(cDocumento + Keys.Enter);
                 }
-                Esperar(2);
+                Esperar(4);
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al buscar documento: " + Ex.Message, Ex); }
         }
@@ -613,33 +614,27 @@ namespace Robot.Util.Nacar
             return string.Empty;
         }
 
-        public int ObtenerFilasTablaHTML(IWebDriver oDriver, string idTabla, string nombreCabecera = "")
+        public int ObtenerFilasTablaHTML(IWebDriver oDriver, string cIdTabla, string cValorFinal = "sin texto")
         {
+            int nFilas = 0;
             try
             {
-                IList<IWebElement> oFilas = oDriver.FindElement(By.Id(idTabla)).FindElements(By.XPath("id('" + idTabla + "')/tbody/tr"));
-                int posicionCabecera = 0;
+                IList<IWebElement> oFilas = oDriver.FindElement(By.Id(cIdTabla)).FindElements(By.XPath("id('" + cIdTabla + "')/tbody/tr"));
 
                 foreach (IWebElement nItem in oFilas)
                 {
                     IList<IWebElement> oCeldas = nItem.FindElements(By.XPath("td"));
-
-                    for (int j = 0; j < oCeldas.Count; j++)
-                    {
-                        if (oCeldas[j].Text.Contains(nombreCabecera))
-                        {
-                            posicionCabecera = j;
-                            break;
-                        }
-                        if (posicionCabecera > 0)
-                        {
-                            return 0;
-                        }
-                    }
+                    if (oCeldas[1].Text == cValorFinal) { break; }
+                    nFilas += 1;
                 }
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener número de filas: " + Ex.Message, Ex); }
-            return 0;
+            return nFilas;
+        }
+
+        public String ObtenerCadenaDeNumeros(string cTexto)
+        {
+            return Regex.Replace(cTexto, @"[^\d]", "");
         }
     }
 }
