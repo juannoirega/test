@@ -214,8 +214,8 @@ namespace RobotProcesarTicket
         private void CondicionalesAnulacionPoliza(Ticket oTicketDatos)
         {
             //Campos para Validar:
-            int[] oCampos = new int[] {eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre, eesFields.Default.fec_solicitud,
-                                       eesFields.Default.flg_nuevo,eesFields.Default.poliza_fec_ini_vig,eesFields.Default.poliza_fec_fin_vig,
+            int[] oCampos = new int[] {eesFields.Default.fec_solicitud, eesFields.Default.flg_nuevo,
+                                       eesFields.Default.poliza_fec_ini_vig, 
                                        eesFields.Default.poliza_est, eesFields.Default.poliza_tipo_vig};
 
             //Valida Línea de la Póliza:
@@ -273,65 +273,67 @@ namespace RobotProcesarTicket
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
-                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fec_solicitud).Value)
-                                            - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value);
-
-                    msgConforme = "La poliza se encuentra en estado: " + estadoPoliza + ". " + msgConforme;
+                    TimeSpan nDiferencia =  Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value) - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fec_solicitud).Value);
+                    if (_bFlagVigencia) {
+                        msgObservacion ="Se debe mandar a mesa de control."+ msgObservacion;
+                    }
+                    msgConforme = "Se esta cumpliendo la regla de la poliza en estado VIGENTE. " + msgConforme;
                     //SE VERIFICA SINIESTRO
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.siniestros).Value != null)
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.siniestros).Value == null)
                     {
-                        msgConforme = "Se esta cumpliendo que la poliza no tiene siniestros. " + msgConforme;
+                        msgConforme = "Se esta cumpliendo la regla de la poliza sin siniestros. " + msgConforme;
 
                     }
                     else
                     {
-                        msgNoConforme = "No se esta cumpliendo que la poliza no tiene siniestros. " + msgNoConforme;
+                        msgNoConforme = "No se esta cumpliendo la regla de la poliza sin siniestros. " + msgNoConforme;
                     }
 
                     //SE VERIFICA ENDOSOS
                     if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.endosos).Value != null)
                     {
-                        msgConforme = "Se esta cumpliendo que la poliza tiene endosos. " + msgConforme;
+                        msgConforme = "Se esta cumpliendo la regla de la poliza con endosos. " + msgConforme;
                     }
                     else
                     {
-                        msgNoConforme = "No se esta cumpliendo que la poliza no tiene endosos. " + msgNoConforme;
+                        msgNoConforme = "No se esta cumpliendo la relga de la poliza  con endosos. " + msgNoConforme;
                     }
 
 
                     //VERIFICA QUE SEA EMISIÓN:
                     if (Convert.ToInt32 (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.flg_nuevo).Value)  == 1)
                     {
+                        msgObservacion = "La poliza esta en estado de Emisión. " + msgObservacion;
                         if (!(nDiferencia.Days > _nDiasDesistimiento))
                         {
-                            msgConforme = "Se esta cumpliendo con la diferencia de dias de desestimiento. " + msgConforme;
-                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "1" });
+                            msgConforme = "Se esta cumpliendo con la regla de los dias de desestimiento. " + msgConforme;
+                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.forma_de_reembolso, Value = "97" });
                         }
                         else
                         {
-                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "0" });
-                            msgNoConforme = "No se esta cumpliendo con la diferencia de dias de desestimiento. " + msgNoConforme;
+                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.forma_de_reembolso, Value = "100" });
+                            msgNoConforme = "No se esta cumpliendo con la regla de los dias de desestimiento. " + msgNoConforme;
                         }
                     }
                     else //Es renovación:
                     {
-
+                        msgObservacion = "La poliza esta en estado de Renovación. " + msgObservacion;
                         if (!(nDiferencia.Days > _nDiasArrepentimiento))
                         {
-                            msgConforme = "Se esta cumpliendo con la diferencia de dias de desestimiento." + msgConforme;
-                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "1" });
+                            msgConforme = "Se esta cumpliendo con la regla de los dias de desestimiento." + msgConforme;
+                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.forma_de_reembolso, Value = "97" });
                         }
                         else
                         {
-                            msgNoConforme = "No se esta cumpliendo con la diferencia de dias de desestimiento." + msgNoConforme;
-                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "0" });
+                            msgNoConforme = "No se esta cumpliendo con la regla de los dias de desestimiento." + msgNoConforme;
+                            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.forma_de_reembolso, Value = "100" });
                         }
                     }
                     
                 }
                 else
                 {
-                    msgNoConforme = " Se esta cumpliendo la regla por el hecho de que la poliza se encuentra en estado: " + estadoPoliza + msgNoConforme;
+                    msgNoConforme = " No esta cumpliendo la regla de la poliza en estado VIGENTE, se encuentra en estado: " + estadoPoliza + msgNoConforme;
                     InsertarValoresReglas(oTicketDatos, msgConforme, msgNoConforme, msgObservacion);
                     return false;
                 }
@@ -357,36 +359,36 @@ namespace RobotProcesarTicket
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
-                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fec_solicitud).Value)
-                                            - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value);
+                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value)-Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fec_solicitud).Value);
 
-                    msgConforme = "La poliza se encuentra en estado: " + estadoPoliza + ". " + msgConforme;
+                    msgConforme = "Se  esta cumpliendo la regla de la poliza en estado VIGENTE. " + msgConforme;
                     //SE VERIFICA SINIESTRO
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.siniestros).Value != null)
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.siniestros).Value == null)
                     {
-                        msgConforme = "Se esta cumpliendo que la poliza no tiene siniestros. " + msgConforme;
+                        msgConforme = "Se esta cumpliendo la regla de la poliza sin siniestros. " + msgConforme;
 
                     }
                     else
                     {
-                        msgNoConforme = "No se esta cumpliendo que la poliza no tiene siniestros. " + msgNoConforme;
+                        msgNoConforme = "No se esta cumpliendo la regla de la poliza sin siniestros. " + msgNoConforme;
                     }
+
 
                     if (!(nDiferencia.Days > _nDiasDesistimiento))
                     {
-                        msgConforme = "Se esta cumpliendo con la diferencia de dias de desestimiento. " + msgConforme;
-                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "1" });
+                        msgConforme = "Se esta cumpliendo la regla de los dias de desestimiento. " + msgConforme;
+                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.forma_de_reembolso, Value = "97" });
                     }
                     else
                     {
-                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.aplica_prorrata, Value = "0" });
-                        msgNoConforme = "No se esta cumpliendo con la diferencia de dias de desestimiento. " + msgNoConforme;
+                        oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.forma_de_reembolso, Value = "100" });
+                        msgNoConforme = "No se esta cumpliendo la regla de los dias de desestimiento. " + msgNoConforme;
                     }
 
                 }
                 else
                 {
-                    msgNoConforme = " Se esta cumpliendo la regla por el hecho de que la poliza se encuentra en estado: " + estadoPoliza + msgNoConforme;
+                    msgNoConforme = " No esta cumpliendo la regla de la poliza en estado VIGENTE, se encuentra en estado: " + estadoPoliza + msgNoConforme;
                     InsertarValoresReglas(oTicketDatos, msgConforme, msgNoConforme, msgObservacion);
                     return false;
                 }
