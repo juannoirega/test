@@ -437,7 +437,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             ActualizarPolicyCenter(oTicket);
             if (String.IsNullOrWhiteSpace(_cOrdenTrabajo))
             {
-                CambiarEstadoTicket(oTicket, _oMesaControl, "Ocurrió un error en Análisis de Riesgos para la línea " + _cLinea);
+                CambiarEstadoTicket(oTicket, _oMesaControl, "Ocurrió un error en Análisis de Riesgos para la línea " + _cLinea + ", se requiere aprobación del endoso.");
             }
             else
             {
@@ -702,7 +702,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 //Clic en Nombre del asegurado:
                 _cElemento = "Nombre del Asegurado";
                 _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:Name")).Click();
-                _Funciones.Esperar(1);
+                _Funciones.Esperar(15);
 
                 //Verifica si es Persona o Empresa:
                 if (Convert.ToBoolean(Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_contacto).Value)))
@@ -816,6 +816,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     }
                 }
 
+                //Campos comunes:
                 if (!String.IsNullOrWhiteSpace(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.pais_de_procedencia).Value))
                 {
                     //País de procedencia:
