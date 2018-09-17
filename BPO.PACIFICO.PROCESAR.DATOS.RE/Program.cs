@@ -117,7 +117,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         {
             //Campos para Validar:
             int[] oCampos = new int[] {eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre,
-                                       eesFields.Default.motivo_rehabilitar, eesFields.Default.poliza_est};
+                                       eesFields.Default.rehabilitar_motivo, eesFields.Default.poliza_est};
 
             //Valida Línea de la Póliza:
             if (_cLinea == _cLineaLLPP)
@@ -164,7 +164,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         private Boolean ValidarDatosPoliza(Ticket oTicketDatos)
         {
             int[] oCampos = new int[] {eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre,
-                                       eesFields.Default.motivo_rehabilitar, eesFields.Default.poliza_est};
+                                       eesFields.Default.rehabilitar_motivo, eesFields.Default.poliza_est};
 
             if (_Funciones.ValidarCamposVacios(oTicketDatos, oCampos))
             {

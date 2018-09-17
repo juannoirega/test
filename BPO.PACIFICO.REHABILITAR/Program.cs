@@ -110,7 +110,7 @@ namespace BPO.PACIFICO.REHABILITAR
                     string _descripcionMotivo = "";
 
                     _pasoRealizado = "Seleccionar motivo rehabilitar";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:ReinstatePolicyDV:Reason", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.motivo_rehabilitar).Value)));
+                    _Funciones.SeleccionarCombo(_driverGlobal, "ReinstatementWizard:ReinstatementWizard_ReinstatePolicyScreen:ReinstatePolicyDV:Reason", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.rehabilitar_motivo).Value)));
                     _Funciones.Esperar(2);
 
                     _pasoRealizado = "Ingresar descripcion";
@@ -171,7 +171,7 @@ namespace BPO.PACIFICO.REHABILITAR
         {
             try
             {
-                int[] oCampos = new int[] { eesFields.Default.motivo_rehabilitar };
+                int[] oCampos = new int[] { eesFields.Default.rehabilitar_motivo };
 
                 return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
             }

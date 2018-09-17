@@ -157,7 +157,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 int[] oCampos = new int[] { eesFields.Default.cuenta_nombre, eesFields.Default.asegurado_nombre,
                                             eesFields.Default.email_de, eesFields.Default.email_fecha_hora,
                                             eesFields.Default.poliza_fec_ini_vig, eesFields.Default.poliza_fec_fin_vig,
-                                            eesFields.Default.num_orden_trabajo, eesFields.Default.canal_agente_cod,
+                                            eesFields.Default.endoso_nro, eesFields.Default.canal_agente_cod,
                                             eesFields.Default.canal};
 
                 return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
@@ -338,7 +338,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         {
             try
             {
-                return oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.documentos).Value.Split(',');
+                return oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.endoso_adj).Value.Split(',');
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener documentos adjuntos: " + Ex.Message, Ex); }
         }

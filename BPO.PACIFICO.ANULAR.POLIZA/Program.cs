@@ -199,7 +199,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                     _Funciones.Esperar(2);
 
                     _pasoRealizado = "Seleccionar combobox motivo anulación";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.poliza_anu_motivo).Value)));
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.anulacion_motivo).Value)));
                     _Funciones.Esperar(2);
 
                     _pasoRealizado = "Ingresar endoso anulacion";
@@ -286,9 +286,9 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                     //Ruta Local Destino
                     string rutaDestino = Path.Combine(_rutaDocumentos, archivopdf);
                     //Cantidad Documentos
-                    int CantidadDocumentos = ticket.TicketValues.Where(t => t.FieldId == eesFields.Default.documentos).ToList().Count;
+                    int CantidadDocumentos = ticket.TicketValues.Where(t => t.FieldId == eesFields.Default.endoso_adj).ToList().Count;
                     File.Copy(origenArchivo, rutaDestino);
-                    ticket.TicketValues.Add(new TicketValue { Value = rutaDestino, ClonedValueOrder = CantidadDocumentos + 1, TicketId = ticket.Id, FieldId = eesFields.Default.documentos });
+                    ticket.TicketValues.Add(new TicketValue { Value = rutaDestino, ClonedValueOrder = CantidadDocumentos + 1, TicketId = ticket.Id, FieldId = eesFields.Default.endoso_adj });
                 }
                 catch (Exception ex) { LogFailStep(12, ex); throw new Exception(ex.Message + " :" + _pasoRealizado, ex); }
             }
@@ -313,7 +313,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
 
         private void GuardarInformacionTicket(Ticket ticket)
         {
-            ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.num_orden_trabajo, Value = _numeroOrdenTrabajo });
+            ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.endoso_nro, Value = _numeroOrdenTrabajo });
         }
     }
 }

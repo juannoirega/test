@@ -1139,7 +1139,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             {
                 ClonedValueOrder = null,
                 TicketId = oTicketDatos.Id,
-                FieldId = eesFields.Default.num_orden_trabajo,
+                FieldId = eesFields.Default.endoso_nro,
                 Value = _cOrdenTrabajo
             });
         }

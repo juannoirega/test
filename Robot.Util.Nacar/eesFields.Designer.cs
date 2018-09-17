@@ -106,10 +106,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
-        public int num_orden_trabajo {
+        [global::System.Configuration.DefaultSettingValueAttribute("48")]
+        public int endoso_nro {
             get {
-                return ((int)(this["num_orden_trabajo"]));
+                return ((int)(this["endoso_nro"]));
             }
         }
         
@@ -196,10 +196,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int documentos {
+        [global::System.Configuration.DefaultSettingValueAttribute("47")]
+        public int endoso_adj {
             get {
-                return ((int)(this["documentos"]));
+                return ((int)(this["endoso_adj"]));
             }
         }
         
@@ -313,10 +313,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1054")]
-        public int motivo_rehabilitar {
+        [global::System.Configuration.DefaultSettingValueAttribute("68")]
+        public int rehabilitar_motivo {
             get {
-                return ((int)(this["motivo_rehabilitar"]));
+                return ((int)(this["rehabilitar_motivo"]));
             }
         }
         
@@ -977,6 +977,15 @@ namespace Robot.Util.Nacar {
         public int fec_solicitud {
             get {
                 return ((int)(this["fec_solicitud"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("67")]
+        public int anulacion_motivo {
+            get {
+                return ((int)(this["anulacion_motivo"]));
             }
         }
     }
