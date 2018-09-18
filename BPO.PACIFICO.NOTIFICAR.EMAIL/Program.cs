@@ -80,7 +80,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
 
             //CAMPO QUE VIENE DE LOS ROBOT QUE INDICA QUE TIPO DE PLANTILLA USARA 
-            _valoresTicket[2] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipoplantillaen).Value;
+            _valoresTicket[2] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.id_archivo_tipo_adj).Value;
 
             //Opteniendo el Nombre del Dominio Funcionanal para Actualizar plantilla
             var container = ODataContextWrapper.GetContainer();
@@ -88,8 +88,8 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
             if (TipoProceso.Value == "Plantilla Correo Anulación Conforme" || TipoProceso.Value == "Plantilla Correo Anulación Rechazo")
             {
-                _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.cuenta_nombre).Value;
-                _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
+                _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.endoso_nro).Value;
+                _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_nro).Value;
             }
             else if (TipoProceso.Value == "Plantilla Correo Rehabilitación Conforme" || TipoProceso.Value == "Plantilla Correo Rehabilitación Rechazo")
             {
@@ -103,7 +103,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
 
             //Correos 
-            _valoresTicket[3] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_de).Value;
+            _valoresTicket[3] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_para).Value;
             //Correos Copias
             _valoresTicket[4] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_cc).Value;
 
@@ -258,11 +258,13 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
         public void LeerArchivo(string archivo)
         {
+            String rutax = _valores[4] + archivo;
+            rutax = rutax.Replace("/", "\\");
 
             try
             {
                 //Lleyendo el JSON
-                using (StreamReader lector = new StreamReader(String.Concat(@"", _valores[4], archivo, "")))
+                using (StreamReader lector = new StreamReader(@rutax))
                 {
                     while (lector.Peek() > -1)
                     {
