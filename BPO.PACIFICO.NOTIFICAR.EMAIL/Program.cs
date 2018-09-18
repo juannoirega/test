@@ -318,37 +318,37 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
         {
             switch (TipoProceso)
             {
-                case "Plantilla Conforme Anulación Póliza":
+                case "Plantilla Correo Anulación Conforme":
                     if (error == "si")
                         _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[6])).Id);
                     else
                         _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[0]));
                     break;
-                case "Plantilla Rechazo Anulación Póliza":
+                case "Plantilla Correo Anulación Rechazo":
                     if (error == "si")
                         _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[6])).Id);
                     else
                         _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[1]));
                     break;
-                case "Plantilla Conforme Rehabilitación":
+                case "Plantilla Correo Rehabilitación Conforme":
                     if (error == "si")
                         _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[7])).Id);
                     else
                         _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[8]));
                     break;
-                case "Plantilla Rechazo Rehabilitación":
+                case "Plantilla Correo Rehabilitación Rechazo":
                     if (error == "si")
                         _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[7])).Id);
                     else
                         _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[9]));
                     break;
-                case "Plantilla Conforme Actualización Cliente":
+                case "Plantilla Correo Actualización Datos Cliente Conforme":
                     if (error == "si")
                         _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[12])).Id);
                     else
                         _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[10]));
                     break;
-                case "Plantilla Rechazo Actualización CLiente":
+                case "Plantilla Correo Actualización Datos Cliente Rechazo":
                     if (error == "si")
                         _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[12])).Id);
                     else
