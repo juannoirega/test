@@ -22,7 +22,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
     class Program : IRobot
     {
         private static BaseRobot<Program> _robot = null;
-        private static IWebDriver _driverGlobal = new InternetExplorerDriver();
+        private static IWebDriver _driverGlobal = null;
         string campo = string.Empty;
         string texto = string.Empty;
         string Acceso = string.Empty;
