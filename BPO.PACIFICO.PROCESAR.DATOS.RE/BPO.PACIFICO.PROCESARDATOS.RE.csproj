@@ -34,23 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="everis.Ees.Proxy">
-      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\everis.Ees.Proxy.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.OData.Client">
-      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\Microsoft.OData.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.OData.Core">
-      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\Microsoft.OData.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.OData.Edm">
-      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\Microsoft.OData.Edm.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Spatial">
-      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\Microsoft.Spatial.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\everis.Ees.Proxy.2018.1.0.5\lib\net462\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="everis.Ees.Proxy, Version=2018.2.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\everis.Ees.Proxy.2018.2.0.2\lib\net462\everis.Ees.Proxy.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
