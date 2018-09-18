@@ -49,28 +49,6 @@ namespace RobotProcesarTicket
             }
             catch (Exception Ex) { Console.WriteLine(Ex.Message); }
         }
-        protected void IniciarParametros()
-        {
-            _productosAutos.Add("Auto Modular");
-            _productosAutos.Add("Auto a Medida");
-            _productosAutos.Add("RCTPU (AX)");
-            _productosRG.Add("MI01");
-            _productosRG.Add("Hogar");
-            _productosRG.Add("Accidentes Personales");
-            _productosAlianzas.Add("Auto Modular | Cod. Canal 0210199");
-            _productosAlianzas.Add("Auto Modular | Cod. Canal 0020962");
-            _productosAlianzas.Add("PV02 (AX)");
-            _productosAlianzas.Add("Auto Modular | Cod. Canal 1001330");
-            _productosAlianzas.Add("Auto Modular | Cod. Canal 0024488");
-            _productosAlianzas.Add("MI BANCO (AX)");
-            _productosAlianzas.Add("PRE1 (AX)");
-            _tProductosAlianzas.Add("PRE2 (AX)");
-            _tProductosAlianzas.Add("PRE3");
-            _tProductosLPersonales.Add("VTAR");
-            _tProductosLPersonales.Add("VACC");
-            _tProductosLPersonales.Add("VDES");
-            _tProductosLPersonales.Add("PH01");
-        }
 
         protected override void Start()
         {
@@ -106,6 +84,29 @@ namespace RobotProcesarTicket
             Console.WriteLine("♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦");
         }
 
+        //Inicializacion de los productos y tipos de productos en sus respectivos lugares
+        protected void IniciarParametros()
+        {
+            _productosAutos.Add("Auto Modular");
+            _productosAutos.Add("Auto a Medida");
+            _productosAutos.Add("RCTPU (AX)");
+            _productosRG.Add("MI01");
+            _productosRG.Add("Hogar");
+            _productosRG.Add("Accidentes Personales");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 0210199");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 0020962");
+            _productosAlianzas.Add("PV02 (AX)");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 1001330");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 0024488");
+            _productosAlianzas.Add("MI BANCO (AX)");
+            _productosAlianzas.Add("PRE1 (AX)");
+            _tProductosAlianzas.Add("PRE2 (AX)");
+            _tProductosAlianzas.Add("PRE3");
+            _tProductosLPersonales.Add("VTAR");
+            _tProductosLPersonales.Add("VACC");
+            _tProductosLPersonales.Add("VDES");
+            _tProductosLPersonales.Add("PH01");
+        }
         //Obtiene valores para los parámetros del Robot desde EES:
         private void ObtenerParametros()
         {
@@ -133,8 +134,7 @@ namespace RobotProcesarTicket
         private void ProcesarTicket(Ticket oTicketDatos)
         {
             ObtieneLineaDeNegocio(oTicketDatos);
-            //Si es Anulación de Póliza:
-
+            //Si es Anulación de Póliza: 
             CondicionalesAnulacionPoliza(oTicketDatos);
 
         }
@@ -236,7 +236,7 @@ namespace RobotProcesarTicket
                     return;
                 }
             }
-            else if ((_cLinea == _cLineaAlianzas) || (_cLinea == _cLineaAlianzas) || (_cLinea == _cLineaAlianzas))
+            else if ((_cLinea == _cLineaAlianzas) || (_cLinea == _cLineaLLPP) || (_cLinea == _cLineaRRGG))
             {
                 if (!ValidarDatosPoliza(oTicketDatos, oCampos))
                 {

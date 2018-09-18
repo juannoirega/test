@@ -14,20 +14,28 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
     {
         #region "PARÁMETROS"
         private static BaseRobot<Program> _oRobot = null;
-        private static string _cEstadoRehabilitacion;
+        private static int _nDiasArrepentimiento;
+        private static int _nDiasDesistimiento;
         private static string _cLinea = string.Empty;
-        private static int _nIdMesaControl;
-        private static int _nIdPantallaValidacion;
-        private static int _nIdNotificacion;
         private static string _cLineaAutos = string.Empty;
         private static string _cLineaLLPP = string.Empty;
         private static string _cLineaAlianzas = string.Empty;
         private static string _cLineaRRGG = string.Empty;
+        private static string _cProceso = string.Empty;
+        private static string _cTratamientoManual = string.Empty;
+        private static string[] _procesos;
+        private List<string> _productosAutos = new List<string>();
+        private List<string> _productosRG = new List<string>();
+        private List<string> _productosAlianzas = new List<string>();
+        private List<string> _tProductosAlianzas = new List<string>();
+        private List<string> _tProductosLPersonales = new List<string>();
         private static StateAction _oMesaControl;
         private static StateAction _oPantallaValidacion;
         private static StateAction _oNotificacion;
         private static Functions _Funciones;
-        private static string[] Procesos;
+        private string msgConforme = string.Empty;
+        private string msgNoConforme = string.Empty;
+        private string msgObservacion = string.Empty;
         #endregion
 
         static void Main(string[] args)
@@ -48,18 +56,17 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         {
             if (_oRobot.Tickets.Count < 1)
                 return;
-
+            IniciarParametros();
             ObtenerParametros();
             LogStartStep(4);
             foreach (Ticket oTicket in _oRobot.Tickets)
             {
                 try
                 {
-                    _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdMesaControl);
+                    _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Mesa de Control");
                     _cLinea = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.linea).Value)).ToUpperInvariant();
-                    _oPantallaValidacion = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdPantallaValidacion);
-                    _oNotificacion = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdNotificacion);
-                    ProcesosEndoso(oTicket);
+                    _oPantallaValidacion = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Validar");
+                    _oNotificacion = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Rechazar");                    
                     ProcesarTicket(oTicket);
                 }
                 catch (Exception Ex)
@@ -70,20 +77,87 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                 }
             }
         }
+        //Inicializacion de los productos y tipos de productos en sus respectivos lugares
+        protected void IniciarParametros()
+        {
+            _productosAutos.Add("Auto Modular");
+            _productosAutos.Add("Auto a Medida");
+            _productosAutos.Add("RCTPU (AX)");
+            _productosRG.Add("Hogar");
+            _productosRG.Add("Accidentes Personales");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 0210199");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 0020962");
+            _productosAlianzas.Add("PV02 (AX)");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 1001330");
+            _productosAlianzas.Add("Auto Modular | Cod. Canal 0024488");
+            _productosAlianzas.Add("MI BANCO (AX)");
+            _productosAlianzas.Add("PRE1 (AX)");
+            _tProductosAlianzas.Add("PRE2 (AX)");
+            _tProductosAlianzas.Add("PRE3");
+            _tProductosLPersonales.Add("VTAR");
+            _tProductosLPersonales.Add("VACC");
+            _tProductosLPersonales.Add("VDES");
+            _tProductosLPersonales.Add("PH01");
+        }
 
+        //Anina: Método para determinar a qué Línea pertenece la póliza.
+        private void ObtieneLineaDeNegocio(Ticket oTicketDatos)
+        {
+            try
+            {
+                // FunctionalDomains<List<DomainValue>> objLineas = _Funciones.GetDomainValuesByParameters(_oRobot.SearchDomain, _cDominioLineas, new string[,] { { _cDominioLineasCol3, oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_linea).Value } });
+                string motivoAnulacion = "(AX)";
+                string producto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.producto).Value;
+                string tipoProducto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.producto_tipo).Value;
+                if (_productosAutos.Where(o => o == producto).FirstOrDefault() != null)
+                {
+                    _cLinea = "AUTOS";
+
+                }
+                else if (_productosRG.Where(o => o == producto).FirstOrDefault() != null)
+                {
+                    _cLinea = "RRGG";
+                }
+                else if (_productosAlianzas.Where(o => o == producto).FirstOrDefault() != null)
+                {
+                    _cLinea = "ALIANZAS";
+                }
+                if (_tProductosAlianzas.Where(o => o == tipoProducto).FirstOrDefault() != null)
+                {
+                    _cLinea = "ALIANZAS";
+
+                }
+                else if (_tProductosLPersonales.Where(o => o == tipoProducto).FirstOrDefault() != null)
+                {
+                    _cLinea = "LLPP";
+                }
+                if (producto.Contains(motivoAnulacion))
+                {
+                    msgObservacion = "Se debe anular por lo acordado con el operador." + msgObservacion;
+                }
+                else if (tipoProducto.Contains(motivoAnulacion))
+                {
+                    msgObservacion = "Se debe anular por lo acordado con el operador." + msgObservacion;
+                }
+                //Reglas Conforme
+                oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.linea, Value = _cLinea });
+
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener Línea de Negocio: " + Ex.Message, Ex); }
+        }
         //Obtiene valores para los parámetros del Robot desde EES:
         private void ObtenerParametros()
         {
             try
             {
-                //Parámetros del Robot Procesamiento de Datos:                               
-                _nIdMesaControl = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoError").ValueParam);
-                _nIdPantallaValidacion = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoSiguiente").ValueParam);
-                _nIdNotificacion = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoNotificacion").ValueParam);
-                _cLineaAutos = _oRobot.GetValueParamRobot("LineaAutos").ValueParam;
-                _cLineaLLPP = _oRobot.GetValueParamRobot("LineaLLPP").ValueParam;
-                _cLineaAlianzas = _oRobot.GetValueParamRobot("LineaAlianzas").ValueParam;
-                _cLineaRRGG = _oRobot.GetValueParamRobot("LineaRRGG").ValueParam;
+                //Parámetros del Robot Procesamiento de Datos:
+                _nDiasArrepentimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolRenovadaAuto").ValueParam);
+                _nDiasDesistimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolNuevaAuto").ValueParam);
+                _cLineaAutos = "AUTOS";
+                _cLineaLLPP = "LLPP";
+                _cLineaAlianzas = "ALIANZAS";
+                _cLineaRRGG = "RRGG ";
+                _procesos = _oRobot.GetValueParamRobot("reglaEstado").ValueParam.Split(',');
             }
             catch (Exception Ex)
             {
@@ -97,20 +171,6 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
             _oRobot.SaveTicketNextState(cMensaje == "" ? oTicket : _Funciones.MesaDeControl(oTicket, cMensaje), oAccion.Id);
         }
 
-
-        //Obtiene un arreglo con todos los procesos de endoso:
-        private string[] ProcesosEndoso(Ticket oTicketDatos)
-        {
-            try
-            {
-                Procesos = _oRobot.GetValueParamRobot("Procesos").ValueParam.Split(',');
-                return Procesos;
-            }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un erro al obtener lista de procesos de endoso: " + Ex.Message, Ex);
-            }
-        }
 
         //Inicia el procesamiento de datos:
         private void ProcesarTicket(Ticket oTicketDatos)
@@ -179,14 +239,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_est).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
-                {
-                    //REGLA: Que no tenga siniestros.
-                }
-                else
-                {
-                    return false;
-                }
+                 
             }
             catch (Exception Ex)
             {
@@ -199,14 +252,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         {
             try
             {
-                if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_est).Value.ToUpperInvariant() == _cEstadoRehabilitacion) //Estado: CANCELADA. 
-                {
-                    //REGLA: Que no tenga siniestros.
-                }
-                else
-                {
-                    return false;
-                }
+                 
             }
             catch (Exception Ex)
             {
