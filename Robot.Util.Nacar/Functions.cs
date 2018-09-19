@@ -38,7 +38,7 @@ namespace Robot.Util.Nacar
             }
             catch (Exception Ex)
             {
-                throw new Exception("Error de acceso al sistema OnBase.", Ex);
+                throw new Exception("Error de acceso al sistema OnBase: " + Ex.Message, Ex);
             }
         }
 
@@ -100,9 +100,9 @@ namespace Robot.Util.Nacar
             {
                 _driver.Url = url;
                 _driver.Manage().Window.Maximize();
-                Esperar(1);
+                Esperar();
             }
-            catch (Exception Ex) { throw new Exception("Ocurrió un error al ingresar al sitio portal bcp", Ex); }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al ingresar al sitio portal bcp: " + Ex.Message, Ex); }
         }
 
         public void LoginPolicyCenter(IWebDriver _driver, string usuario, string contraseña)
@@ -178,7 +178,7 @@ namespace Robot.Util.Nacar
             }
             catch (Exception ex)
             {
-                throw new Exception(String.Format("Se produjo un error al tratar de obtener el elemento \"{0}\" por \"{1}\".", idElement, type), ex);
+                throw new Exception(String.Format("Ocurrió un error al obtener el elemento \"{0}\" por \"{1}\".", idElement, type), ex);
             }
         }
 
@@ -242,10 +242,7 @@ namespace Robot.Util.Nacar
                 service.FirefoxBinaryPath = _cRutaFirefox;
                 return service;
             }
-            catch (Exception Ex)
-            {
-                throw new Exception("No se encontró la ruta para el archivo geckodriver.exe", Ex);
-            }
+            catch (Exception Ex) { throw new Exception("No se encontró la ruta para el archivo geckodriver.exe . " + Ex.Message, Ex); }
         }
 
         private static FirefoxOptions GetFirefoxOptions()
@@ -300,10 +297,7 @@ namespace Robot.Util.Nacar
                 oDriver = GetFirefoxDriver();
                 Esperar();
             }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un error al abrir navegador Firefox.", Ex);
-            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al abrir navegador Firefox: " + Ex.Message, Ex); }
         }
 
         //Anina: Selecciona elemento de una lista.
@@ -327,10 +321,7 @@ namespace Robot.Util.Nacar
                     }
                 }
             }
-            catch (Exception Ex)
-            {
-                throw new Exception("Ocurrió un error al seleccionar una opción de la lista.", Ex);
-            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al seleccionar una opción de la lista: " + Ex.Message, Ex); }
         }
 
         //Valida campos vacíos en TicketValues:

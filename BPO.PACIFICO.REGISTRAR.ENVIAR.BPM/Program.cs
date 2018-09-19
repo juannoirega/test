@@ -72,7 +72,6 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                     CambiarEstadoTicket(oTicket, _oMesaControl, Ex.Message);
                     LogFailStep(12, Ex);
                     _Funciones.CerrarDriver(_oDriver);
-                    return;
                 }
             }
         }
@@ -98,7 +97,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 _cBPMWebDriver = _oRobot.GetValueParamRobot("BPMWebDriver").ValueParam;
                 _cGeckodriver = _oRobot.GetValueParamRobot("Geckodriver").ValueParam;
             }
-            catch (Exception Ex) { LogFailStep(12, Ex); }
+            catch (Exception Ex) { LogFailStep(12, Ex); throw new Exception("Ocurrió un error: " + Ex.Message, Ex); }
         }
 
         //Obtiene los usuarios OnBase según Línea de negocio:
@@ -162,7 +161,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
                 return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
             }
-            catch (Exception Ex) { throw new Exception("Ocurrió un error al validar campos del Ticket: " + Convert.ToString(oTicketDatos.Id), Ex); }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al validar campos del Ticket: " + Convert.ToString(oTicketDatos.Id) + ". " + Ex.Message, Ex); }
         }
 
         //Envía el ticket al siguiente estado:
