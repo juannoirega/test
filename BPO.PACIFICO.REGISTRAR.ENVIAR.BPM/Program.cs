@@ -34,6 +34,8 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         private static string _cEndosoAnulacion = string.Empty;
         private static string _cBPMWebDriver = string.Empty;
         private static string _cGeckodriver = string.Empty;
+        private static int _reprocesoContador = 0;
+        private static int _idEstadoRetorno = 0;
         private static StateAction _oMesaControl;
         private static StateAction _oRegistro;
         private static Functions _Funciones;
@@ -62,17 +64,21 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             {
                 try
                 {
-                    _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdEstadoError);
-                    _oRegistro = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdEstadoFinal);
+                    var valoresReprocesamiento = _Funciones.ObtenerValoresReprocesamiento(oTicket);
+                    if (valoresReprocesamiento.Count > 0) { _reprocesoContador = valoresReprocesamiento[0]; _idEstadoRetorno = valoresReprocesamiento[1]; }
+                    _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.Id == _nIdEstadoError);
+                    _oRegistro = _oRobot.GetNextStateAction(oTicket).First(a => a.Id == _nIdEstadoFinal);
                     _cLineaTicket = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.linea).Value));
                     ProcesarTicket(oTicket);
                 }
                 catch (Exception Ex)
                 {
+                    _reprocesoContador++;
+                    _Funciones.GuardarValoresReprocesamiento(oTicket, _reprocesoContador, _idEstadoRetorno);
                     CambiarEstadoTicket(oTicket, _oMesaControl, Ex.Message);
                     LogFailStep(12, Ex);
-                    _Funciones.CerrarDriver(_oDriver);
                 }
+                finally { _Funciones.CerrarDriver(_oDriver); }
             }
         }
 
@@ -327,6 +333,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             {
                 _Funciones.Esperar(7);
                 WorkflowOnBase();
+                if (_reprocesoContador > 0) { _reprocesoContador = 0; _idEstadoRetorno = 0; _Funciones.GuardarValoresReprocesamiento(oTicket, _reprocesoContador, _idEstadoRetorno); }
                 CambiarEstadoTicket(oTicketDatos, _oRegistro);
                 LogEndStep(1);
             }

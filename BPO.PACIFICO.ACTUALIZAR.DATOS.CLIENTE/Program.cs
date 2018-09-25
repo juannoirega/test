@@ -51,6 +51,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private static int _nIndexFilaCuenta = 0;
         private static int _nIndexCeldaCuenta = 0;
         private static bool _bControl = false;
+        private static int _reprocesoContador = 0;
+        private static int _idEstadoRetorno = 0;
         List<TicketValue> ticketValue = null;
         private static Functions _Funciones;
         private static StateAction _oMesaControl;
@@ -79,13 +81,21 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             {
                 try
                 {
-                    _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdEstadoError);
-                    _oTicketHijo = _oRobot.GetNextStateAction(oTicket).First(a => a.DestinationStateId == _nIdEstadoSiguiente);
+                    var valoresReprocesamiento = _Funciones.ObtenerValoresReprocesamiento(oTicket);
+                    if(valoresReprocesamiento.Count > 0) { _reprocesoContador = valoresReprocesamiento[0];_idEstadoRetorno = valoresReprocesamiento[1]; }
+                    _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.Id == _nIdEstadoError);
+                    _oTicketHijo = _oRobot.GetNextStateAction(oTicket).First(a => a.Id == _nIdEstadoSiguiente);
                     //Obteniendo Línea de Negocio:
                     _cLinea = oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.linea).Value;
                     ProcesarTicket(oTicket);
                 }
-                catch (Exception Ex) { CambiarEstadoTicket(oTicket, _oMesaControl, Ex.Message); LogFailStep(30, Ex); }
+                catch (Exception Ex)
+                {
+                    _reprocesoContador++;
+                    _Funciones.GuardarValoresReprocesamiento(oTicket, _reprocesoContador, _idEstadoRetorno);
+                    CambiarEstadoTicket(oTicket, _oMesaControl, Ex.Message);
+                    LogFailStep(30, Ex);
+                }
                 finally { _Funciones.CerrarDriver(_driverGlobal); }
             }
         }
@@ -123,7 +133,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private void ProcesarTicket(Ticket oTicket)
         {
             ContactManager(oTicket);
-            PolicyCenter(oTicket);
+            PolicyCenter(oTicket);  
         }
 
         #region CONTACT MANAGER
@@ -258,7 +268,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             try
             {
-
                 var container = ODataContextWrapper.GetContainer();
 
                 ticket = _oRobot.Tickets.FirstOrDefault();
@@ -436,6 +445,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 AgregarValoresTicket(oTicket);
 
                 //Si todo es conforme, pasa al estado Crear Ticket Hijo:
+                if (_reprocesoContador > 0) { _reprocesoContador = 0; _idEstadoRetorno = 0; _Funciones.GuardarValoresReprocesamiento(oTicket, _reprocesoContador, _idEstadoRetorno); }
                 CambiarEstadoTicket(oTicket, _oTicketHijo);
             }
             LogEndStep(4);
