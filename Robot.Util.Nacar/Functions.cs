@@ -14,6 +14,7 @@ using everis.Ees.Proxy.Services;
 using OpenQA.Selenium.Interactions;
 using System.Web.Script.Serialization;
 using System.Text.RegularExpressions;
+using OpenQA.Selenium.Support.UI;
 
 namespace Robot.Util.Nacar
 {
@@ -42,23 +43,24 @@ namespace Robot.Util.Nacar
             }
         }
 
-        public void AbrirSelenium(ref IWebDriver _driver)
+        public void AbrirSelenium(ref IWebDriver oDriver)
         {
             try
             {
-                _driver = new InternetExplorerDriver();
-                _driver.Manage().Window.Maximize();
+                oDriver = new InternetExplorerDriver();
+                oDriver.Manage().Window.Maximize();
+                VerificarVentanaAlerta(oDriver);
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al iniciar navegador Internet Explorer: " + Ex.Message, Ex); }
         }
 
-        public void NavegarUrlPolicyCenter(IWebDriver _driver, string url)
+        public void NavegarUrlPolicyCenter(IWebDriver oDriver, string url)
         {
             try
             {
-                _driver.Url = url;
-                _driver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
-                _driver.Manage().Window.Maximize();
+                oDriver.Url = url;
+                oDriver.Navigate().GoToUrl("javascript:document.getElementById('overridelink').click()");
+                oDriver.Manage().Window.Maximize();
                 Esperar();
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al ingresar a la dirección indicada: " + Ex.Message, Ex); }
@@ -132,7 +134,7 @@ namespace Robot.Util.Nacar
                 _driver.FindElement(By.Id("TabBar:PolicyTab_arrow")).Click();
                 _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(numeroPoliza);
                 _driver.FindElement(By.Id("TabBar:PolicyTab:PolicyTab_PolicyRetrievalItem")).SendKeys(Keys.Enter);
-                Esperar(5);
+                Esperar(10);
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al buscar póliza: " + Ex.Message, Ex); }
         }
@@ -152,33 +154,15 @@ namespace Robot.Util.Nacar
             Esperar(2);
         }
 
-        public string GetElementValue(IWebDriver driver, string idElement, string type = "id")
+        public string GetElementValue(IWebDriver driver, By idElement)
         {
             try
             {
-                switch (type.ToLower())
-                {
-                    case "id":
-                        return driver.FindElement(By.Id(idElement)).Text;
-                    case "xpath":
-                        return driver.FindElement(By.XPath(idElement)).Text;
-                    case "linktext":
-                        return driver.FindElement(By.LinkText(idElement)).Text;
-                    case "name":
-                        return driver.FindElement(By.Name(idElement)).Text;
-                    case "tagname":
-                        return driver.FindElement(By.TagName(idElement)).Text;
-                    case "classname":
-                        return driver.FindElement(By.ClassName(idElement)).Text;
-                    case "partiallinktext":
-                        return driver.FindElement(By.PartialLinkText(idElement)).Text;
-                    default:
-                        return null;
-                }
+                return driver.FindElement(idElement).Text;
             }
-            catch (Exception ex)
+            catch (Exception Ex)
             {
-                throw new Exception(String.Format("Ocurrió un error al obtener el elemento \"{0}\" por \"{1}\".", idElement, type), ex);
+                throw new Exception(String.Format("Ocurrió un error al obtener el elemento \"{0}\" .", idElement), Ex);
             }
         }
 
@@ -333,35 +317,14 @@ namespace Robot.Util.Nacar
             return true;
         }
 
-        //Anina: Verifica si existe elemento web.
-        public Boolean ExisteElemento(IWebDriver oDriver, string cIdElemento, int nIntentos = 1, bool bId = true)
+        //Anina: Verifica si existe elemento web. Parámetro de tipo By.
+        public Boolean ExisteElemento(IWebDriver oDriver, By cIdElemento, int nIntentos = 1)
         {
             for (int i = 0; i < nIntentos; i++)
             {
                 try
                 {
-                    if (bId)
-                    {
-                        if (oDriver.FindElement(By.Id(cIdElemento)).Displayed) { return true; }
-                    }else { if (oDriver.FindElement(By.XPath(cIdElemento)).Displayed) { return true; } }
-                    
-                }
-                catch (NoSuchElementException)
-                {
-                    Esperar();
-                }
-            }
-            return false;
-        }
-
-        public Boolean ExisteElementoXPath(IWebDriver oDriver, string cIdElemento, int nIntentos)
-        {
-            for (int i = 0; i < nIntentos; i++)
-            {
-                try
-                {
-                    oDriver.FindElement(By.XPath(cIdElemento));
-                    return true;
+                    if (oDriver.FindElement(cIdElemento).Displayed) { return true; }                 
                 }
                 catch (NoSuchElementException)
                 {
@@ -378,10 +341,7 @@ namespace Robot.Util.Nacar
             {
                 if (oDriver.SwitchTo().Alert().ToString().Length > 0) { oDriver.SwitchTo().Alert().Accept(); return true; }
             }
-            catch (NoSuchElementException)
-            {
-                Esperar();
-            }
+            catch (NoAlertPresentException) { Esperar(); }
             return false;
         }
 
@@ -643,6 +603,20 @@ namespace Robot.Util.Nacar
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener valor de celda: " + Ex.Message, Ex); }
             return string.Empty;
+        }
+
+        public IWebElement FindElement(IWebDriver oDriver, By by, int nTiempoEsperaSegundos)
+        {
+            try
+            {
+                if(nTiempoEsperaSegundos > 0)
+                {
+                    var oEsperar = new WebDriverWait(oDriver, TimeSpan.FromSeconds(nTiempoEsperaSegundos));
+                    return oEsperar.Until(drv => drv.FindElement(by));
+                }
+                return oDriver.FindElement(by);
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener elemento web: " + Ex.Message, Ex); }
         }
     }
 }

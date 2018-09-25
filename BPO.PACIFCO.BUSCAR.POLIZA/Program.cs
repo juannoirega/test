@@ -13,7 +13,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
     {
         private static BaseRobot<Program> _robot = null;
         private static IWebDriver _driverGlobal = null;
-        private static IWebElement element;
         private static Functions _Funciones;
         private StateAction _estadoContact;
         //private static Functions _Funciones;
@@ -61,11 +60,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         //
         private bool _polizaNueva = true;
         private bool _finProcesoContact = false;
-
-        //Pendiente
-        private string _numeroVehiculos = "1";
-        private string _numeroAsegurados = "1";
-
         #endregion
         static void Main(string[] args)
         {
@@ -214,20 +208,20 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             LogStartStep(42);
             string _idDesplegable = string.Empty;
 
-            _producto = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product");
-            _tipoProducto = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:PolicyTypeExt");
-            _polizaInicioVigencia = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerEffDate_date");
-            _polizaFinVigencia = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerExpirDate_date");
-            _polizaEstado = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:state");
-            _polizaTipoVigencia = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:validityType");
-            _nombreContratante = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:AccountName");
-            _nombreAsegurado = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Name");
-            _numeroCuenta = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:Number");
-            _polizaFechaEmision = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:submissionDate");
-            _anulacionMotivo = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:CanceledReason");
-            _canalOrganizacion = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:POROrganization");
-            _servicioOrganizacion = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:Producer");
-            string[] ArrayAgente = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:SecondaryProducerCode").Split(' ');
+            _producto = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product"));
+            _tipoProducto = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:PolicyTypeExt"));
+            _polizaInicioVigencia = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerEffDate_date"));
+            _polizaFinVigencia = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerExpirDate_date"));
+            _polizaEstado = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AssocJobDV:state"));
+            _polizaTipoVigencia = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:validityType"));
+            _nombreContratante = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:AccountName"));
+            _nombreAsegurado = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Name"));
+            _numeroCuenta = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:Number"));
+            _polizaFechaEmision = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:submissionDate"));
+            _anulacionMotivo = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:CanceledReason"));
+            _canalOrganizacion = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:POROrganization"));
+            _servicioOrganizacion = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:Producer"));
+            string[] ArrayAgente = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:SecondaryProducerCode")).Split(' ');
             if (ArrayAgente.Length > 0)
             {
                 _canalAgenteCodido = ArrayAgente[0];
@@ -238,7 +232,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
                 }
             }
-            string[] ArrayCanal = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:ProducerCodeOfRecord").Split(' ');
+            string[] ArrayCanal = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:ProducerCodeOfRecord")).Split(' ');
             if (ArrayCanal.Length > 0)
             {
                 _canalCodigo = ArrayCanal[0];
@@ -249,7 +243,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 }
             }
 
-            string[] ArrayServicioAgente = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:SecondaryProducerCodeService").Split(' ');
+            string[] ArrayServicioAgente = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:SecondaryProducerCodeService")).Split(' ');
             if (ArrayServicioAgente.Length > 0)
             {
                 _servicioAgenteCodigo = ArrayServicioAgente[0];
@@ -260,7 +254,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 }
             }
 
-            string[] ArrayServicioCanal = _Funciones.GetElementValue(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:ProducerCode").Split(' ');
+            string[] ArrayServicioCanal = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:ProducerCode")).Split(' ');
             if (ArrayServicioCanal.Length > 0)
             {
                 _servicioCanalCodigo = ArrayServicioCanal[0];
@@ -273,7 +267,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
 
             try
             {//Agregar id ComboBox Paginacion talbla 
-                _idDesplegable = _Funciones.GetElementValue(_driverGlobal, "FALTA ID DEL COMBOBOX");
+                _idDesplegable = _Funciones.GetElementValue(_driverGlobal, By.Id("FALTA ID DEL COMBOBOX"));
             }
             catch
             {
@@ -303,14 +297,14 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 _polizaNueva = _Funciones.VerificarValorGrilla(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "Tipo", "Renovación", ref count) == true ? false : true;
             }
 
-            if (_Funciones.ExisteElementoXPath(_driverGlobal, "//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_RiskAnalysis']/div", 1))
+            if (_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_RiskAnalysis']/div")))
             {
                 _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_RiskAnalysis']/div")).Click();
                 _Funciones.Esperar(3);
                 _driverGlobal.FindElement(By.Id("PolicyFile_RiskAnalysis:PolicyFile_RiskAnalysisScreen:PolicyFile_RiskAnalysisCV:PolicyFile_ClaimsCardTab")).Click();
                 _siniestros = _Funciones.ObtenerJsonGrilla(_driverGlobal, "PolicyFile_RiskAnalysis:PolicyFile_RiskAnalysisScreen:PolicyFile_RiskAnalysisCV:ClaimsLV");
             }
-            if (_Funciones.ExisteElemento(_driverGlobal, "PolicyChangeWizard:LOBWizardStepGroup:PersonalVehicles", 1))
+            if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyChangeWizard:LOBWizardStepGroup:PersonalVehicles")))
             {
                 _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PersonalVehicles")).Click();
                 _Funciones.Esperar(3);

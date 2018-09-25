@@ -45,12 +45,12 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private static string _cLineaAlianzas = string.Empty;
         private static string _cLineaLLPP = string.Empty;
         private static string _cLinea = string.Empty;
-        private static string _nombreCabecera = string.Empty;
         private static string _cNombreOferta = string.Empty;
         private static string _cCeldaLimitante = string.Empty;
         private static string _cOrdenTrabajo = string.Empty;
         private static int _nIndexFilaCuenta = 0;
         private static int _nIndexCeldaCuenta = 0;
+        private static bool _bControl = false;
         List<TicketValue> ticketValue = null;
         private static Functions _Funciones;
         private static StateAction _oMesaControl;
@@ -107,7 +107,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _cLineaAlianzas = _oRobot.GetValueParamRobot("LineaAlianzas").ValueParam;
                 _cLineaLLPP = _oRobot.GetValueParamRobot("LineaLLPP").ValueParam;
                 _cComentariosAdicionales = _oRobot.GetValueParamRobot("ComentariosAdicionales").ValueParam;
-                _nombreCabecera = _oRobot.GetValueParamRobot("NombreCabeceraEndoso").ValueParam;
                 _cCeldaLimitante = _oRobot.GetValueParamRobot("CeldaLimitante").ValueParam;
                 _nIndexFilaCuenta = Convert.ToInt32(_oRobot.GetValueParamRobot("IndexFilaCuenta").ValueParam);
                 _nIndexCeldaCuenta = Convert.ToInt32(_oRobot.GetValueParamRobot("IndexCeldaCuenta").ValueParam);
@@ -144,15 +143,13 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             //Opteniendo RUC
             _valoresTickets[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.ruc).Value;
 
-            String mensajeError_Xpath = "//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div";
-
             if (_valoresTickets[0] != "" && _valoresTickets[1] != "")
             {
                 if (_valoresTickets[0] != "")
                 {
                     Filtros(1, _valoresTickets[0]);
 
-                    if (!_Funciones.ExisteElementoXPath(_driverGlobal, mensajeError_Xpath, 1))
+                    if (!_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div")))
                     {
                         AccederRegistro();
                         Acceso = "";
@@ -167,7 +164,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     Filtros(2, _valoresTickets[1]);
 
 
-                    if (!_Funciones.ExisteElementoXPath(_driverGlobal, mensajeError_Xpath, 1))
+                    if (!_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div")))
                     {
                         AccederRegistro();
                         Acceso = "";
@@ -184,7 +181,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 {
                     Filtros(1, _valoresTickets[0]);
 
-                    if (!_Funciones.ExisteElementoXPath(_driverGlobal, mensajeError_Xpath, 1))
+                    if (!_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div")))
                     {
                         AccederRegistro();
                         Acceso = "";
@@ -199,7 +196,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 {
                     Filtros(2, _valoresTickets[1]);
 
-                    if (!_Funciones.ExisteElementoXPath(_driverGlobal, mensajeError_Xpath, 1))
+                    if (!_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div")))
                     {
                         AccederRegistro();
                         Acceso = "";
@@ -287,12 +284,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _oRobot.SaveTicketNextState(ticket, _nIdEstadoSiguiente);
 
             }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-
+            catch (Exception Ex) { throw new Exception("Ocurrió un error: " + Ex.Message, Ex); }
         }
 
         public void EditarFormulario(String campo, String texto)
@@ -426,7 +418,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _cUrlPolicyCenter);
                 Credenciales();
                 _Funciones.LoginPolicyCenter(_driverGlobal, _Usuarios[0], _Usuarios[1]);
-                if (_Funciones.ExisteElemento(_driverGlobal, "TabBar:PolicyTab_arrow", _nIntentosPolicyCenter))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("TabBar:PolicyTab_arrow"), _nIntentosPolicyCenter))
                 {
                     break;
                 }
@@ -437,7 +429,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             ActualizarPolicyCenter(oTicket);
             if (String.IsNullOrWhiteSpace(_cOrdenTrabajo))
             {
-                CambiarEstadoTicket(oTicket, _oMesaControl, "Ocurrió un error en Análisis de Riesgos para la línea " + _cLinea + ", se requiere aprobación del endoso.");
+                CambiarEstadoTicket(oTicket, _oMesaControl, _bControl == true ? "La fecha efectiva del cambio no se encuentra dentro del rango de vigencia." : "Ocurrió un error en Análisis de Riesgos para la línea " + _cLinea + ", se requiere aprobación del endoso.");
             }
             else
             {
@@ -472,12 +464,13 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     //Busca datos de Póliza por Nro. de Póliza:
                     _cElemento = "Buscar póliza";
                     _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_nro).Value);
+                    _Funciones.Esperar(12);
 
                     //Obtener nombre de la oferta:
                     _cNombreOferta = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering")).Text;
 
                     IniciarCambioPoliza(oTicketDatos);
-                    FormularioCambioPoliza(oTicketDatos);
+                    if (!FormularioCambioPoliza(oTicketDatos)) { _bControl = true;  return; }
                     if (!String.IsNullOrWhiteSpace(_cNombreOferta)) { SeleccionarOferta(oTicketDatos); }
 
                     //Método para actualizar datos:
@@ -506,7 +499,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _cNombreOferta = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering")).Text;
 
                     IniciarCambioPoliza(oTicketDatos);
-                    FormularioCambioPoliza(oTicketDatos);
+                    if (!FormularioCambioPoliza(oTicketDatos)) { _bControl = true; return; }
                     if (!String.IsNullOrWhiteSpace(_cNombreOferta)) { SeleccionarOferta(oTicketDatos); }
 
                     //Método para actualizar datos:
@@ -535,7 +528,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _cNombreOferta = _driverGlobal.FindElement(By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering")).Text;
 
                     IniciarCambioPoliza(oTicketDatos);
-                    FormularioCambioPoliza(oTicketDatos);
+                    if (!FormularioCambioPoliza(oTicketDatos)) { _bControl = true; return; }
                     _Funciones.VerificarVentanaAlerta(_driverGlobal);
                     _Funciones.Esperar(10);
 
@@ -590,7 +583,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                         oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.ruc).Value :
                         oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.dni).Value);
 
-                    if (_Funciones.ExisteElemento(_driverGlobal, "ContactFile_AccountsSearch:AssociatedAccountsLV",2))
+                    if (_Funciones.ExisteElemento(_driverGlobal, By.Id("ContactFile_AccountsSearch:AssociatedAccountsLV"),2))
                     {
                         //Obtener número de filas de la tabla:
                         _cElemento = "Tabla de cuentas registradas";
@@ -622,7 +615,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         }
 
         //Formulario inicial para el Cambio de Póliza:
-        private void FormularioCambioPoliza(Ticket oTicketDatos)
+        private Boolean FormularioCambioPoliza(Ticket oTicketDatos)
         {
             try
             {
@@ -632,8 +625,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 if (ValidarFechaSolicitud(oTicketDatos, Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_efectiva).Value)))
                     _driverGlobal.FindElement(By.Id("StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:EffectiveDate")).
                         SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_efectiva).Value);
+                else { return false; }
 
-                if (_Funciones.ExisteElemento(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason", 2))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason"), 2))
                 {
                     //Seleccionar tipo de complejidad:
                     _cElemento = "Tipo de Complejidad";
@@ -656,6 +650,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _Funciones.Esperar(4);
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error en formulario: " + Ex.Message + " " + _cElemento, Ex); }
+            return true;
         }
 
         //Verifica si se requiere seleccionar Oferta:
@@ -663,7 +658,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             try
             {
-                if (_Funciones.ExisteElemento(_driverGlobal, "PolicyChangeWizard:OfferingScreen:OfferingSelection", 2))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyChangeWizard:OfferingScreen:OfferingSelection"), 2))
                 {
                     if (_cLinea != _cLineaRRGG)
                     {
@@ -900,7 +895,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Update")).Click();
                 _Funciones.Esperar(5);
 
-                if (_Funciones.ExisteElemento(_driverGlobal, "EditPolicyContactRolePopup:ContactDetailScreen:_msgs_msgs"))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("EditPolicyContactRolePopup:ContactDetailScreen:_msgs_msgs")))
                 {
                     //Clic en Cancelar:
                     _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Cancel")).Click();
@@ -914,7 +909,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:JobWizardToolbarButtonSet:QuoteOrReview")).Click();
                     _Funciones.Esperar(15);
 
-                    if (_Funciones.ExisteElemento(_driverGlobal, "UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton"))
+                    if (_Funciones.ExisteElemento(_driverGlobal, By.Id("UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton")))
                     {
                         //Clic en botón Detalles:
                         _cElemento = "Botón Detalles";
@@ -1032,7 +1027,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _Funciones.Esperar(5);
 
                 //Verificar si los datos son correctos:
-                if (_Funciones.ExisteElemento(_driverGlobal, "EditAccountPopup:EditAccountScreen:_msgs_msgs", 2))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("EditAccountPopup:EditAccountScreen:_msgs_msgs"), 2))
                 {
                     //Clic en Cancelar:
                     _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Cancel")).Click();
@@ -1050,7 +1045,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             try
             {
                 //Ventana de aprobación de bloqueantes:
-                if (_Funciones.ExisteElemento(_driverGlobal, "PolicyChangeWizard:Job_RiskAnalysisScreen:RiskAnalysisCV:RiskEvaluationPanelSet:1"))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:RiskAnalysisCV:RiskEvaluationPanelSet:1")))
                 {
                     //Verifica si existen bloqueantes:
                     _cElemento = "Tabla de bloqueantes";
@@ -1066,7 +1061,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                         _driverGlobal.FindElement(By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:RiskAnalysisCV:RiskEvaluationPanelSet:" + i + ":UWIssueRowSet:_Checkbox")).Click();
                     }
 
-                    if (_Funciones.ExisteElemento(_driverGlobal, "PolicyChangeWizard:Job_RiskAnalysisScreen:RiskAnalysisCV:RiskEvaluationPanelSet:Approve"))
+                    if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:RiskAnalysisCV:RiskEvaluationPanelSet:Approve")))
                     {
                         //Clic en botón Aprobar:
                         _cElemento = "Botón Aprobar";
@@ -1094,7 +1089,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             try
             {
-                if (_Funciones.ExisteElemento(_driverGlobal, "PolicyChangeWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:QuoteOrReview",2))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:QuoteOrReview"),2))
                 {
                     //Clic en Cotización:
                     _cElemento = "Botón Cotización";
@@ -1102,7 +1097,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _Funciones.Esperar(15);
                 }
 
-                if (_Funciones.ExisteElemento(_driverGlobal, "PolicyChangeWizard:PolicyChangeWizard_QuoteScreen:RatingCumulDetailsPanelSet:RatingOverrideButtonDV:RatingOverrideButtonDV:OverrideRating_link"))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyChangeWizard:PolicyChangeWizard_QuoteScreen:RatingCumulDetailsPanelSet:RatingOverrideButtonDV:RatingOverrideButtonDV:OverrideRating_link")))
                 {
                     //Clic en Reescribir prima:
                     _cElemento = "Reescribir prima y comisiones";
@@ -1121,7 +1116,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _Funciones.VerificarVentanaAlerta(_driverGlobal);
                 _Funciones.Esperar(8);
 
-                if (_Funciones.ExisteElemento(_driverGlobal, "JobComplete:JobCompleteScreen:Message"))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("JobComplete:JobCompleteScreen:Message")))
                 {
                     _cOrdenTrabajo = _Funciones.ObtenerCadenaDeNumeros(_driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:Message")).Text);
                 }

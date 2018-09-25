@@ -132,7 +132,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                     _Funciones.InstanciarFirefoxDriver(ref _oDriver, _cRutaGeckodriver, _cRutaFirefox, _cBPMWebDriver, _cGeckodriver);
                     UsuariosOnBase(nIndice);
                     _Funciones.IngresarBPM(_oDriver, _cUrlOnBase, Usuarios[0], Usuarios[1]);
-                    if (_Funciones.ExisteElemento(_oDriver, "controlBarMenuName", _nIntentosOnBase))
+                    if (_Funciones.ExisteElemento(_oDriver, By.Id("controlBarMenuName"), _nIntentosOnBase))
                     {
                         break;
                     }
@@ -189,13 +189,13 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         private void IniciaFormularioBPM()
         {
             //Clic en pestaña Consultas Personalizadas:
-            if (!_Funciones.ExisteElemento(_oDriver, "controlBarMenuName", _nIntentosOnBase))
+            if (!_Funciones.ExisteElemento(_oDriver, By.Id("controlBarMenuName"), _nIntentosOnBase))
                 IniciaFormularioBPM();
 
             _cElemento = _oDriver.FindElement(By.XPath("//*[@id ='DropDownContainer']/tbody/tr/td[2]")).Text;
             _oDriver.FindElement(By.XPath("//*[@id ='DropDownContainer']/tbody/tr/td[2]")).Click();
 
-            if (_Funciones.ExisteElemento(_oDriver, "/html/body/div[8]",_nIntentosOnBase,false))
+            if (_Funciones.ExisteElemento(_oDriver, By.XPath("/html/body/div[8]"),_nIntentosOnBase))
             {
                 //Clic en Nuevo Formulario:
                 _Funciones.SeleccionarListBox(_oDriver, "//*[@id='SubMenuOptionsTable']/tbody/tr", _cOpcionFormulario);
@@ -252,7 +252,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             _Funciones.Esperar(3);
 
             //Seleccionar Motivo de Anulación:
-            if (_Funciones.ExisteElemento(_oDriver, "motivo_anulacion",_nIntentosOnBase))
+            if (_Funciones.ExisteElemento(_oDriver, By.Id("motivo_anulacion"),_nIntentosOnBase))
             {
                 _cElemento = "Motivo de Anulación";
                 _oDriver.FindElement(By.XPath("//*[@id='motivo_anulacion']/button")).Click();
@@ -287,7 +287,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             _oDriver.FindElement(By.Id("vser_nombrerazonsocialdelcontratante571_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.asegurado_nombre).Value.ToUpper());
 
             //Nro. Doc. Identidad:
-            if (_Funciones.ExisteElemento(_oDriver, "nrodedocumentoidentidad",_nIntentosOnBase))
+            if (_Funciones.ExisteElemento(_oDriver, By.Id("nrodedocumentoidentidad"),_nIntentosOnBase))
             {
                 _cElemento = "Documento de identidad";
                 _oDriver.FindElement(By.Id("nrodedocumentoidentidad_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_dni).Value);
