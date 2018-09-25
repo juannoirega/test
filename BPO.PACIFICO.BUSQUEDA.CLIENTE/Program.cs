@@ -27,12 +27,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         string texto = string.Empty;
         string Acceso = string.Empty;
         private static Functions _Funciones;
-
         static string[] _valoresTickets = new string[10];
         static string[] _valoresTickets_Ident = new string[10];
-
-
-        List<TicketValue> ticketValue = null;
 
         #region ParametrosRobot
         private string _urlContactManager = string.Empty;
@@ -46,7 +42,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         static void Main(string[] args)
         {
-
             _Funciones = new Functions();
             _robot = new BaseRobot<Program>(args);
             _robot.Start();
@@ -54,7 +49,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         protected override void Start()
         {
-
             if (_robot.Tickets.Count < 1)
                 return;
 
@@ -70,23 +64,16 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_EstadoSiguiente)).Id);
                 }
-
             }
-
-
         }
 
         private void ProcesarTicket(Ticket ticket)
         {
-
             GetParameterRobots();
             AbrirSelenium();
             NavegarUrl();
             Login();
             AccedientoContactManager(ticket);
-
-
-
         }
 
         private void AccedientoContactManager(Ticket ticket)
@@ -96,16 +83,13 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             //Opteniendo RUC
             _valoresTickets[1] = ticket.TicketValues.First(a => a.FieldId == eesFields.Default.ruc).Value;
 
-
-            String mensajeError_Xpath = "//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div";
-
             if (_valoresTickets[0] != "" && _valoresTickets[1] != "")
             {
                 if (_valoresTickets[0] != "")
                 {
                     Filtros(1, _valoresTickets[0]);
 
-                    if (!_Funciones.ExisteElementoXPath(_driverGlobal, mensajeError_Xpath, 1))
+                    if (!_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div")))
                     {
                         _Funciones.Esperar(3);
                         AccederRegistro();
@@ -121,7 +105,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     Filtros(2, _valoresTickets[1]);
 
 
-                    if (!_Funciones.ExisteElementoXPath(_driverGlobal, mensajeError_Xpath, 1))
+                    if (!_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div")))
                     {
                         _Funciones.Esperar(3);
                         AccederRegistro();
@@ -132,15 +116,13 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                         Acceso = "Negativo";
                     }
                 }
-
             }
             else
             {
                 if (_valoresTickets[0] != "")
                 {
                     Filtros(1, _valoresTickets[0]);
-
-                    if (!_Funciones.ExisteElementoXPath(_driverGlobal, mensajeError_Xpath, 1))
+                    if (!_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div")))
                     {
                         _Funciones.Esperar(3);
                         AccederRegistro();
@@ -155,9 +137,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 if (_valoresTickets[1] != "")
                 {
                     Filtros(2, _valoresTickets[1]);
-
-
-                    if (!_Funciones.ExisteElementoXPath(_driverGlobal, mensajeError_Xpath, 1))
+                    if (!_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div")))
                     {
                         _Funciones.Esperar(3);
                         AccederRegistro();
@@ -168,9 +148,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                         Acceso = "Negativo";
                     }
                 }
-
-
-
             }
 
             if (Acceso == "Negativo")
@@ -182,7 +159,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 CapturarDatos(ticket);
             }
         }
-
 
         public void Filtros(int indicador, string valor)
         {
@@ -214,8 +190,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _driverGlobal.FindElement(By.ClassName("bigButton_link")).Click();
                 _Funciones.Esperar(2);
             }
-
-
         }
 
         public void AccederRegistro()
@@ -258,7 +232,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     InsertarValoresFielt(ticket, eesFields.Default.correo_personal, ExtraerDatosXPath(0, 41, "textBox"));
                     //Distrito
                     InsertarValoresFielt(ticket, eesFields.Default.distrito, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_District"));
-
                 }
 
                 if (_valoresTickets[1] != "")
@@ -277,7 +250,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     InsertarValoresFielt(ticket, eesFields.Default.correo_personal, ExtraerDatosXPath(0, 38, "textBox"));
                     //Distrito
                     InsertarValoresFielt(ticket, eesFields.Default.distrito, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:abc"));
-
                 }
 
 
@@ -308,18 +280,14 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
                 _robot.SaveTicketNextState(ticket, Convert.ToInt32(_EstadoSiguiente));
             }
-
             catch (Exception ex)
             {
-
                 _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_EstadoSiguiente)).Id);
             }
-
         }
 
         public void InsertarValoresFielt(Ticket ticket, Int32 idFields, String valor)
         {
-
             ticket.TicketValues.Add(new TicketValue
             {
                 FieldId = idFields,
@@ -340,63 +308,27 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _EstadoSiguiente = _robot.GetValueParamRobot("EstadoSiguiente").ValueParam;
 
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Obtener los parametros del robot", ex);
-            }
+            catch (Exception ex) { throw new Exception("Ocurrió un error al obtener los parámetros del robot", ex); }
         }
 
         private void AbrirSelenium()
         {
             //LogInfoStep(5);//id referencial msje Log "Iniciando la carga Internet Explorer"
-            try
-            {
-                _Funciones.AbrirSelenium(ref _driverGlobal);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al Iniciar Internet Explorer", ex);
-            }
-            //LogInfoStep(6);//id referencial msje Log "Finalizando la carga Internet Explorer"
-
+            _Funciones.AbrirSelenium(ref _driverGlobal);
         }
 
         private void NavegarUrl()
         {
-
-            try
-            {
-                //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
-                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlContactManager);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("No se puede acceder al sitio policycenter", ex);
-            }
-            //LogInfoStep(5);//id referencial msje Log "Finalizando acceso al sitio policenter"
-
-
+            //LogInfoStep(5);//id referencial msje Log "Iniciando acceso al sitio policenter"
+            _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlContactManager);
         }
 
         private void Login()
         {
-
-            try
-            {
-                //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
-
-                _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioContactManager, _contraseñaContactManager);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("No se puede acceder al sistema policycenter", ex);
-            }
-            //LogInfoStep(5);//id referencial msje Log "Finalizacion login policenter"
-
-
+            //LogInfoStep(5);//id referencial msje Log "Iniciando login policenter"
+            _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioContactManager, _contraseñaContactManager);
         }
 
-        
         public String ExtraerDatosXPath(int index, int posicion, string clase)
         {
             try
@@ -409,7 +341,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             {
                 return "";
             }
-
         }
 
         public String optenerNacionalidad()
@@ -422,9 +353,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 if (element.Selected)
                     return "Peruano (a)";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 return "";
             }
 
@@ -434,21 +364,13 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 if (element.Selected)
                     return "Extranjero (a)";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 return "";
             }
 
-
             return "";
-
-
-            //else
-            //    .Click();
         }
-
-
 
         public void IngresarTextoSelect(String name, String texto)
         {
@@ -461,13 +383,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             SelectElement elemen = new SelectElement(_driverGlobal.FindElement(By.Name(name)));
             return elemen.SelectedOption.Text;
-
-
         }
-
-     
-
-
-
     }
 }

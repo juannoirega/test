@@ -47,6 +47,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
         static void Main(string[] args)
         {
             _robot = new BaseRobot<Program>(args);
+            _Funciones = new Functions();
             _robot.Start();
         }
 

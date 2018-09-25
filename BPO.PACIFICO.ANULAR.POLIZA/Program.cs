@@ -186,7 +186,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 _pasoRealizado = "Menu acciones";
                 _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
 
-                if (_Funciones.ExisteElemento(_driverGlobal, "PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy", 2))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy"), 2))
                 {
                     _pasoRealizado = "Menu opcion cancelar poliza";
                     _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
@@ -203,7 +203,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                     _Funciones.Esperar(2);
 
                     _pasoRealizado = "Ingresar endoso anulacion";
-                    _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo, " ", _Funciones.GetElementValue(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date")));
+                    _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo, " ", _Funciones.GetElementValue(_driverGlobal, By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date"))));
                     _Funciones.Esperar(3);
 
                     _pasoRealizado = "Seleccionar combobox forma de reembolso";
@@ -224,7 +224,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                     _Funciones.Esperar();
                     _driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:JobCompleteDV:ViewPolicy")).Click();
                     _Funciones.Esperar(2);
-                    _numeroOrdenTrabajo = _Funciones.GetElementValue(_driverGlobal, "JobComplete:JobCompleteScreen:Message").Trim().Split(' ').LastOrDefault().Replace(").", " ").Trim();
+                    _numeroOrdenTrabajo = _Funciones.ObtenerCadenaDeNumeros(_driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:Message")).Text);
                     _Funciones.Esperar(2);
                 }
                 else
@@ -251,7 +251,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         {
             LogStartStep(58);
             _Funciones.Esperar(2);
-            if (_Funciones.ExisteElementoXPath(_driverGlobal, "//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_Documents']/div", 2))
+            if (_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_Documents']/div"), 2))
             {
                 _pasoRealizado = "Herramientas Documentos";
                 _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile:MenuLinks:PolicyFile_PolicyFile_Documents']/div")).Click();

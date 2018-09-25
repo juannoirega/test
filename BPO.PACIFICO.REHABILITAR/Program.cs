@@ -12,7 +12,6 @@ namespace BPO.PACIFICO.REHABILITAR
     {
         private static BaseRobot<Program> _robot = null;
         private static IWebDriver _driverGlobal = null;
-        private static IWebElement element;
         private static Functions _Funciones;
 
         #region ParametrosRobot
@@ -101,7 +100,7 @@ namespace BPO.PACIFICO.REHABILITAR
             try
             {
                 _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
-                if (_Funciones.ExisteElemento(_driverGlobal, "PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ReinstatePolicy", 2))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ReinstatePolicy"), 2))
                 {
                     _pasoRealizado = "Pestaña rehabilitar";
                     _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ReinstatePolicy")).Click();
@@ -127,7 +126,7 @@ namespace BPO.PACIFICO.REHABILITAR
                     _driverGlobal.SwitchTo().Alert().Accept();
                     _Funciones.Esperar(5);
 
-                    if (_Funciones.ExisteElementoXPath(_driverGlobal, "//*[@id='UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton']/span[2]", 2))
+                    if (_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton']/span[2]"), 2))
                     {
                         _pasoRealizado = "Boton detalle";
                         _driverGlobal.FindElement(By.XPath("//*[@id='UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton']/span[2]")).Click();
