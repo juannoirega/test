@@ -149,9 +149,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private void ActualizarContactManager(Ticket ticket)
         {
             //Opteniendo DNI
-            _valoresTickets[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.dni).Value;
+            _valoresTickets[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nro_dni).Value;
             //Opteniendo RUC
-            _valoresTickets[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.ruc).Value;
+            _valoresTickets[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nro_ruc).Value;
 
             if (_valoresTickets[0] != "" && _valoresTickets[1] != "")
             {
@@ -589,9 +589,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     //Buscar Documento:
                     _cElemento = "Buscar por documento";
                     _Funciones.BuscarDocumentoPolicyCenter(_driverGlobal,
-                        oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.dni).Value.Length == 0 ?
-                        oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.ruc).Value :
-                        oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.dni).Value);
+                        oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nro_dni).Value.Length == 0 ?
+                        oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nro_ruc).Value :
+                        oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nro_dni).Value);
 
                     if (_Funciones.ExisteElemento(_driverGlobal, By.Id("ContactFile_AccountsSearch:AssociatedAccountsLV"),2))
                     {
@@ -633,8 +633,13 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _cElemento = "Fecha efectiva del cambio";
                 //Validar fecha:
                 if (ValidarFechaSolicitud(oTicketDatos, Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_efectiva).Value)))
-                    _driverGlobal.FindElement(By.Id("StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:EffectiveDate")).
-                        SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_efectiva).Value);
+                {
+                    _Funciones.FindElement(_driverGlobal, By.XPath("//*[@id='StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:0']/tbody/tr[1]/td[5]/input[@class='textBox']"), 1).SendKeys("");
+                    _driverGlobal.FindElement(By.XPath("//*[@id='StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:0']/tbody/tr[1]/td[5]/input[@class='textBox']")).SendKeys(Keys.Control + "e");
+                    _driverGlobal.FindElement(By.XPath("//*[@id='StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:0']/tbody/tr[1]/td[5]/input[@class='textBox']")).
+                        SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.fecha_efectiva).Value.Replace("/",""));
+                }
+                    
                 else { return false; }
 
                 if (_Funciones.ExisteElemento(_driverGlobal, By.Id("StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason"), 2))
@@ -656,7 +661,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
                 //Clic en Siguiente:
                 _cElemento = "Botón Siguiente";
-                _driverGlobal.FindElement(By.Id("StartPolicyChange:StartPolicyChangeScreen:NewPolicyChange")).Click();
+                _Funciones.FindElement(_driverGlobal, By.Id("StartPolicyChange:StartPolicyChangeScreen:NewPolicyChange")).Click();
+                _Funciones.VerificarVentanaAlerta(_driverGlobal);
                 _Funciones.Esperar(4);
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error en formulario: " + Ex.Message + " " + _cElemento, Ex); }
@@ -674,7 +680,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     {
                         //Seleccionar oferta:
                         _cElemento = "Seleccionar oferta";
-                        _Funciones.SeleccionarCombo(_driverGlobal, "PolicyChangeWizard:OfferingScreen:OfferingSelection", _cNombreOferta);
+                        _Funciones.SeleccionarCombo(_driverGlobal, "PolicyChangeWizard:OfferingScreen:OfferingSelection", _cNombreOferta.ToUpperInvariant());
                     }
 
                     //Clic en Siguiente:
@@ -706,11 +712,10 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             {
                 //Clic en Nombre del asegurado:
                 _cElemento = "Nombre del Asegurado";
-                _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:Name")).Click();
-                _Funciones.Esperar(15);
+                _Funciones.FindElement(_driverGlobal, By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:Name"), 5).Click();
 
                 //Verifica si es Persona o Empresa:
-                if (Convert.ToBoolean(Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_de_contacto).Value)))
+                if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nro_dni).Value.Length > 0 )
                 {
                     //Es persona:
                     if (!String.IsNullOrWhiteSpace(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre).Value))
@@ -788,7 +793,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                         _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:PolicyContactRoleNameInputSet:ContactEmailsInputSet:PrimaryEmailTypeExt")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.correo_personal).Value);
                     }
                 }
-                else
+                else if(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nro_ruc).Value.Length > 0)
                 {
                     //Es empresa:
                     if (!String.IsNullOrWhiteSpace(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.razon_social).Value))

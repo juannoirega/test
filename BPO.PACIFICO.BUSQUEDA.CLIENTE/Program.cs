@@ -79,9 +79,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private void AccedientoContactManager(Ticket ticket)
         {
             //Opteniendo DNI
-            _valoresTickets[0] = ticket.TicketValues.First(a => a.FieldId == eesFields.Default.dni).Value;
+            _valoresTickets[0] = ticket.TicketValues.First(a => a.FieldId == eesFields.Default.nro_dni).Value;
             //Opteniendo RUC
-            _valoresTickets[1] = ticket.TicketValues.First(a => a.FieldId == eesFields.Default.ruc).Value;
+            _valoresTickets[1] = ticket.TicketValues.First(a => a.FieldId == eesFields.Default.nro_ruc).Value;
 
             if (_valoresTickets[0] != "" && _valoresTickets[1] != "")
             {

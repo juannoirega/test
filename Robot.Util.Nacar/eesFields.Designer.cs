@@ -88,15 +88,6 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("24")]
-        public int numero_de_dni {
-            get {
-                return ((int)(this["numero_de_dni"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("41")]
         public int email_asunto {
             get {
@@ -448,15 +439,6 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1062")]
-        public int tipo_de_contacto {
-            get {
-                return ((int)(this["tipo_de_contacto"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1077")]
         public int provincia {
             get {
@@ -745,19 +727,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1099")]
-        public int dni {
+        [global::System.Configuration.DefaultSettingValueAttribute("57")]
+        public int nro_ruc {
             get {
-                return ((int)(this["dni"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1100")]
-        public int ruc {
-            get {
-                return ((int)(this["ruc"]));
+                return ((int)(this["nro_ruc"]));
             }
         }
         
@@ -986,6 +959,15 @@ namespace Robot.Util.Nacar {
         public int anulacion_motivo {
             get {
                 return ((int)(this["anulacion_motivo"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("56")]
+        public int nro_dni {
+            get {
+                return ((int)(this["nro_dni"]));
             }
         }
     }

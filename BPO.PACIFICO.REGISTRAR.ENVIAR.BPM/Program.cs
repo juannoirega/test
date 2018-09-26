@@ -296,7 +296,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             if (_Funciones.ExisteElemento(_oDriver, By.Id("nrodedocumentoidentidad"),_nIntentosOnBase))
             {
                 _cElemento = "Documento de identidad";
-                _oDriver.FindElement(By.Id("nrodedocumentoidentidad_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_dni).Value);
+                _oDriver.FindElement(By.Id("nrodedocumentoidentidad_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nro_dni).Value);
             }
 
             //Email de Notificación:

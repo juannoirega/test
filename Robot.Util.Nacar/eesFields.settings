@@ -23,9 +23,6 @@
     <Setting Name="agente" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="numero_de_dni" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">24</Value>
-    </Setting>
     <Setting Name="email_asunto" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">41</Value>
     </Setting>
@@ -143,9 +140,6 @@
     <Setting Name="numero_del_documento_de_identificacion" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1065</Value>
     </Setting>
-    <Setting Name="tipo_de_contacto" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1062</Value>
-    </Setting>
     <Setting Name="provincia" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1077</Value>
     </Setting>
@@ -242,11 +236,8 @@
     <Setting Name="listacampos" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1097</Value>
     </Setting>
-    <Setting Name="dni" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1099</Value>
-    </Setting>
-    <Setting Name="ruc" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1100</Value>
+    <Setting Name="nro_ruc" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">57</Value>
     </Setting>
     <Setting Name="id_archivo_tipo_adj" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">37</Value>
@@ -322,6 +313,9 @@
     </Setting>
     <Setting Name="anulacion_motivo" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">67</Value>
+    </Setting>
+    <Setting Name="nro_dni" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">56</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -605,7 +605,7 @@ namespace Robot.Util.Nacar
             return string.Empty;
         }
 
-        public IWebElement FindElement(IWebDriver oDriver, By by, int nTiempoEsperaSegundos)
+        public IWebElement FindElement(IWebDriver oDriver, By by, int nTiempoEsperaSegundos = 0)
         {
             try
             {
