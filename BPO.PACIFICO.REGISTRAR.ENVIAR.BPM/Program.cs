@@ -333,7 +333,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             {
                 _Funciones.Esperar(7);
                 WorkflowOnBase();
-                if (_reprocesoContador > 0) { _reprocesoContador = 0; _idEstadoRetorno = 0; _Funciones.GuardarValoresReprocesamiento(oTicket, _reprocesoContador, _idEstadoRetorno); }
+                if (_reprocesoContador > 0) { _reprocesoContador = 0; _idEstadoRetorno = 0; _Funciones.GuardarValoresReprocesamiento(oTicketDatos, _reprocesoContador, _idEstadoRetorno); }
                 CambiarEstadoTicket(oTicketDatos, _oRegistro);
                 LogEndStep(1);
             }
