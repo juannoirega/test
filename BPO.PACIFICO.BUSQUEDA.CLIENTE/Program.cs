@@ -213,7 +213,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 if (_valoresTickets[0] != "")
                 {
                     //Nombre (s)
-                    InsertarValoresFielt(ticket, eesFields.Default.nombre, ExtraerDatosXPath(0, 4, "textBox"));
+                    InsertarValoresFielt(ticket, eesFields.Default.nombre_s, ExtraerDatosXPath(0, 4, "textBox"));
                     //Apellido Paterno
                     InsertarValoresFielt(ticket, eesFields.Default.apellido_paterno, ExtraerDatosXPath(0, 5, "textBox"));
                     //Apellido Materno

@@ -618,5 +618,14 @@ namespace Robot.Util.Nacar
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener elemento web: " + Ex.Message, Ex); }
         }
+
+        public void LimpiarElementoInput(IWebDriver oDriver, By oElemento)
+        {
+            try
+            {
+                oDriver.FindElement(oElemento).SendKeys(Keys.Control + "e");
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al limpiar input: " + Ex.Message, Ex); }
+        }
     }
 }

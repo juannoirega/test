@@ -58,6 +58,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             if (_oRobot.Tickets.Count < 1)
                 return;
 
+            Inicio();
             ObtenerParametros();
             LogStartStep(4);
             foreach (Ticket oTicket in _oRobot.Tickets)
@@ -80,6 +81,13 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 }
                 finally { _Funciones.CerrarDriver(_oDriver); }
             }
+        }
+
+        private void Inicio()
+        {
+            Console.WriteLine("♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦ ROBOT ♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦");
+            Console.WriteLine("             Robot Registro y Envio en BPM             ");
+            Console.WriteLine("♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦");
         }
 
         //Obtiene valores para los parámetros del Robot desde EES:

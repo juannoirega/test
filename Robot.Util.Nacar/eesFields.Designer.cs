@@ -169,15 +169,6 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1028")]
-        public int estado_error {
-            get {
-                return ((int)(this["estado_error"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("51")]
         public int fields {
             get {
@@ -196,15 +187,6 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1050")]
-        public int poliza_nueva {
-            get {
-                return ((int)(this["poliza_nueva"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("32")]
         public int linea {
             get {
@@ -214,7 +196,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1031")]
+        [global::System.Configuration.DefaultSettingValueAttribute("29")]
         public int tipo_proceso {
             get {
                 return ((int)(this["tipo_proceso"]));
@@ -236,24 +218,6 @@ namespace Robot.Util.Nacar {
         public int email_cc {
             get {
                 return ((int)(this["email_cc"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1053")]
-        public int notificacion {
-            get {
-                return ((int)(this["notificacion"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1059")]
-        public int trazabilidad {
-            get {
-                return ((int)(this["trazabilidad"]));
             }
         }
         
@@ -286,19 +250,10 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1046")]
-        public int tipo_de_error {
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int error_tipo {
             get {
-                return ((int)(this["tipo_de_error"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1057")]
-        public int moneda_de_la_poliza {
-            get {
-                return ((int)(this["moneda_de_la_poliza"]));
+                return ((int)(this["error_tipo"]));
             }
         }
         
@@ -331,16 +286,16 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1068")]
-        public int nombre {
+        [global::System.Configuration.DefaultSettingValueAttribute("95")]
+        public int nombre_s {
             get {
-                return ((int)(this["nombre"]));
+                return ((int)(this["nombre_s"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1070")]
+        [global::System.Configuration.DefaultSettingValueAttribute("97")]
         public int apellido_materno {
             get {
                 return ((int)(this["apellido_materno"]));
@@ -349,7 +304,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1069")]
+        [global::System.Configuration.DefaultSettingValueAttribute("96")]
         public int apellido_paterno {
             get {
                 return ((int)(this["apellido_paterno"]));
@@ -358,25 +313,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1056")]
-        public int fecha_de_vigencia_rehabilitacion {
-            get {
-                return ((int)(this["fecha_de_vigencia_rehabilitacion"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1055")]
-        public int fecha_referencia_tarifa {
-            get {
-                return ((int)(this["fecha_referencia_tarifa"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1066")]
+        [global::System.Configuration.DefaultSettingValueAttribute("69")]
         public int nacionalidad {
             get {
                 return ((int)(this["nacionalidad"]));
@@ -385,7 +322,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1072")]
+        [global::System.Configuration.DefaultSettingValueAttribute("99")]
         public int nombre_corto {
             get {
                 return ((int)(this["nombre_corto"]));
@@ -394,7 +331,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1080")]
+        [global::System.Configuration.DefaultSettingValueAttribute("71")]
         public int nombre_de_la_calle {
             get {
                 return ((int)(this["nombre_de_la_calle"]));
@@ -403,7 +340,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1079")]
+        [global::System.Configuration.DefaultSettingValueAttribute("86")]
         public int tipo_de_calle {
             get {
                 return ((int)(this["tipo_de_calle"]));
@@ -412,7 +349,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1074")]
+        [global::System.Configuration.DefaultSettingValueAttribute("81")]
         public int tipo_de_direccion {
             get {
                 return ((int)(this["tipo_de_direccion"]));
@@ -421,25 +358,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1064")]
-        public int tipo_del_documento_de_identificacion {
-            get {
-                return ((int)(this["tipo_del_documento_de_identificacion"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1065")]
-        public int numero_del_documento_de_identificacion {
-            get {
-                return ((int)(this["numero_del_documento_de_identificacion"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1077")]
+        [global::System.Configuration.DefaultSettingValueAttribute("84")]
         public int provincia {
             get {
                 return ((int)(this["provincia"]));
@@ -448,7 +367,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1078")]
+        [global::System.Configuration.DefaultSettingValueAttribute("85")]
         public int distrito {
             get {
                 return ((int)(this["distrito"]));
@@ -457,7 +376,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1076")]
+        [global::System.Configuration.DefaultSettingValueAttribute("83")]
         public int departamento {
             get {
                 return ((int)(this["departamento"]));
@@ -470,33 +389,6 @@ namespace Robot.Util.Nacar {
         public int producto_tipo {
             get {
                 return ((int)(this["producto_tipo"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1113")]
-        public int tipo_de_interes {
-            get {
-                return ((int)(this["tipo_de_interes"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1114")]
-        public int porcentaje {
-            get {
-                return ((int)(this["porcentaje"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1112")]
-        public int nombre_endosatario {
-            get {
-                return ((int)(this["nombre_endosatario"]));
             }
         }
         
@@ -718,7 +610,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1097")]
+        [global::System.Configuration.DefaultSettingValueAttribute("103")]
         public int listacampos {
             get {
                 return ((int)(this["listacampos"]));
@@ -745,7 +637,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1075")]
+        [global::System.Configuration.DefaultSettingValueAttribute("82")]
         public int pais {
             get {
                 return ((int)(this["pais"]));
@@ -754,7 +646,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1067")]
+        [global::System.Configuration.DefaultSettingValueAttribute("74")]
         public int pais_de_procedencia {
             get {
                 return ((int)(this["pais_de_procedencia"]));
@@ -763,7 +655,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1090")]
+        [global::System.Configuration.DefaultSettingValueAttribute("78")]
         public int pais_del_telefono {
             get {
                 return ((int)(this["pais_del_telefono"]));
@@ -772,7 +664,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1083")]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
         public int fecha_de_nacimiento {
             get {
                 return ((int)(this["fecha_de_nacimiento"]));
@@ -790,7 +682,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1081")]
+        [global::System.Configuration.DefaultSettingValueAttribute("72")]
         public int numero {
             get {
                 return ((int)(this["numero"]));
@@ -835,7 +727,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1096")]
+        [global::System.Configuration.DefaultSettingValueAttribute("106")]
         public int sector_economico {
             get {
                 return ((int)(this["sector_economico"]));
@@ -844,7 +736,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1085")]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
         public int razon_social {
             get {
                 return ((int)(this["razon_social"]));
@@ -853,7 +745,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1095")]
+        [global::System.Configuration.DefaultSettingValueAttribute("105")]
         public int actividad_economica {
             get {
                 return ((int)(this["actividad_economica"]));
@@ -862,7 +754,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1086")]
+        [global::System.Configuration.DefaultSettingValueAttribute("76")]
         public int nombre_comercial {
             get {
                 return ((int)(this["nombre_comercial"]));
@@ -871,7 +763,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1084")]
+        [global::System.Configuration.DefaultSettingValueAttribute("77")]
         public int correo_personal {
             get {
                 return ((int)(this["correo_personal"]));
@@ -880,7 +772,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1092")]
+        [global::System.Configuration.DefaultSettingValueAttribute("79")]
         public int indicativo_codigo_de_area {
             get {
                 return ((int)(this["indicativo_codigo_de_area"]));
@@ -889,7 +781,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1093")]
+        [global::System.Configuration.DefaultSettingValueAttribute("70")]
         public int telefono_de_casa {
             get {
                 return ((int)(this["telefono_de_casa"]));
@@ -898,7 +790,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1088")]
+        [global::System.Configuration.DefaultSettingValueAttribute("101")]
         public int sexo {
             get {
                 return ((int)(this["sexo"]));
@@ -907,7 +799,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1089")]
+        [global::System.Configuration.DefaultSettingValueAttribute("102")]
         public int estado_civil {
             get {
                 return ((int)(this["estado_civil"]));
@@ -916,7 +808,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1087")]
+        [global::System.Configuration.DefaultSettingValueAttribute("98")]
         public int prefijo {
             get {
                 return ((int)(this["prefijo"]));
@@ -925,7 +817,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1094")]
+        [global::System.Configuration.DefaultSettingValueAttribute("104")]
         public int fecha_de_inicio_de_actividades {
             get {
                 return ((int)(this["fecha_de_inicio_de_actividades"]));
@@ -934,7 +826,7 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1082")]
+        [global::System.Configuration.DefaultSettingValueAttribute("73")]
         public int referencia {
             get {
                 return ((int)(this["referencia"]));
@@ -968,6 +860,33 @@ namespace Robot.Util.Nacar {
         public int nro_dni {
             get {
                 return ((int)(this["nro_dni"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("94")]
+        public int nombre_de_la_urbanizacion {
+            get {
+                return ((int)(this["nombre_de_la_urbanizacion"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int error_imagen {
+            get {
+                return ((int)(this["error_imagen"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("49")]
+        public int error_otro {
+            get {
+                return ((int)(this["error_otro"]));
             }
         }
     }
