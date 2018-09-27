@@ -212,7 +212,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
                     msgObservacion = "Se debe anular por lo acordado con el operador." + msgObservacion;
                 }
                 //Reglas Conforme
-                oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.linea, Value = _cLinea });
+                oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.idlinea, Value = _cLinea });
 
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener Línea de Negocio: " + Ex.Message, Ex); }

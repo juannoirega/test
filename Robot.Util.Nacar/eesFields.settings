@@ -56,10 +56,10 @@
     <Setting Name="endoso_adj" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">47</Value>
     </Setting>
-    <Setting Name="linea" Type="System.Int32" Scope="Application">
+    <Setting Name="idlinea" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">32</Value>
     </Setting>
-    <Setting Name="tipo_proceso" Type="System.Int32" Scope="Application">
+    <Setting Name="idproceso" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">29</Value>
     </Setting>
     <Setting Name="email_de" Type="System.Int32" Scope="Application">
@@ -290,10 +290,10 @@
     <Setting Name="error_otro" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">49</Value>
     </Setting>
-    <Setting Name="complejidad_tipo" Type="System.Int32" Scope="Application">
+    <Setting Name="idcomplejidad" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">108</Value>
     </Setting>
-    <Setting Name="endoso_motivo" Type="System.Int32" Scope="Application">
+    <Setting Name="idmotivoendoso" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">109</Value>
     </Setting>
     <Setting Name="comentarios_adicionales" Type="System.Int32" Scope="Application">
