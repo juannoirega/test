@@ -420,6 +420,13 @@ namespace Robot.Util.Nacar
             return sr.Serialize(ListaValoresGrilla);
         }
 
+        public string ObtenerJson(string cadena)
+        {
+            JavaScriptSerializer sr = new JavaScriptSerializer();
+             
+            return sr.Serialize(cadena);
+        }
+
 
         public FunctionalDomains<List<DomainValue>> GetDomainValuesByParameters(Func<FunctionalDomains<List<DomainValue>>, FunctionalDomains<List<DomainValue>>> SearchDomain
                                                                                 , string nameFunctionalDomain

@@ -16,12 +16,16 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
         private static BaseRobot<Program> _oRobot = null;
         private static int _nDiasArrepentimiento;
         private static int _nDiasDesistimiento;
-        private static string _cLinea = string.Empty; 
+        private static string _cLinea = string.Empty;
+        private static string _cLineaAutos = string.Empty;
+        private static string _cLineaRRGG = string.Empty;
         private static string _cLineaLLPP = string.Empty;
         private static string _cLineaAlianzas = string.Empty; 
         private static string _cProceso = string.Empty;
         private static string _cTratamientoManual = string.Empty;
         private static string[] _procesos;
+        private List<string> _productosAutos = new List<string>();
+        private List<string> _productosRG = new List<string>();
         private List<string> _productosAlianzas = new List<string>();
         private List<string> _tProductosAlianzas = new List<string>();
         private List<string> _tProductosLPersonales = new List<string>();
@@ -75,6 +79,11 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
         //Inicializacion de los productos y tipos de productos en sus respectivos lugares
         protected void IniciarParametros()
         {
+            _productosAutos.Add("Auto Modular");
+            _productosAutos.Add("Auto a Medida");
+            _productosAutos.Add("RCTPU (AX)"); 
+            _productosRG.Add("Hogar");
+            _productosRG.Add("Accidentes Personales");
             _productosAlianzas.Add("Auto Modular | Cod. Canal 0210199");
             _productosAlianzas.Add("Auto Modular | Cod. Canal 0020962");
             _productosAlianzas.Add("PV02 (AX)");
@@ -96,9 +105,11 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
             try{ 
                 //Parámetros del Robot Procesamiento de Datos:
                 _nDiasArrepentimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolRenovadaAuto").ValueParam);
-                _nDiasDesistimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolNuevaAuto").ValueParam); 
+                _nDiasDesistimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolNuevaAuto").ValueParam);
+                _cLineaAutos = "AUTOS";
+                _cLineaRRGG = "RRGG ";
                 _cLineaLLPP = "LLPP";
-                _cLineaAlianzas = "ALIANZAS"; 
+                _cLineaAlianzas = "ALIANZAS";
                 _procesos = _oRobot.GetValueParamRobot("reglaEstado").ValueParam.Split(',');
             }
             catch (Exception Ex)
@@ -111,13 +122,13 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
         private void InsertarValoresReglas(Ticket oTicketDatos, string msgConforme, string msgNoConforme, string msgObservacion)
         {
             //Reglas Conforme
-            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.reglas_conforme, Value = msgConforme });
+            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.reglas_conforme, Value = _Funciones.ObtenerJson(msgConforme )});
 
             //Reglas No Conforme
-            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.reglas_no_conforme, Value = msgNoConforme });
+            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.reglas_no_conforme, Value = _Funciones.ObtenerJson(msgNoConforme )});
 
             //Reglas Observación
-            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.reglas_observacion, Value = msgObservacion });
+            oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.reglas_observacion, Value = _Funciones.ObtenerJson(msgObservacion) });
 
         }
 
@@ -136,11 +147,11 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
                                        eesFields.Default.rehabilitar_motivo, eesFields.Default.poliza_est};
 
             //Valida Línea de la Póliza:
-            if   ((_cLinea == _cLineaAlianzas) || (_cLinea == _cLineaLLPP))
+            if   ((_cLinea == _cLineaAlianzas) || (_cLinea == _cLineaLLPP) || (_cLinea == _cLineaAutos) || (_cLinea == _cLineaRRGG))
             {
                 if (ValidarDatosPoliza(oTicketDatos))
                 {
-                    if (!ReglasActualizacionPolizaLLPPAlianzas(oTicketDatos))
+                    if (!ReglasRehabilitacionPoliza(oTicketDatos))
                     {
                         //Enviar a notificación de correo:
                         CambiarEstadoTicket(oTicketDatos, _oNotificacion);
@@ -170,7 +181,16 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
                 string motivoAnulacion = "(AX)";
                 string producto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.producto).Value;
                 string tipoProducto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.producto_tipo).Value;
-                if (_productosAlianzas.Where(o => o == producto).FirstOrDefault() != null)
+                if (_productosAutos.Where(o => o == producto).FirstOrDefault() != null)
+                {
+                    _cLinea = "AUTOS";
+
+                }
+                else if (_productosRG.Where(o => o == producto).FirstOrDefault() != null)
+                {
+                    _cLinea = "RRGG";
+                }
+                else if(_productosAlianzas.Where(o => o == producto).FirstOrDefault() != null)
                 {
                     _cLinea = "ALIANZAS";
                 }
@@ -213,7 +233,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
 
         #region "REGLAS DE VALIDACIÓN"
 
-        private Boolean ReglasActualizacionPolizaLLPPAlianzas(Ticket oTicketDatos)
+        private Boolean ReglasRehabilitacionPoliza(Ticket oTicketDatos)
         {
             try
             {
@@ -222,23 +242,11 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
+                    TimeSpan nDiferencia = Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.poliza_fec_ini_vig).Value) - Convert.ToDateTime(oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.fec_solicitud).Value);
                     if (_bFlagVigencia)
                     {
                         msgObservacion = "Se debe mandar a mesa de control." + msgObservacion;
                     }
-                    //SE VERIFICA SINIESTRO
-                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.siniestros).Value == null)
-                    {
-                        msgConforme = "Se esta cumpliendo la regla de la poliza sin siniestros. " + msgConforme;
-                    }
-                    else
-                    {
-                        msgNoConforme = "No se esta cumpliendo la regla de la poliza sin siniestros. " + msgNoConforme;
-                    }
-                }
-                else
-                {
-                    return false;
                 }
             }
             catch (Exception Ex)
@@ -248,7 +256,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
             return true;
         }
 
-        
+
         #endregion
     }
 }
