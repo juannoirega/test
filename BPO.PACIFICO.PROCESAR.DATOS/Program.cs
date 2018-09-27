@@ -164,25 +164,25 @@ namespace RobotProcesarTicket
                 string tipoProducto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.producto_tipo).Value;
                 if (_productosAutos.Where(o => o == producto).FirstOrDefault() != null)
                 {
-                    _cLinea = "AUTOS";
+                    _cLinea = "1";
 
                 }
                 else if (_productosRG.Where(o => o == producto).FirstOrDefault() != null)
                 {
-                    _cLinea = "RRGG";
+                    _cLinea = "2";
                 }
                 else if (_productosAlianzas.Where(o => o == producto).FirstOrDefault() != null)
                 {
-                    _cLinea = "ALIANZAS";
+                    _cLinea = "3";
                 }
                 if (_tProductosAlianzas.Where(o => o == tipoProducto).FirstOrDefault() != null)
                 {
-                    _cLinea = "ALIANZAS";
+                    _cLinea = "3";
 
                 }
                 else if (_tProductosLPersonales.Where(o => o == tipoProducto).FirstOrDefault() != null)
                 {
-                    _cLinea = "LLPP";
+                    _cLinea = "4";
                 }
                 if (producto.Contains(motivoAnulacion))
                 {

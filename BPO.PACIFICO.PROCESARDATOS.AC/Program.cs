@@ -183,25 +183,25 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
                 string tipoProducto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.producto_tipo).Value;
                 if (_productosAutos.Where(o => o == producto).FirstOrDefault() != null)
                 {
-                    _cLinea = "AUTOS";
+                    _cLinea = "7";
 
                 }
                 else if (_productosRG.Where(o => o == producto).FirstOrDefault() != null)
                 {
-                    _cLinea = "RRGG";
+                    _cLinea = "8";
                 }
                 else if(_productosAlianzas.Where(o => o == producto).FirstOrDefault() != null)
                 {
-                    _cLinea = "ALIANZAS";
+                    _cLinea = "9";
                 }
                 if (_tProductosAlianzas.Where(o => o == tipoProducto).FirstOrDefault() != null)
                 {
-                    _cLinea = "ALIANZAS";
+                    _cLinea = "9";
 
                 }
                 else if (_tProductosLPersonales.Where(o => o == tipoProducto).FirstOrDefault() != null)
                 {
-                    _cLinea = "LLPP";
+                    _cLinea = "10";
                 }
                 if (producto.Contains(motivoAnulacion))
                 {

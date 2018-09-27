@@ -30,7 +30,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
         private static Functions _Funciones;
 
         static string[] _valores = new string[15];
-        static string[] _valoresTicket = new string[6];
+        static string[] _valoresTicket = new string[7];
         string _contenido = String.Empty;
         string _correoRobot = "bponaa@gmail.com";
         string _rutaPlantilla = String.Empty;
@@ -83,31 +83,18 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //CAMPO QUE VIENE DE LOS ROBOT QUE INDICA QUE TIPO DE PLANTILLA USARA 
             _valoresTicket[2] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.id_archivo_tipo_adj).Value;
 
-            //Opteniendo el Nombre del Dominio Funcionanal para Actualizar plantilla
-            var container = ODataContextWrapper.GetContainer();
-            TipoProceso = container.DomainValues.Where(c => c.Id == Convert.ToInt32(_valoresTicket[2])).FirstOrDefault();
-
-            if (TipoProceso.Value == "Plantilla Correo Anulación Conforme" || TipoProceso.Value == "Plantilla Correo Anulación Rechazo")
-            {
-                _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.endoso_nro).Value;
-                _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_nro).Value;
-            }
-            else if (TipoProceso.Value == "Plantilla Correo Rehabilitación Conforme" || TipoProceso.Value == "Plantilla Correo Rehabilitación Rechazo")
-            {
-                _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value;
-            }
-            else if (TipoProceso.Value == "Plantilla Correo Actualización Datos Cliente Conforme" || TipoProceso.Value == "Plantilla Correo Actualización Datos Cliente Rechazo")
-            {
-                _valoresTicket[0] = "";
-                _valoresTicket[1] = "";
-            }
 
 
+            //Asegurado Nombre 
+            _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.asegurado_nombre).Value;
+            //Poliza
+            _valoresTicket[1] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_nro).Value;
             //Correos 
             _valoresTicket[3] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_para).Value;
             //Correos Copias
             _valoresTicket[4] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.email_cc).Value;
-
+            //Dni
+            _valoresTicket[6] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nro_dni).Value;
 
 
 
@@ -205,18 +192,18 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             mail.From = new MailAddress(_correoRobot);
 
             //Adjuntar Documentos
-            List<string> ListaDocuemntos = new List<string>();
-            ListaDocuemntos.Add(@"\\PCLCEVE0Q6K\Content/Upload_Files/6/2018-09-06/3e96f340-289a-4f4c-bebc-f870894b8e3a_json_Anulacion_Conforme.TXT");
-            ListaDocuemntos.Add(@"\\PCLCEVE0Q6K\Content/Upload_Files/6/2018-09-06/3e96f340-289a-4f4c-bebc-f870894b8e3a_json_Anulacion_Conforme.TXT");
+            //List<string> ListaDocuemntos = new List<string>();
+            //ListaDocuemntos.Add(@"\\PCLCEVE0Q6K\Content/Upload_Files/6/2018-09-06/3e96f340-289a-4f4c-bebc-f870894b8e3a_json_Anulacion_Conforme.TXT");
+            //ListaDocuemntos.Add(@"\\PCLCEVE0Q6K\Content/Upload_Files/6/2018-09-06/3e96f340-289a-4f4c-bebc-f870894b8e3a_json_Anulacion_Conforme.TXT");
 
-            if (ListaDocuemntos != null)
-            {
-                foreach (string archivos in ListaDocuemntos)
-                {
-                    if (System.IO.File.Exists(archivos))
-                        mail.Attachments.Add(new Attachment(archivos));
-                }
-            }
+            //if (ListaDocuemntos != null)
+            //{
+            //    foreach (string archivos in ListaDocuemntos)
+            //    {
+            //        if (System.IO.File.Exists(archivos))
+            //            mail.Attachments.Add(new Attachment(archivos));
+            //    }
+            //}
 
 
 
@@ -280,12 +267,22 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
                 //Deserializando JSON en una CLase
                 JsonCorreo = JsonConvert.DeserializeObject<JsonCorreo>(_contenido);
 
+                string valor = "";
+                var containeValores = ODataContextWrapper.GetContainer();
                 //Almacenando Palabras que esten entre {XXXXXX} y asignando la palabras para reemplazar
                 foreach (Match match in Regex.Matches(JsonCorreo.Body, @"\{([^{}\]]*)\}"))
-                    if (match.Value.Length >= 11)
-                        palabrasClaves.Add(new PalabrasClave() { clave = match.Value, palabra = _valoresTicket[1] });
-                    else
-                        palabrasClaves.Add(new PalabrasClave() { clave = match.Value, palabra = _valoresTicket[0] });
+                {
+                    valor = match.Value.Replace("{", "");
+                    valor = valor.Replace("}", "");
+
+                    //Opteniendo el Id del Field buscando por name
+                    var fieldId = containeValores.Fields.Where(f => f.Name == valor).FirstOrDefault().Id;
+                    //Opteniendo el Valor del ticker filtrandolo 
+                    var name = ticket.TicketValues.Where(t => t.FieldId == fieldId).FirstOrDefault().Value;
+                    valor = "{" + valor + "}";
+                    palabrasClaves.Add(new PalabrasClave() { clave = valor, palabra = name });
+                }
+
 
 
                 //Reemplazar las palabras Claves para enviar Correos
