@@ -49,6 +49,8 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private string _servicioCanal = string.Empty;
         private string _polizaFechaEmision = string.Empty;
         private string _numeroCuenta = string.Empty;
+        private string _nroDni = string.Empty;
+        private string _nroRuc = string.Empty;
         private int _reprocesoContador = 0;
         private int _idEstadoRetorno = 0;
         private int _idEstadoError = 0;
@@ -206,8 +208,17 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private void ObtenerDatos(Ticket ticket)
         {
             LogStartStep(42);
-            string _idDesplegable = string.Empty;
+            string _idDesplegable = string.Empty, banderaDnioRuc = string.Empty;
 
+            banderaDnioRuc = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:ExtContactOfficialIDsLV:0:Type"));
+            if (banderaDnioRuc.Equals("RUC"))
+            {
+                _nroRuc = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:ExtContactOfficialIDsLV:0:IDDocumentNumber"));
+            }
+            if (banderaDnioRuc.Equals("DNI"))
+            {
+                _nroDni = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:ExtContactOfficialIDsLV:0:IDDocumentNumber"));
+            }
             _producto = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Product"));
             _tipoProducto = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:PolicyTypeExt"));
             _polizaInicioVigencia = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:PolicyPerEffDate_date"));
@@ -218,10 +229,13 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             _nombreAsegurado = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Name"));
             _numeroCuenta = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:Number"));
             _polizaFechaEmision = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:submissionDate"));
-            _anulacionMotivo = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:CanceledReason"));
             _canalOrganizacion = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:POROrganization"));
             _servicioOrganizacion = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:Producer"));
             string[] ArrayAgente = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_ProducerDV:PolicyInfoProducerInfoSummaryInputSet:SecondaryProducerCode")).Split(' ');
+            if(_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:CanceledReason"))
+            {
+                _anulacionMotivo = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_DatesDV:CanceledReason"));
+            }
             if (ArrayAgente.Length > 0)
             {
                 _canalAgenteCodido = ArrayAgente[0];
@@ -304,9 +318,9 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 _driverGlobal.FindElement(By.Id("PolicyFile_RiskAnalysis:PolicyFile_RiskAnalysisScreen:PolicyFile_RiskAnalysisCV:PolicyFile_ClaimsCardTab")).Click();
                 _siniestros = _Funciones.ObtenerJsonGrilla(_driverGlobal, "PolicyFile_RiskAnalysis:PolicyFile_RiskAnalysisScreen:PolicyFile_RiskAnalysisCV:ClaimsLV");
             }
-            if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyChangeWizard:LOBWizardStepGroup:PersonalVehicles")))
+            if (_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='PolicyFile:PolicyFileAcceleratedMenuActions:PolicyMenuItemSet:PolicyMenuItemSet_Vehicles']/div")))
             {
-                _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PersonalVehicles")).Click();
+                _driverGlobal.FindElement(By.XPath("//*[@id='PolicyFile:PolicyFileAcceleratedMenuActions:PolicyMenuItemSet:PolicyMenuItemSet_Vehicles']/div")).Click();
                 _Funciones.Esperar(3);
                 _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:LineWizardStepSet:PAVehiclesScreen:PAVehiclesPanelSet:VehiclesListDetailPanel:VehiclesDetailsCV:AdditionalInterestCardTab")).Click();
                 _endosatarios = _Funciones.ObtenerJsonGrilla(_driverGlobal, "PolicyChangeWizard:LOBWizardStepGroup:LineWizardStepSet:PAVehiclesScreen:PAVehiclesPanelSet:VehiclesListDetailPanel:VehiclesDetailsCV:AdditionalInterestDetailsDV:AdditionalInterestLV");
@@ -319,13 +333,14 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             try
             {
                 string[] ValorCampos = { _producto, _polizaInicioVigencia, _polizaFinVigencia, _polizaTipoVigencia, _polizaEstado,_nombreContratante,_nombreAsegurado,Convert.ToString(_polizaNueva),_tipoProducto,
-                _polizaFechaEmision,_canalOrganizacion,_canalAgenteCodido,_canalAgente,_canalCodigo,_canal,_servicioOrganizacion,_servicioAgenteCodigo,_servicioAgente,_servicioCanalCodigo,_servicioCanal,_numeroCuenta,_anulacionMotivo,_endosatarios,_siniestros};
+                _polizaFechaEmision,_canalOrganizacion,_canalAgenteCodido,_canalAgente,_canalCodigo,_canal,_servicioOrganizacion,_servicioAgenteCodigo,_servicioAgente,_servicioCanalCodigo,_servicioCanal,_numeroCuenta,_anulacionMotivo,_endosatarios,_siniestros,
+                _nroDni,_nroRuc};
 
                 int[] IdCampos = { eesFields.Default.producto, eesFields.Default.poliza_fec_ini_vig , eesFields.Default.poliza_fec_fin_vig,eesFields.Default.poliza_tipo_vig,eesFields.Default.poliza_est,
                 eesFields.Default.cuenta_nombre,eesFields.Default.asegurado_nombre,eesFields.Default.producto_tipo,eesFields.Default.poliza_fec_emision,
                 eesFields.Default.canal_org,eesFields.Default.canal_agente_cod,eesFields.Default.canal_agente,
                 eesFields.Default.canal_cod,eesFields.Default.canal,eesFields.Default.servicio_org,eesFields.Default.servicio_agente_cod,eesFields.Default.servicio_agente,eesFields.Default.servicio_canal_cod,
-                eesFields.Default.servicio_canal,eesFields.Default.cuenta_nro,eesFields.Default.poliza_anu_motivo,eesFields.Default.endosos,eesFields.Default.siniestros};
+                eesFields.Default.servicio_canal,eesFields.Default.cuenta_nro,eesFields.Default.poliza_anu_motivo,eesFields.Default.endosos,eesFields.Default.siniestros,eesFields.Default.poliza_nro_dni,eesFields.Default.poliza_nro_ruc};
 
                 for (int i = 0; i < ValorCampos.Length; i++)
                     ticket.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = ticket.Id, FieldId = IdCampos[i], Value = ValorCampos[i] });
