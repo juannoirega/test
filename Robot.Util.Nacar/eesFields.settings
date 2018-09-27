@@ -290,5 +290,14 @@
     <Setting Name="error_otro" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">49</Value>
     </Setting>
+    <Setting Name="complejidad_tipo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">108</Value>
+    </Setting>
+    <Setting Name="endoso_motivo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">109</Value>
+    </Setting>
+    <Setting Name="comentarios_adicionales" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">110</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

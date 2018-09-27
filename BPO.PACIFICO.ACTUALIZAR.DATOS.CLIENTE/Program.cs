@@ -36,7 +36,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private static int _nIdEstadoSiguiente; //Robot Crear Ticket Hijo
         private static int _nIntentosPolicyCenter;
         private static string _cUrlPolicyCenter = string.Empty;
-        private static string _cComentariosAdicionales = string.Empty;
         private static string[] _Usuarios;
         private static int _nIndice;
         private static string _cElemento = string.Empty;
@@ -124,7 +123,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _cLineaRRGG = _oRobot.GetValueParamRobot("LineaRRGG").ValueParam;
                 _cLineaAlianzas = _oRobot.GetValueParamRobot("LineaAlianzas").ValueParam;
                 _cLineaLLPP = _oRobot.GetValueParamRobot("LineaLLPP").ValueParam;
-                _cComentariosAdicionales = _oRobot.GetValueParamRobot("ComentariosAdicionales").ValueParam;
                 _cCeldaLimitante = _oRobot.GetValueParamRobot("CeldaLimitante").ValueParam;
                 _nIndexFilaCuenta = Convert.ToInt32(_oRobot.GetValueParamRobot("IndexFilaCuenta").ValueParam);
                 _nIndexCeldaCuenta = Convert.ToInt32(_oRobot.GetValueParamRobot("IndexCeldaCuenta").ValueParam);
@@ -653,18 +651,18 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 {
                     //Seleccionar tipo de complejidad:
                     _cElemento = "Tipo de Complejidad";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason", _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.producto_tipo).Value))); //Campo tipo de complejidad
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason", _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.complejidad_tipo).Value))); //Campo tipo de complejidad
                     _Funciones.Esperar(4);
                 }
 
                 //Seleccionar motivo del endoso:
                 _cElemento = "Motivo del endoso";
-                _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Description", _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_anu_motivo).Value)));
+                _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Description", _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.endoso_motivo).Value)));
                 _Funciones.Esperar(4);
 
                 //Ingresar comentarios adicionales:
                 _cElemento = "Comentarios adicionales";
-                _driverGlobal.FindElement(By.Id("StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Comments")).SendKeys(_cComentariosAdicionales);
+                _driverGlobal.FindElement(By.Id("StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Comments")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.comentarios_adicionales).Value);
 
                 //Clic en Siguiente:
                 _cElemento = "Botón Siguiente";

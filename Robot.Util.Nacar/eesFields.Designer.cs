@@ -889,5 +889,32 @@ namespace Robot.Util.Nacar {
                 return ((int)(this["error_otro"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("108")]
+        public int complejidad_tipo {
+            get {
+                return ((int)(this["complejidad_tipo"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("109")]
+        public int endoso_motivo {
+            get {
+                return ((int)(this["endoso_motivo"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("110")]
+        public int comentarios_adicionales {
+            get {
+                return ((int)(this["comentarios_adicionales"]));
+            }
+        }
     }
 }
