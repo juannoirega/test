@@ -69,7 +69,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                     if (valoresReprocesamiento.Count > 0) { _reprocesoContador = valoresReprocesamiento[0]; _idEstadoRetorno = valoresReprocesamiento[1]; }
                     _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.Id == _nIdEstadoError);
                     _oRegistro = _oRobot.GetNextStateAction(oTicket).First(a => a.Id == _nIdEstadoFinal);
-                    _cLineaTicket = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.linea).Value));
+                    _cLineaTicket = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value));
                     ProcesarTicket(oTicket);
                 }
                 catch (Exception Ex)
@@ -248,7 +248,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             _cElemento = "Línea de Negocio";
             _oDriver.FindElement(By.XPath("//*[@id='linea_negocio']/button")).Click();
             _Funciones.Esperar();
-            _Funciones.SeleccionarListBox(_oDriver, "//body/ul[2]/li/a", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.linea).Value);
+            _Funciones.SeleccionarListBox(_oDriver, "//body/ul[2]/li/a", oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value);
 
             //Selecciona Producto:
             _cElemento = "Producto";
@@ -261,7 +261,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             _cElemento = "Tipo de Endoso";
             _oDriver.FindElement(By.XPath("//*[@id='tipodeendoso']/button")).Click();
             _Funciones.Esperar();
-            string cProceso = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.tipo_proceso).Value));
+            string cProceso = _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso).Value));
             _Funciones.SeleccionarListBox(_oDriver, "//body/ul[4]/li/a", cProceso);
             _Funciones.Esperar(3);
 
@@ -278,7 +278,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             //Ingresar número de vehículos y asegurados:
             _cElemento = "Número Unidades/Asegurados/Bienes";
             _oDriver.FindElement(By.Id("nrounidnroasegnrocertinrobienes_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a =>
-                            a.FieldId == (oTicketDatos.TicketValues.FirstOrDefault(b => b.FieldId == eesFields.Default.linea).Value == _cLineaPorDefecto ? 1 : 1)).Value);         
+                            a.FieldId == (oTicketDatos.TicketValues.FirstOrDefault(b => b.FieldId == eesFields.Default.idlinea).Value == _cLineaPorDefecto ? 1 : 1)).Value);         
 
             //Ingresa Nro. de Póliza:
             _cElemento = "Número de Póliza";

@@ -60,7 +60,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                 try
                 {
                     _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Mesa de Control");
-                    _cLinea = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.linea).Value)).ToUpperInvariant();
+                    _cLinea = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value)).ToUpperInvariant();
                     _oPantallaValidacion = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Validar");
                     _oNotificacion = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Rechazar");                    
                     ProcesarTicket(oTicket);
@@ -122,7 +122,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                     msgObservacion = "Se debe anular por lo acordado con el operador." + msgObservacion;
                 }
                 //Reglas Conforme
-                oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.linea, Value = _cLinea });
+                oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.idlinea, Value = _cLinea });
 
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener Línea de Negocio: " + Ex.Message, Ex); }

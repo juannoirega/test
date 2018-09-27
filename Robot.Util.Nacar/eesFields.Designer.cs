@@ -188,18 +188,18 @@ namespace Robot.Util.Nacar {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("32")]
-        public int linea {
+        public int idlinea {
             get {
-                return ((int)(this["linea"]));
+                return ((int)(this["idlinea"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("29")]
-        public int tipo_proceso {
+        public int idproceso {
             get {
-                return ((int)(this["tipo_proceso"]));
+                return ((int)(this["idproceso"]));
             }
         }
         
@@ -893,18 +893,18 @@ namespace Robot.Util.Nacar {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("108")]
-        public int complejidad_tipo {
+        public int idcomplejidad {
             get {
-                return ((int)(this["complejidad_tipo"]));
+                return ((int)(this["idcomplejidad"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("109")]
-        public int endoso_motivo {
+        public int idmotivoendoso {
             get {
-                return ((int)(this["endoso_motivo"]));
+                return ((int)(this["idmotivoendoso"]));
             }
         }
         
