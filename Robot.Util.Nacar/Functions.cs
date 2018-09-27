@@ -11,6 +11,8 @@ using OpenQA.Selenium.IE;
 using System.Threading;
 using Everis.Ees.Entities;
 using everis.Ees.Proxy.Services;
+using everis.Ees.Proxy.Core;
+using everis.Ees.Proxy.Services.Interfaces;
 using OpenQA.Selenium.Interactions;
 using System.Web.Script.Serialization;
 using System.Text.RegularExpressions;
@@ -633,6 +635,13 @@ namespace Robot.Util.Nacar
                 oDriver.FindElement(oElemento).SendKeys(Keys.Control + "e");
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al limpiar input: " + Ex.Message, Ex); }
+        }
+
+        public String GetDomainValue(int nParentId, int nDomainColumnaId, int nLineNumber)
+        {
+            var oContainer = ODataContextWrapper.GetContainer();
+            List<Domain> oDominios = oContainer.Domains.Expand(a => a.DomainValues).Where(b => b.ParentId == nParentId).ToList();
+            return oDominios.FirstOrDefault(c => c.Id == nDomainColumnaId).DomainValues.FirstOrDefault(c => c.LineNumber == nLineNumber).Value;
         }
     }
 }

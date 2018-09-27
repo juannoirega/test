@@ -37,6 +37,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private static int _nIntentosPolicyCenter;
         private static string _cUrlPolicyCenter = string.Empty;
         private static string[] _Usuarios;
+        private static string[] _DominioLineas;
+        private static string[] _DominioComplejidad;
+        private static string[] _DominioMotivo;
         private static int _nIndice;
         private static string _cElemento = string.Empty;
         private static string _cLineaAutos = string.Empty;
@@ -86,7 +89,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.Id == _nIdEstadoError);
                     _oTicketHijo = _oRobot.GetNextStateAction(oTicket).First(a => a.Id == _nIdEstadoSiguiente);
                     //Obteniendo Línea de Negocio:
-                    _cLinea = oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value;
+                    _cLinea = _Funciones.GetDomainValue(Convert.ToInt32(_DominioLineas[0]), Convert.ToInt32(_DominioLineas[1]), Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value));
                     ProcesarTicket(oTicket);
                 }
                 catch (Exception Ex)
@@ -126,6 +129,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _cCeldaLimitante = _oRobot.GetValueParamRobot("CeldaLimitante").ValueParam;
                 _nIndexFilaCuenta = Convert.ToInt32(_oRobot.GetValueParamRobot("IndexFilaCuenta").ValueParam);
                 _nIndexCeldaCuenta = Convert.ToInt32(_oRobot.GetValueParamRobot("IndexCeldaCuenta").ValueParam);
+                _DominioLineas = _oRobot.GetValueParamRobot("ParametrosDominioLineas").ValueParam.Split(',');
+                _DominioComplejidad = _oRobot.GetValueParamRobot("ParametrosDominioComplejidad").ValueParam.Split(',');
+                _DominioMotivo = _oRobot.GetValueParamRobot("ParametrosDominioMotivo").ValueParam.Split(',');
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener parámetros del Robot: " + Ex.Message, Ex); }
         }
@@ -402,9 +408,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             _Funciones.Esperar(2);
             _driverGlobal.FindElement(By.XPath(xPath)).SendKeys(Keys.Control + "e");
             _driverGlobal.FindElement(By.XPath(xPath)).SendKeys(texto);
-
-            //_element.SendKeys(Keys.Control + "e");
-            //_element.SendKeys(Texto);
         }
 
         public void CambiarNacionalidad(string Texto)
@@ -651,13 +654,15 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 {
                     //Seleccionar tipo de complejidad:
                     _cElemento = "Tipo de Complejidad";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason", _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idcomplejidad).Value))); //Campo tipo de complejidad
+                    string cComplejidad = _Funciones.GetDomainValue(Convert.ToInt32(_DominioComplejidad[0]),Convert.ToInt32(_DominioComplejidad[1]), Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idcomplejidad).Value));
+                    _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason", cComplejidad);
                     _Funciones.Esperar(4);
                 }
 
                 //Seleccionar motivo del endoso:
                 _cElemento = "Motivo del endoso";
-                _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Description", _Funciones.ObtenerValorDominio(oTicketDatos, Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idmotivoendoso).Value)));
+                string cMotivoEndoso = _Funciones.GetDomainValue(Convert.ToInt32(_DominioMotivo[0]), Convert.ToInt32(_DominioMotivo[1]), Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idmotivoendoso).Value));
+                _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Description", cMotivoEndoso);
                 _Funciones.Esperar(4);
 
                 //Ingresar comentarios adicionales:
