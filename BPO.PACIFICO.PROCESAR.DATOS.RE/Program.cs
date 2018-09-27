@@ -102,16 +102,16 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                 string tipoProducto = oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.producto_tipo).Value;
                 if (_productosAlianzas.Where(o => o == producto).FirstOrDefault() != null)
                 {
-                    _cLinea = "ALIANZAS";
+                    _cLinea = "5";
                 }
                 if (_tProductosAlianzas.Where(o => o == tipoProducto).FirstOrDefault() != null)
                 {
-                    _cLinea = "ALIANZAS";
+                    _cLinea = "5";
 
                 }
                 else if (_tProductosLPersonales.Where(o => o == tipoProducto).FirstOrDefault() != null)
                 {
-                    _cLinea = "LLPP";
+                    _cLinea = "6";
                 }
                 if (producto.Contains(motivoAnulacion))
                 {
