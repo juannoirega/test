@@ -299,5 +299,11 @@
     <Setting Name="comentarios_adicionales" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">110</Value>
     </Setting>
+    <Setting Name="poliza_nro_dni" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">111</Value>
+    </Setting>
+    <Setting Name="poliza_nro_ruc" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">112</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
