@@ -324,14 +324,8 @@ namespace Robot.Util.Nacar
         {
             for (int i = 0; i < nIntentos; i++)
             {
-                try
-                {
-                    if (oDriver.FindElement(cIdElemento).Displayed) { return true; }                 
-                }
-                catch (NoSuchElementException)
-                {
-                    Esperar();
-                }
+                try { if (oDriver.FindElement(cIdElemento).Displayed) { return true; } }
+                catch (NoSuchElementException) { Esperar(); }
             }
             return false;
         }
@@ -526,21 +520,80 @@ namespace Robot.Util.Nacar
             catch (Exception Ex) { throw new Exception("Ocurrió un error al buscar documento: " + Ex.Message, Ex); }
         }
 
-        public void GuardarIdPlantillaNotificacion(Ticket ticket, int idPlantilla)
+        public void GuardarIdPlantillaNotificacion(Ticket ticket, int nIdProceso, int nIdLinea, bool bConforme = true)
         {
-            if (ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj) == null)
+            try
             {
-                ticket.TicketValues.Add(new TicketValue
+                if (ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj) == null)
                 {
-                    FieldId = eesFields.Default.reproceso_contador,
-                    TicketId = ticket.Id,
-                    Value = idPlantilla.ToString(),
-                    CreationDate = DateTime.Now,
-                    ClonedValueOrder = null
-                });
+                    ticket.TicketValues.Add(new TicketValue
+                    {
+                        FieldId = eesFields.Default.reproceso_contador,
+                        TicketId = ticket.Id,
+                        Value = Convert.ToString(GetTemplateID(nIdProceso, nIdLinea, bConforme)),
+                        CreationDate = DateTime.Now,
+                        ClonedValueOrder = null
+                    });
+                }
+                else
+                    ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj).Value = Convert.ToString(GetTemplateID(nIdProceso, nIdLinea, bConforme));
             }
-            else
-                ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.id_archivo_tipo_adj).Value = idPlantilla.ToString();
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al guardar plantilla de notificación: " + Ex.Message, Ex); }
+        }
+
+        private int GetTemplateID(int nProceso, int nLinea, bool bTipo)
+        {
+            int nIdTemplate = 0;
+            if (nProceso == eesDomains.Default.AnulacionPoliza)
+            {
+                if (nLinea == eesDomains.Default.AP_Autos)
+                {
+                    if (bTipo) { nIdTemplate = eesPlantillas.Default.AP_AutosConforme; } else { nIdTemplate = eesPlantillas.Default.AP_AutosRechazo; };
+                }
+                else if (nLinea == eesDomains.Default.AP_RRGG)
+                {
+                    if (bTipo) { nIdTemplate = eesPlantillas.Default.AP_RRGGConforme; } else { nIdTemplate = eesPlantillas.Default.AP_RRGGRechazo; };
+                }
+                else if (nLinea == eesDomains.Default.AP_BancaAlianzas)
+                {
+                    if (bTipo) { nIdTemplate = eesPlantillas.Default.AP_BancaAlianzasConforme; } else { nIdTemplate = eesPlantillas.Default.AP_BancaAlianzasRechazo; };
+                }
+                else if (nLinea == eesDomains.Default.AP_LLPP)
+                {
+                    if (bTipo) { nIdTemplate = eesPlantillas.Default.AP_LLPPConforme; } else { nIdTemplate = eesPlantillas.Default.AP_LLPPRechazo; };
+                }
+            }
+            else if (nProceso == eesDomains.Default.Rehabilitacion)
+            {
+                if (nLinea == eesDomains.Default.RE_BancaAlianzas)
+                {
+                    if (bTipo) { nIdTemplate = eesPlantillas.Default.RE_BancaAlianzasConforme; } else { nIdTemplate = eesPlantillas.Default.RE_BancaAlianzasRechazo; };
+                }
+                else if (nLinea == eesDomains.Default.RE_LLPP)
+                {
+                    if (bTipo) { nIdTemplate = eesPlantillas.Default.RE_LLPPConforme; } else { nIdTemplate = eesPlantillas.Default.RE_LLPPRechazo; };
+                }
+            }
+            else if (nProceso == eesDomains.Default.ActualizarDatosCliente)
+            {
+                if (nLinea == eesDomains.Default.AC_Autos)
+                {
+                    if (bTipo) { nIdTemplate = eesPlantillas.Default.AC_AutosConforme; } else { nIdTemplate = eesPlantillas.Default.AC_AutosRechazo; };
+                }
+                else if (nLinea == eesDomains.Default.AC_RRGG)
+                {
+                    if (bTipo) { nIdTemplate = eesPlantillas.Default.AC_RRGGConforme; } else { nIdTemplate = eesPlantillas.Default.AC_RRGGRechazo; };
+                }
+                else if (nLinea == eesDomains.Default.AC_BancaAlianzas)
+                {
+                    if (bTipo) { nIdTemplate = eesPlantillas.Default.AC_BancaAlianzasConforme; } else { nIdTemplate = eesPlantillas.Default.AC_BancaAlianzasRechazo; };
+                }
+                else if (nLinea == eesDomains.Default.AC_LLPP)
+                {
+                    if (bTipo) { nIdTemplate = eesPlantillas.Default.AC_LLPPConforme; } else { nIdTemplate = eesPlantillas.Default.AC_LLPPRechazo; };
+                }
+            }
+            return nIdTemplate;
         }
 
         public String ObtenerNOrdenTrabajo(IWebDriver oDriver, string idTabla, string nombreCabecera)
@@ -628,7 +681,7 @@ namespace Robot.Util.Nacar
                 }
                 return oDriver.FindElement(by);
             }
-            catch (Exception Ex) { throw new Exception("Ocurrió un error al obtener elemento web: " + Ex.Message, Ex); }
+            catch (NoSuchElementException Ex) { throw new Exception("Ocurrió un error al obtener elemento web: " + Ex.Message, Ex); }
         }
 
         public void LimpiarElementoInput(IWebDriver oDriver, By oElemento)

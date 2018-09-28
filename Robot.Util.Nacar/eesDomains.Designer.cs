@@ -26,135 +26,117 @@ namespace Robot.Util.Nacar {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int functional_assignment_rules {
+        public int AP_Autos {
             get {
-                return ((int)(this["functional_assignment_rules"]));
+                return ((int)(this["AP_Autos"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int AP_RRGG {
+            get {
+                return ((int)(this["AP_RRGG"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int AP_BancaAlianzas {
+            get {
+                return ((int)(this["AP_BancaAlianzas"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int AP_LLPP {
+            get {
+                return ((int)(this["AP_LLPP"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int RE_BancaAlianzas {
+            get {
+                return ((int)(this["RE_BancaAlianzas"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public int RE_LLPP {
+            get {
+                return ((int)(this["RE_LLPP"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int AC_Autos {
+            get {
+                return ((int)(this["AC_Autos"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("8")]
-        public int lineas {
+        public int AC_RRGG {
             get {
-                return ((int)(this["lineas"]));
+                return ((int)(this["AC_RRGG"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("11")]
-        public int forma_de_reembolso {
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public int AC_BancaAlianzas {
             get {
-                return ((int)(this["forma_de_reembolso"]));
+                return ((int)(this["AC_BancaAlianzas"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1008")]
-        public int palabras_claves {
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int AC_LLPP {
             get {
-                return ((int)(this["palabras_claves"]));
+                return ((int)(this["AC_LLPP"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1012")]
-        public int procesos {
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int AnulacionPoliza {
             get {
-                return ((int)(this["procesos"]));
+                return ((int)(this["AnulacionPoliza"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1015")]
-        public int tipo_documento {
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int Rehabilitacion {
             get {
-                return ((int)(this["tipo_documento"]));
+                return ((int)(this["Rehabilitacion"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1023")]
-        public int tipo_de_error {
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int ActualizarDatosCliente {
             get {
-                return ((int)(this["tipo_de_error"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1027")]
-        public int motivo_de_anulacion {
-            get {
-                return ((int)(this["motivo_de_anulacion"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1031")]
-        public int solicitante {
-            get {
-                return ((int)(this["solicitante"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1038")]
-        public int motivo_rehabilitar {
-            get {
-                return ((int)(this["motivo_rehabilitar"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1042")]
-        public int tipo_de_contacto {
-            get {
-                return ((int)(this["tipo_de_contacto"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1046")]
-        public int indicetabla_actualizacion_datos_persona {
-            get {
-                return ((int)(this["indicetabla_actualizacion_datos_persona"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1051")]
-        public int tipo_documento_de_identificacion {
-            get {
-                return ((int)(this["tipo_documento_de_identificacion"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1055")]
-        public int procesos_version_final {
-            get {
-                return ((int)(this["procesos_version_final"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1062")]
-        public int lineas_version_final {
-            get {
-                return ((int)(this["lineas_version_final"]));
+                return ((int)(this["ActualizarDatosCliente"]));
             }
         }
     }

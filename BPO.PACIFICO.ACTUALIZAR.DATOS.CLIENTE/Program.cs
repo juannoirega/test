@@ -485,7 +485,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_nro).Value);
 
                     //Obtener nombre de la oferta:
-                    _cNombreOferta = _Funciones.FindElement(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering"), 2).Text;
+                    if(_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering"),_nIntentosPolicyCenter))
+                        _cNombreOferta = _Funciones.FindElement(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering"), 2).Text;
 
                     IniciarCambioPoliza(oTicketDatos);
                     if (!FormularioCambioPoliza(oTicketDatos)) { _bControl = true;  return; }
@@ -589,8 +590,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
                     //Hacer clic en Cambiar Póliza:
                     _cElemento = "Opción Cambiar Póliza";
-                    _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ChangePolicy")).Click();
-                    _Funciones.Esperar(5);
+                    _Funciones.FindElement(_driverGlobal, By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ChangePolicy"),5).Click();
+                    //_Funciones.Esperar(5);
                 }
                 else
                 {

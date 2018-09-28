@@ -1,0 +1,66 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Robot.Util.Nacar" GeneratedClassName="eesPlantillas">
+  <Profiles />
+  <Settings>
+    <Setting Name="AP_AutosConforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">77</Value>
+    </Setting>
+    <Setting Name="AP_AutosRechazo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">93</Value>
+    </Setting>
+    <Setting Name="AC_AutosConforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">517</Value>
+    </Setting>
+    <Setting Name="AC_AutosRechazo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">533</Value>
+    </Setting>
+    <Setting Name="AP_RRGGConforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">85</Value>
+    </Setting>
+    <Setting Name="AP_RRGGRechazo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">509</Value>
+    </Setting>
+    <Setting Name="AC_RRGGConforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">525</Value>
+    </Setting>
+    <Setting Name="AC_RRGGRechazo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">541</Value>
+    </Setting>
+    <Setting Name="AP_BancaAlianzasConforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">73</Value>
+    </Setting>
+    <Setting Name="AP_BancaAlianzasRechazo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">89</Value>
+    </Setting>
+    <Setting Name="AC_BancaAlianzasConforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">513</Value>
+    </Setting>
+    <Setting Name="AC_BancaAlianzasRechazo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">529</Value>
+    </Setting>
+    <Setting Name="RE_BancaAlianzasConforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">545</Value>
+    </Setting>
+    <Setting Name="RE_BancaAlianzasRechazo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">553</Value>
+    </Setting>
+    <Setting Name="AP_LLPPConforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">81</Value>
+    </Setting>
+    <Setting Name="AP_LLPPRechazo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">505</Value>
+    </Setting>
+    <Setting Name="AC_LLPPConforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">521</Value>
+    </Setting>
+    <Setting Name="AC_LLPPRechazo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">537</Value>
+    </Setting>
+    <Setting Name="RE_LLPPConforme" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">549</Value>
+    </Setting>
+    <Setting Name="RE_LLPPRechazo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">557</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
