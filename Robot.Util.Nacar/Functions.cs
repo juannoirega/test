@@ -409,7 +409,10 @@ namespace Robot.Util.Nacar
                             _count++;
                             break;
                         }
-                        ListaValoresGrilla.Add(_td[j].Text);
+                        if (!string.IsNullOrEmpty(_td[j].Text))
+                        {
+                            ListaValoresGrilla.Add(_td[j].Text);
+                        }
                     }
 
                 }
