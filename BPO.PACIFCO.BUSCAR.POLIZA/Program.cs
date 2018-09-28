@@ -157,7 +157,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             if (_finProcesoContact)
                 _robot.SaveTicketNextState(ticket, _estadoContact.Id);
             else
-                _robot.SaveTicketNextState(ticket, _idEstadoInicio);
+                _robot.SaveTicketNextState(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _idEstadoInicio).Id);
 
         }
         private bool ValidacionPoliCenter(List<Domain> dominios, int numero)
