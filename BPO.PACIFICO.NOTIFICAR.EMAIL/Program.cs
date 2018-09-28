@@ -118,7 +118,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //Opteneniendo la Ruta de la Plantilla
             _rutaPlantilla = Convert.ToString(valorTicket.Value);
 
-            LeerArchivo(_rutaPlantilla);
+            LeerArchivo(_rutaPlantilla,ticket);
 
             //Metodo Email
             EnviarEmail();
@@ -244,7 +244,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
         }
 
-        public void LeerArchivo(string archivo)
+        public void LeerArchivo(string archivo,Ticket ticket)
         {
             String rutax = _valores[4] + archivo;
             rutax = rutax.Replace("/", "\\");
