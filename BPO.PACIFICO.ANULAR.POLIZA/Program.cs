@@ -98,18 +98,18 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 BuscarPoliza(ticket);
                 AnularPoliza(ticket);
                 GuardarPdf(ticket);
-                _Funciones.GuardarIdPlantillaNotificacion(ticket,
-                    Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
-                    Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso))
-                    );
                 GuardarInformacionTicket(ticket);
+                _Funciones.GuardarIdPlantillaNotificacion(ticket,
+               Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
+               Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea))
+               );
                 if (_reprocesoContador > 0)
                 {
                     _reprocesoContador = 0;
                     _idEstadoRetorno = 0;
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                 }
-                _robot.SaveTicketNextState(ticket, _estadoFinal);
+                _robot.SaveTicketNextState(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoFinal).Id);
             }
         }
         private void AnularPoliza(Ticket ticket)

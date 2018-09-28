@@ -96,6 +96,10 @@ namespace BPO.PACIFICO.REHABILITAR
                 _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
                 _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.poliza_nro).Value);
                 RehabilitarPoliza(ticket);
+                _Funciones.GuardarIdPlantillaNotificacion(ticket,
+                   Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
+                   Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea))
+                   );
                 if (_reprocesoContador > 0)
                 {
                     _reprocesoContador = 0;
