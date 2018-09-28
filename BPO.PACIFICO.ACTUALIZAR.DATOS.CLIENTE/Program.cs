@@ -95,6 +95,11 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 catch (Exception Ex)
                 {
                     _reprocesoContador++;
+                    _Funciones.GuardarIdPlantillaNotificacion(oTicket, 
+                        Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)), 
+                        Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea)), 
+                        false
+                        );
                     _Funciones.GuardarValoresReprocesamiento(oTicket, _reprocesoContador, _idEstadoRetorno);
                     CambiarEstadoTicket(oTicket, _oMesaControl, Ex.Message);
                     LogFailStep(30, Ex);
@@ -452,7 +457,10 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             else
             {
                 AgregarValoresTicket(oTicket);
-
+                _Funciones.GuardarIdPlantillaNotificacion(oTicket,
+                    Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
+                    Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea))
+                    );
                 //Si todo es conforme, pasa al estado Crear Ticket Hijo:
                 if (_reprocesoContador > 0) { _reprocesoContador = 0; _idEstadoRetorno = 0; _Funciones.GuardarValoresReprocesamiento(oTicket, _reprocesoContador, _idEstadoRetorno); }
                 CambiarEstadoTicket(oTicket, _oTicketHijo);
