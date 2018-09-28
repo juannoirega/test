@@ -24,6 +24,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         private string _urlBcp = string.Empty;
         private int _estadoError;
         private int _estadoFinal;
+        private int _tiempoEsperaLargo = 0;
         #endregion
         #region VariablesGLoables
         private string _rutaDocumentos = string.Empty;
@@ -308,6 +309,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             _plantillaConforme = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaConforme").ValueParam);
             _plantillaRechazo = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaRechazo").ValueParam);
             _rutaDocumentos = _robot.GetValueParamRobot("RutaDocumentos").ValueParam;
+            _tiempoEsperaLargo = Convert.ToInt32(_robot.GetValueParamRobot("TiempoEsperaLargo").ValueParam);
             LogEndStep(4);
         }
 
