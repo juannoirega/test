@@ -13,7 +13,7 @@ namespace Robot.Util.Nacar {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
-    internal sealed partial class eesDomains : global::System.Configuration.ApplicationSettingsBase {
+    public sealed partial class eesDomains : global::System.Configuration.ApplicationSettingsBase {
         
         private static eesDomains defaultInstance = ((eesDomains)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new eesDomains())));
         

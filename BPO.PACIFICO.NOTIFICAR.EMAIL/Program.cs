@@ -29,11 +29,12 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
         private static Functions _Funciones;
 
-        static string[] _valores = new string[15];
-        static string[] _valoresTicket = new string[7];
+        static string[] _valores = new string[20];
+        static string[] _valoresTicket = new string[8];
         string _contenido = String.Empty;
         string _correoRobot = "soportecorredor_des@pacifico.com.pe";
         string _rutaPlantilla = String.Empty;
+        string NombrePlantilla = String.Empty;
         static string[] Scopes = { GmailService.Scope.GmailModify };
         static string ApplicationName = "Gmail API .NET Quickstart";
         UserCredential credential;
@@ -69,7 +70,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
                 catch (Exception ex)
                 {
                     LogFailStep(30, ex);
-                    cambiarEstado(TipoProceso.Value, ticket, "si", ex.Message);
+                    EdentificarProceso(ticket, ex.Message);
                 }
 
             }
@@ -82,9 +83,8 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
 
             //CAMPO QUE VIENE DE LOS ROBOT QUE INDICA QUE TIPO DE PLANTILLA USARA 
             _valoresTicket[2] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.id_archivo_tipo_adj).Value;
-
-
-
+            //idProceso 
+            _valoresTicket[7] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso).Value;
             //Asegurado Nombre 
             _valoresTicket[0] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.asegurado_nombre).Value;
             //Poliza
@@ -96,8 +96,9 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //Dni
             _valoresTicket[6] = ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nro_dni).Value;
 
-
-
+            //Optenr el NOmbre de la Plantilla
+            var dominio = ODataContextWrapper.GetContainer();
+            NombrePlantilla = dominio.DomainValues.Where(c => c.Id == Convert.ToInt32(_valoresTicket[2])).FirstOrDefault().Value;
 
             //Optener todos lo Ticket del Workflow "Adjuntar Documentos"
             List<Ticket> ticketDocumento = _robot.GetDataQueryTicket().Where(t => t.StateId == Convert.ToInt32(_valores[3])).ToList();
@@ -123,17 +124,16 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             //Metodo Email
             EnviarEmail();
 
-
-
-
-            cambiarEstado(TipoProceso.Value, ticket, "no", "");
+            EdentificarProceso(ticket, "");
+           
 
         }
 
         public void GetRobotParam()
         {
-            _valores[0] = _robot.GetValueParamRobot("EstadoSolicitudAceptadaA").ValueParam;
-            _valores[1] = _robot.GetValueParamRobot("EstadoSolicitudRechazadaA").ValueParam;
+            _valores[0] = _robot.GetValueParamRobot("EstadoSolicitudAceptadaAP").ValueParam;
+            _valores[1] = _robot.GetValueParamRobot("EstadoSolicitudRechazadaAP").ValueParam;
+            _valores[13] = _robot.GetValueParamRobot("MesaControlAP").ValueParam;
 
             _valores[2] = _robot.GetValueParamRobot("FieldAdjuntarDocumentos").ValueParam;
             _valores[3] = _robot.GetValueParamRobot("EstadoAdjuntarDocumentos").ValueParam;
@@ -143,11 +143,14 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             _valores[6] = _robot.GetValueParamRobot("EstadoErrorMA").ValueParam;
             _valores[7] = _robot.GetValueParamRobot("EstadoErrorMR").ValueParam;
 
-            _valores[8] = _robot.GetValueParamRobot("EstadoSolicitudAceptadaR").ValueParam;
-            _valores[9] = _robot.GetValueParamRobot("EstadoSolicitudRechazadaR").ValueParam;
+            _valores[8] = _robot.GetValueParamRobot("EstadoSolicitudAceptadaRE").ValueParam;
+            _valores[9] = _robot.GetValueParamRobot("EstadoSolicitudRechazadaRE").ValueParam;
+            _valores[14] = _robot.GetValueParamRobot("MesaControlRE").ValueParam;
+
 
             _valores[10] = _robot.GetValueParamRobot("EstadoSolicitudAceptadaAC").ValueParam;
             _valores[11] = _robot.GetValueParamRobot("EstadoSolicitudRechazadaAC").ValueParam;
+            _valores[15] = _robot.GetValueParamRobot("MesaControlAC").ValueParam;
 
             _valores[12] = _robot.GetValueParamRobot("EstadoErrorMAC").ValueParam;
 
@@ -312,49 +315,65 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
             return Regex.Replace(texto, @"(?:" + palabra + ")", "" + reemplazar + "");
         }
 
-        public void cambiarEstado(String TipoProceso, Ticket ticket, String error, String mensaje)
+        public String buscarPalabras(String texto)
         {
-            switch (TipoProceso)
-            {
-                case "Plantilla Correo Anulación Conforme":
-                    if (error == "si")
-                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[6])).Id);
-                    else
-                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[0]));
-                    break;
-                case "Plantilla Correo Anulación Rechazo":
-                    if (error == "si")
-                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[6])).Id);
-                    else
-                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[1]));
-                    break;
-                case "Plantilla Correo Rehabilitación Conforme":
-                    if (error == "si")
-                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[7])).Id);
-                    else
-                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[8]));
-                    break;
-                case "Plantilla Correo Rehabilitación Rechazo":
-                    if (error == "si")
-                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[7])).Id);
-                    else
-                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[9]));
-                    break;
-                case "Plantilla Correo Actualización Datos Cliente Conforme":
-                    if (error == "si")
-                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[12])).Id);
-                    else
-                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[10]));
-                    break;
-                case "Plantilla Correo Actualización Datos Cliente Rechazo":
-                    if (error == "si")
-                        _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_valores[12])).Id);
-                    else
-                        _robot.SaveTicketNextState(ticket, Convert.ToInt32(_valores[11]));
-                    break;
+            String palabras = String.Empty;
 
+            String[] palabrasClavesPlantillas = ("CONFORME,RECHAZO").Split(',');
+            int conta = 0;
+
+            foreach (String item in palabrasClavesPlantillas)
+            {
+                palabras = item;
+                palabras = String.Format(palabras, "{0:D15}");
+
+                conta = new Regex(String.Concat(@"(?:"+palabras+")")).Matches(texto.ToUpperInvariant()).Count;
+                if (conta == 1) palabras = item;
+            }
+
+            return palabras;
+        }
+
+        public void EdentificarProceso(Ticket ticket,string mensaje)
+        {
+
+            switch (Convert.ToInt32(_valoresTicket[7]))
+            {
+               case 1:
+                    cambiarEstado(eesDomains.Default.AnulacionPoliza,buscarPalabras(NombrePlantilla),ticket,Convert.ToInt32(_valores[0]),Convert.ToInt32(_valores[1]),Convert.ToInt32(_valores[13]),mensaje);
+                break;
+                case  2:
+                     cambiarEstado(eesDomains.Default.Rehabilitacion, buscarPalabras(NombrePlantilla), ticket, Convert.ToInt32(_valores[8]), Convert.ToInt32(_valores[9]), Convert.ToInt32(_valores[14]), mensaje);
+                    break;
+                case 3:
+                     cambiarEstado(eesDomains.Default.ActualizarDatosCliente, buscarPalabras(NombrePlantilla), ticket, Convert.ToInt32(_valores[10]), Convert.ToInt32(_valores[11]), Convert.ToInt32(_valores[15]), mensaje);
+                    break;
+            }
+        }
+
+        public void cambiarEstado( int idproceso, string palabra,Ticket ticket,int estadoConforme,int estadoRechazo,int estadoMesaControl ,string mensaje)
+        {
+            try
+            {
+                if (palabra == "CONFORME")
+                    _robot.SaveTicketNextState(ticket, estadoConforme);
+                else if (palabra == "RECHAZO")
+                    _robot.SaveTicketNextState(ticket, estadoRechazo);
+                
+                if(mensaje!="")
+                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, mensaje), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == estadoMesaControl).Id);
+
+            }
+            catch (Exception ex)
+            {
+                _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == estadoMesaControl).Id);
             }
 
         }
+
+
+
+
+
     }
 }

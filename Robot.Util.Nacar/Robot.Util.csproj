@@ -141,7 +141,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="eesDomains.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>eesDomains.Designer.cs</LastGenOutput>
     </None>
     <None Include="eesFields.settings">
