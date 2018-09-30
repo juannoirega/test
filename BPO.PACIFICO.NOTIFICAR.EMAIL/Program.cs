@@ -43,7 +43,7 @@ namespace BPO.Robot.Template.v3 //BPO.PACIFICO.NOTIFICAR.EMAIL
         Ticket ticket = new Ticket();
         List<TicketValue> ticketValue = new List<TicketValue>();
         List<TicketValue> ticketValue_Valores = new List<TicketValue>();
-        DomainValue TipoProceso = null;
+        
 
         static void Main(string[] args)
         {
