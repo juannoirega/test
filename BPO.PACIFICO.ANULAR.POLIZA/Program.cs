@@ -90,7 +90,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         {
             //falta verificar cual sera el id del campo que confirmara si es portalbc o no**reemplazar por el "1"
             //_esPortalBcp = ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == 1).Value.ToString() == "True" ? true : false;
-            if (!ValidarVacios(ticket))
+            if (ValidarVacios(ticket))
             {
                 _Funciones.AbrirSelenium(ref _driverGlobal);
                 NavegarUrl();
