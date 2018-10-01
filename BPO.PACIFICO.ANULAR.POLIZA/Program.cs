@@ -163,7 +163,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             //}
             //else
             //{
-            _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.numero_de_poliza).Value);
+            _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.poliza_nro).Value);
             //}
 
         }
