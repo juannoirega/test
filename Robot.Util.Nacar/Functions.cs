@@ -676,8 +676,8 @@ namespace Robot.Util.Nacar
             {
                 if(nTiempoEsperaSegundos > 0)
                 {
-                    var oEsperar = new WebDriverWait(oDriver, TimeSpan.FromSeconds(nTiempoEsperaSegundos));
-                    return oEsperar.Until(drv => drv.FindElement(by));
+                    WebDriverWait oEsperar = new WebDriverWait(oDriver, TimeSpan.FromSeconds(nTiempoEsperaSegundos));
+                    IWebElement oElement = oEsperar.Until<IWebElement>(e => { return e.FindElement(by); });
                 }
                 return oDriver.FindElement(by);
             }
