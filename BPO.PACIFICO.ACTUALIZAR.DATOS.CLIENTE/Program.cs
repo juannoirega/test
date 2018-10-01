@@ -89,12 +89,17 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.Id == _nIdEstadoError);
                     _oTicketHijo = _oRobot.GetNextStateAction(oTicket).First(a => a.Id == _nIdEstadoSiguiente);
                     //Obteniendo Línea de Negocio:
-                    _cLinea = _Funciones.GetDomainValue(Convert.ToInt32(_DominioLineas[0]), Convert.ToInt32(_DominioLineas[1]), Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value));
+                    _cLinea = _Funciones.GetDomainValue(Convert.ToInt32(_DominioLineas[0]), Convert.ToInt32(_DominioLineas[1]), Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value)).ToUpperInvariant();
                     ProcesarTicket(oTicket);
                 }
                 catch (Exception Ex)
                 {
                     _reprocesoContador++;
+                    _Funciones.GuardarIdPlantillaNotificacion(oTicket, 
+                        Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)), 
+                        Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea)), 
+                        false
+                        );
                     _Funciones.GuardarValoresReprocesamiento(oTicket, _reprocesoContador, _idEstadoRetorno);
                     CambiarEstadoTicket(oTicket, _oMesaControl, Ex.Message);
                     LogFailStep(30, Ex);
@@ -452,7 +457,10 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             else
             {
                 AgregarValoresTicket(oTicket);
-
+                _Funciones.GuardarIdPlantillaNotificacion(oTicket,
+                    Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
+                    Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea))
+                    );
                 //Si todo es conforme, pasa al estado Crear Ticket Hijo:
                 if (_reprocesoContador > 0) { _reprocesoContador = 0; _idEstadoRetorno = 0; _Funciones.GuardarValoresReprocesamiento(oTicket, _reprocesoContador, _idEstadoRetorno); }
                 CambiarEstadoTicket(oTicket, _oTicketHijo);
@@ -485,7 +493,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_nro).Value);
 
                     //Obtener nombre de la oferta:
-                    _cNombreOferta = _Funciones.FindElement(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering"), 2).Text;
+                    if(_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering"),_nIntentosPolicyCenter))
+                        _cNombreOferta = _Funciones.FindElement(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering"), 2).Text;
 
                     IniciarCambioPoliza(oTicketDatos);
                     if (!FormularioCambioPoliza(oTicketDatos)) { _bControl = true;  return; }
@@ -589,8 +598,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
                     //Hacer clic en Cambiar Póliza:
                     _cElemento = "Opción Cambiar Póliza";
-                    _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ChangePolicy")).Click();
-                    _Funciones.Esperar(5);
+                    _Funciones.FindElement(_driverGlobal, By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ChangePolicy"),5).Click();
+                    //_Funciones.Esperar(5);
                 }
                 else
                 {
@@ -654,14 +663,14 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 {
                     //Seleccionar tipo de complejidad:
                     _cElemento = "Tipo de Complejidad";
-                    string cComplejidad = _Funciones.GetDomainValue(Convert.ToInt32(_DominioComplejidad[0]),Convert.ToInt32(_DominioComplejidad[1]), Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idcomplejidad).Value));
+                    string cComplejidad = _Funciones.GetDomainValue(Convert.ToInt32(_DominioComplejidad[0]),Convert.ToInt32(_DominioComplejidad[1]), Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idcomplejidad).Value)).ToUpperInvariant();
                     _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason", cComplejidad);
                     _Funciones.Esperar(4);
                 }
 
                 //Seleccionar motivo del endoso:
                 _cElemento = "Motivo del endoso";
-                string cMotivoEndoso = _Funciones.GetDomainValue(Convert.ToInt32(_DominioMotivo[0]), Convert.ToInt32(_DominioMotivo[1]), Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idmotivoendoso).Value));
+                string cMotivoEndoso = _Funciones.GetDomainValue(Convert.ToInt32(_DominioMotivo[0]), Convert.ToInt32(_DominioMotivo[1]), Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idmotivoendoso).Value)).ToUpperInvariant();
                 _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Description", cMotivoEndoso);
                 _Funciones.Esperar(4);
 

@@ -25,8 +25,6 @@ namespace BPO.PACIFICO.REHABILITAR
         #region VariablesGLoables
         private int _reprocesoContador = 0;
         private int _idEstadoRetorno = 0;
-        private int _plantillaConforme;
-        private int _plantillaRechazo;
         #endregion
 
         static void Main(string[] args)
@@ -63,7 +61,11 @@ namespace BPO.PACIFICO.REHABILITAR
                 {
                     LogFailStep(30, ex);
                     _reprocesoContador++;
-                    _Funciones.GuardarIdPlantillaNotificacion(ticket, _plantillaRechazo);
+                    _Funciones.GuardarIdPlantillaNotificacion(ticket,
+                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
+                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea)),
+                        false
+                        );
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
                     return;
@@ -75,6 +77,16 @@ namespace BPO.PACIFICO.REHABILITAR
             }
         }
 
+        private void GetParameterRobots()
+        {
+            _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
+            _usuarioPolicyCenter = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
+            _contraseñaPolicyCenter = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
+            _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
+            _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
+            LogEndStep(4);
+        }
+
         private void ProcesarTicket(Ticket ticket)
         {
             if (!ValidarVacios(ticket))
@@ -84,6 +96,10 @@ namespace BPO.PACIFICO.REHABILITAR
                 _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
                 _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.poliza_nro).Value);
                 RehabilitarPoliza(ticket);
+                _Funciones.GuardarIdPlantillaNotificacion(ticket,
+                   Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
+                   Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea))
+                   );
                 if (_reprocesoContador > 0)
                 {
                     _reprocesoContador = 0;
@@ -175,17 +191,6 @@ namespace BPO.PACIFICO.REHABILITAR
                 return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al validar campos del Ticket: " + Convert.ToString(oTicketDatos.Id), Ex); }
-        }
-        private void GetParameterRobots()
-        {
-            _urlPolicyCenter = _robot.GetValueParamRobot("URLPolyCenter").ValueParam;
-            _usuarioPolicyCenter = _robot.GetValueParamRobot("UsuarioPolyCenter").ValueParam;
-            _contraseñaPolicyCenter = _robot.GetValueParamRobot("PasswordPolyCenter").ValueParam;
-            _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
-            _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
-            _plantillaConforme = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaConforme").ValueParam);
-            _plantillaRechazo = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaRechazo").ValueParam);
-            LogEndStep(4);
         }
     }
 }

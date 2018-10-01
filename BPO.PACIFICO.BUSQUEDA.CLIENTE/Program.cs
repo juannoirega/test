@@ -194,7 +194,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         public void AccederRegistro()
         {
-            _driverGlobal.FindElement(By.Id("ABContactSearch:ABContactSearchScreen:ContactSearchResultsLV:0:DisplayName")).Click();
+            _driverGlobal.FindElement(By.XPath("//*[@id='ABContactSearch:ABContactSearchScreen:ContactSearchResultsLV:0:DisplayName']/span")).Click();
             _Funciones.Esperar(3);
             _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Edit']/span[2]")).Click();
             _Funciones.Esperar(2);
@@ -226,8 +226,10 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     InsertarValoresFielt(ticket, eesFields.Default.fecha_de_nacimiento, ExtraerDatosXPath(5, 5, "textBox"));
                     //Sexo
                     InsertarValoresFielt(ticket, eesFields.Default.sexo, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPersonVendorInputSet:Gender"));
+                    
                     //Estado civil                                         
-                    InsertarValoresFielt(ticket, eesFields.Default.estado_civil, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPersonVendorInputSet:MaritalStatus"));
+                    //InsertarValoresFielt(ticket, eesFields.Default.estado_civil, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPersonVendorInputSet:MaritalStatus"));
+                    
                     //Correo Personal;                                     
                     InsertarValoresFielt(ticket, eesFields.Default.correo_personal, ExtraerDatosXPath(0, 41, "textBox"));
                     //Distrito
@@ -240,8 +242,10 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     InsertarValoresFielt(ticket, eesFields.Default.razon_social, ExtraerDatosXPath(0, 4, "textBox"));
                     //Nombre comercial 
                     InsertarValoresFielt(ticket, eesFields.Default.nombre_comercial, ExtraerDatosXPath(0, 5, "textBox"));
-                    //Fecha de inicio de Actividades;
-                    InsertarValoresFielt(ticket, eesFields.Default.fecha_de_inicio_de_actividades, ExtraerDatosXPath(6, 5, "textBox"));
+
+                    ////Fecha de inicio de Actividades;
+                    //InsertarValoresFielt(ticket, eesFields.Default.fecha_de_inicio_de_actividades, ExtraerDatosXPath(6, 5, "textBox"));
+
                     //Actividad económica
                     InsertarValoresFielt(ticket, eesFields.Default.actividad_economica, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:EconomicSectorActivityInputSet:EconomicSubSectorExt"));
                     //Sector Económico                                     
@@ -282,7 +286,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             }
             catch (Exception ex)
             {
-                _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_EstadoSiguiente)).Id);
+                _robot.SaveTicketNextState(ticket, Convert.ToInt32(_EstadoSiguiente));
+                _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_EstadoError)).Id);
             }
         }
 

@@ -24,12 +24,11 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         private string _urlBcp = string.Empty;
         private int _estadoError;
         private int _estadoFinal;
+        private int _tiempoEsperaLargo = 0;
         #endregion
         #region VariablesGLoables
         private string _rutaDocumentos = string.Empty;
         private string _numeroOrdenTrabajo = string.Empty;
-        private int _plantillaConforme;
-        private int _plantillaRechazo;
         private int _reprocesoContador = 0;
         private int _idEstadoRetorno = 0;
         private static string _pasoRealizado = string.Empty;
@@ -72,7 +71,11 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 {
                     LogFailStep(30, ex);
                     _reprocesoContador++;
-                    _Funciones.GuardarIdPlantillaNotificacion(ticket, _plantillaRechazo);
+                    _Funciones.GuardarIdPlantillaNotificacion(ticket, 
+                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
+                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea)),
+                        false
+                        );
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                     _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
                     return;
@@ -95,15 +98,18 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 BuscarPoliza(ticket);
                 AnularPoliza(ticket);
                 GuardarPdf(ticket);
-                _Funciones.GuardarIdPlantillaNotificacion(ticket, _plantillaConforme);
                 GuardarInformacionTicket(ticket);
+                _Funciones.GuardarIdPlantillaNotificacion(ticket,
+               Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
+               Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea))
+               );
                 if (_reprocesoContador > 0)
                 {
                     _reprocesoContador = 0;
                     _idEstadoRetorno = 0;
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                 }
-                _robot.SaveTicketNextState(ticket, _estadoFinal);
+                _robot.SaveTicketNextState(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoFinal).Id);
             }
         }
         private void AnularPoliza(Ticket ticket)
@@ -241,7 +247,8 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
         {
             try
             {
-                int[] oCampos = new int[] { eesFields.Default.anulacion_solicitante, eesFields.Default.poliza_anu_motivo, eesFields.Default.forma_de_reembolso };
+                int[] oCampos = new int[] { eesFields.Default.anulacion_solicitante, eesFields.Default.poliza_anu_motivo, eesFields.Default.forma_de_reembolso,
+                                            eesFields.Default.idproceso, eesFields.Default.idlinea};
 
                 return _Funciones.ValidarCamposVacios(oTicketDatos, oCampos);
             }
@@ -305,9 +312,8 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             //_urlBcp = _robot.GetValueParamRobot("URLBcp").ValueParam;
             _estadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
             _estadoFinal = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
-            _plantillaConforme = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaConforme").ValueParam);
-            _plantillaRechazo = Convert.ToInt32(_robot.GetValueParamRobot("PlantillaRechazo").ValueParam);
             _rutaDocumentos = _robot.GetValueParamRobot("RutaDocumentos").ValueParam;
+            _tiempoEsperaLargo = Convert.ToInt32(_robot.GetValueParamRobot("TiempoEsperaLargo").ValueParam);
             LogEndStep(4);
         }
 

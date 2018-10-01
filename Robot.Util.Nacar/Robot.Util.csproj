@@ -123,6 +123,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>eesFields.settings</DependentUpon>
     </Compile>
+    <Compile Include="eesPlantillas.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>eesPlantillas.settings</DependentUpon>
+    </Compile>
     <Compile Include="eesStateActions.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -136,12 +141,16 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="eesDomains.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>eesDomains.Designer.cs</LastGenOutput>
     </None>
     <None Include="eesFields.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>eesFields.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="eesPlantillas.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>eesPlantillas.Designer.cs</LastGenOutput>
     </None>
     <None Include="eesStateActions.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
