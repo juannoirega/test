@@ -89,7 +89,7 @@ namespace BPO.PACIFICO.REHABILITAR
 
         private void ProcesarTicket(Ticket ticket)
         {
-            if (!ValidarVacios(ticket))
+            if (ValidarVacios(ticket))
             {
                 _Funciones.AbrirSelenium(ref _driverGlobal);
                 _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
@@ -106,7 +106,7 @@ namespace BPO.PACIFICO.REHABILITAR
                     _idEstadoRetorno = 0;
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                 }
-                _robot.SaveTicketNextState(ticket, _estadoFinal);
+                _robot.SaveTicketNextState(ticket, _robot.GetNextStateAction(ticket).First(o=>o.DestinationStateId==_estadoError).Id);
             }
         }
 
