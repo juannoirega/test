@@ -26,7 +26,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
         private string _nombreProceso = string.Empty;
         private string _estadoError;
         private int _dominioProceso;
-        private int _idProceso;
+        private string _idProceso;
         private int _tiempoEsperaLargo = 0;
         #endregion
         #region VariablesGLoables
@@ -121,7 +121,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 //poner parametro
                 List<Domain> dominios = container.Domains.Expand(dv => dv.DomainValues).Where(df => df.ParentId == _dominioProceso).ToList();
                 //poner parametro
-                int numero = dominios.FirstOrDefault(o => o.Name == "id").DomainValues.FirstOrDefault(o => o.Value == _nombreProceso).LineNumber;
+                int numero = dominios.FirstOrDefault(o => o.Name == "id").DomainValues.FirstOrDefault(o => o.Value == _idProceso).LineNumber;
                 _existeValorProducto = ValidacionProducto(ticket);
                 //poner parametro para las buquesdas de dominio
                 _buscarPolicyCenter = ValidacionPoliCenter(dominios, numero);
@@ -373,7 +373,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             _procesoInicio = _robot.GetValueParamRobot("ProcessoInicio").ValueParam;
             _nombreProceso = _robot.GetValueParamRobot("NombreProcesso").ValueParam;
             //Verificar como se trabajara este parametro
-            _idProceso = Convert.ToInt32(_robot.GetValueParamRobot("IdProceso").ValueParam);
+            _idProceso =_robot.GetValueParamRobot("IdProceso").ValueParam;
             _tiempoEsperaLargo = Convert.ToInt32(_robot.GetValueParamRobot("TiempoEsperaLargo").ValueParam);
             LogEndStep(4);
         }
