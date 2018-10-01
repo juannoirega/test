@@ -174,7 +174,7 @@ namespace Robot.Util.Nacar
 
             for (int i = 0; i < oOption.Count; i++)
             {
-                if (oOption[i].Text.ToUpperInvariant().Equals(valorComparar))
+                if (oOption[i].Text.ToUpperInvariant().Equals(valorComparar.ToUpperInvariant()))
                 {
                     oOption[i].Click();
                     break;
@@ -682,7 +682,13 @@ namespace Robot.Util.Nacar
                 if(nTiempoEsperaSegundos > 0)
                 {
                     WebDriverWait oEsperar = new WebDriverWait(oDriver, TimeSpan.FromSeconds(nTiempoEsperaSegundos));
-                    IWebElement oElement = oEsperar.Until<IWebElement>(e => { return e.FindElement(by); });
+                    oEsperar.IgnoreExceptionTypes(typeof(NoSuchElementException));
+                    return oEsperar.Until(e =>
+                    {
+                        if (ExisteElemento(oDriver,by,nTiempoEsperaSegundos)) { return e.FindElement(by); }
+                        else { return null; }
+                    });
+                    //IWebElement oElement = oEsperar.Until<IWebElement>(e => { return e.FindElement(by); });
                 }
                 return oDriver.FindElement(by);
             }
@@ -703,6 +709,16 @@ namespace Robot.Util.Nacar
             var oContainer = ODataContextWrapper.GetContainer();
             List<Domain> oDominios = oContainer.Domains.Expand(a => a.DomainValues).Where(b => b.ParentId == nParentId).ToList();
             return oDominios.FirstOrDefault(c => c.Id == nDomainColumnaId).DomainValues.FirstOrDefault(c => c.LineNumber == nLineNumber).Value;
+        }
+
+        public Boolean IsFieldEdit(Ticket oTicket, int nFieldId)
+        {
+            if (oTicket.TicketValues.FirstOrDefault(a => a.FieldId == nFieldId) != null)
+            {
+                if (String.IsNullOrWhiteSpace(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == nFieldId).Value)) { return false; }
+                else{ return true; }
+            }
+            return false;
         }
     }
 }

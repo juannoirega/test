@@ -163,7 +163,8 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             //}
             //else
             //{
-            _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.numero_de_poliza).Value);
+            _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.poliza_nro).Value);
+            _Funciones.Esperar(_tiempoEsperaLargo);
             //}
 
         }
@@ -189,55 +190,63 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             LogStartStep(45);
             try
             {
-                _pasoRealizado = "Menu acciones";
-                _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
-
-                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy"), 2))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV"), 2))
                 {
-                    _pasoRealizado = "Menu opcion cancelar poliza";
-                    _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
-                    _Funciones.Esperar(5);
+                    _pasoRealizado = "Menu acciones";
+                    _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
 
-                    string _descripcionMotivo = "SE DEJA CONSTANCIA POR EL PRESENTE ENDOSO QUE, LA POLIZA DEL RUBRO QUEDA CANCELADA, NULA Y SIN VALOR PARA TODOS SUS EFECTOS A PARTIR DEL";
+                    if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy"), 2))
+                    {
+                        _pasoRealizado = "Menu opcion cancelar poliza";
+                        _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_CancelPolicy")).Click();
+                        _Funciones.Esperar(5);
 
-                    _pasoRealizado = "Seleccionar combobox solictante";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Source", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.anulacion_solicitante).Value)));
-                    _Funciones.Esperar(2);
+                        string _descripcionMotivo = "SE DEJA CONSTANCIA POR EL PRESENTE ENDOSO QUE, LA POLIZA DEL RUBRO QUEDA CANCELADA, NULA Y SIN VALOR PARA TODOS SUS EFECTOS A PARTIR DEL";
 
-                    _pasoRealizado = "Seleccionar combobox motivo anulación";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.anulacion_motivo).Value)));
-                    _Funciones.Esperar(2);
+                        _pasoRealizado = "Seleccionar combobox solictante";
+                        _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Source", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.anulacion_solicitante).Value)));
+                        _Funciones.Esperar(2);
 
-                    _pasoRealizado = "Ingresar endoso anulacion";
-                    _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo, " ", _Funciones.GetElementValue(_driverGlobal, By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date"))));
-                    _Funciones.Esperar(3);
+                        _pasoRealizado = "Seleccionar combobox motivo anulación";
+                        _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.anulacion_motivo).Value)));
+                        _Funciones.Esperar(2);
 
-                    _pasoRealizado = "Seleccionar combobox forma de reembolso";
-                    _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CalcMethod", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.forma_de_reembolso).Value)));
-                    _Funciones.Esperar(2);
+                        _pasoRealizado = "Ingresar endoso anulacion";
+                        _driverGlobal.FindElement(By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:ReasonDescription")).SendKeys(string.Concat(_descripcionMotivo, " ", _Funciones.GetElementValue(_driverGlobal, By.Id("StartCancellation:StartCancellationScreen:CancelPolicyDV:CancelDate_date"))));
+                        _Funciones.Esperar(3);
 
-                    _pasoRealizado = "Iniciar cancelacion";
-                    _driverGlobal.FindElement(By.XPath("//*[@id='StartCancellation:StartCancellationScreen:NewCancellation']/span[2]")).Click();
-                    _Funciones.Esperar(1);
+                        _pasoRealizado = "Seleccionar combobox forma de reembolso";
+                        _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:CalcMethod", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.forma_de_reembolso).Value)));
+                        _Funciones.Esperar(2);
 
-                    _driverGlobal.FindElement(By.XPath("//*[@id='CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions_arrow']")).Click();
-                    _Funciones.Esperar();
-                    _pasoRealizado = "Opcion Cancelar Poliza";
-                    _driverGlobal.FindElement(By.Id("CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions:CancelNow")).Click();
-                    _Funciones.Esperar();
+                        _pasoRealizado = "Iniciar cancelacion";
+                        _driverGlobal.FindElement(By.XPath("//*[@id='StartCancellation:StartCancellationScreen:NewCancellation']/span[2]")).Click();
+                        _Funciones.Esperar(1);
 
-                    _driverGlobal.SwitchTo().Alert().Accept();
-                    _Funciones.Esperar();
-                    _driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:JobCompleteDV:ViewPolicy")).Click();
-                    _Funciones.Esperar(2);
-                    _numeroOrdenTrabajo = _Funciones.ObtenerCadenaDeNumeros(_driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:Message")).Text);
-                    _Funciones.Esperar(2);
+                        _driverGlobal.FindElement(By.XPath("//*[@id='CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions_arrow']")).Click();
+                        _Funciones.Esperar();
+                        _pasoRealizado = "Opcion Cancelar Poliza";
+                        _driverGlobal.FindElement(By.Id("CancellationWizard:CancellationWizard_QuoteScreen:JobWizardToolbarButtonSet:BindOptions:CancelNow")).Click();
+                        _Funciones.Esperar();
+
+                        _driverGlobal.SwitchTo().Alert().Accept();
+                        _Funciones.Esperar();
+                        _driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:JobCompleteDV:ViewPolicy")).Click();
+                        _Funciones.Esperar(2);
+                        _numeroOrdenTrabajo = _Funciones.ObtenerCadenaDeNumeros(_driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:Message")).Text);
+                        _Funciones.Esperar(2);
+                    }
+                    else
+                    {
+                        _numeroOrdenTrabajo = _Funciones.ObtenerNOrdenTrabajo(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "N.° de orden de trabajo");
+                    }
                 }
                 else
                 {
-                    _numeroOrdenTrabajo= _Funciones.ObtenerNOrdenTrabajo(_driverGlobal, "PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV", "N.° de orden de trabajo");
+                    throw new Exception("Ocurrio un error, no se cargaron los datos de la poliza");
                 }
             }
+
             catch (Exception ex)
             {
                 LogFailStep(12, ex); throw new Exception(ex.Message + " :" + _pasoRealizado, ex);
