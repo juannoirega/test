@@ -40,8 +40,12 @@ namespace GmailQuickstart
         #endregion
         static void Main(string[] args)
         {
-            _robot = new BaseRobot<Program>(args);
-            _robot.Start();
+            try
+            {
+                _robot = new BaseRobot<Program>(args);
+                _robot.Start();
+            }
+            catch (Exception Ex) { Console.WriteLine(Ex.Message); }
         }
 
         protected override void Start()
