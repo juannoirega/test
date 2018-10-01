@@ -722,7 +722,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             {
                 //Clic en Nombre del asegurado:
                 _cElemento = "Nombre del Asegurado";
-                _Funciones.FindElement(_driverGlobal, By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:Name"), 5).Click();
+                _Funciones.FindElement(_driverGlobal, By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:PolicyChangeWizard_PolicyInfoDV:AccountInfoInputSet:Name"), Convert.ToInt32(_TiempoEspera[1])).Click();
 
                 //Verifica si es Persona o Empresa:
                 if (oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nro_dni).Value.Length > 0 )
@@ -903,7 +903,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
                 }
 
-                if (!String.IsNullOrWhiteSpace(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.nombre_de_la_calle).Value))
+                if (_Funciones.IsFieldEdit(oTicketDatos, eesFields.Default.nombre_de_la_calle))
                 {
                     //Nombre de la calle:
                     _cElemento = "Nombre de la calle";
