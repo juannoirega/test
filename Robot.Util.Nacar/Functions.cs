@@ -331,11 +331,16 @@ namespace Robot.Util.Nacar
         }
 
         //Verifica si ventana de alerta existe o no:
-        public Boolean VerificarVentanaAlerta(IWebDriver oDriver)
+        public Boolean VerificarVentanaAlerta(IWebDriver oDriver, bool bAceptar = true)
         {
             try
             {
-                if (oDriver.SwitchTo().Alert().ToString().Length > 0) { oDriver.SwitchTo().Alert().Accept(); return true; }
+                if (oDriver.SwitchTo().Alert().ToString().Length > 0)
+                {
+                    if (bAceptar) { oDriver.SwitchTo().Alert().Accept(); }
+                    else { oDriver.SwitchTo().Alert().Dismiss(); }
+                    return true;
+                }
             }
             catch (NoAlertPresentException) { Esperar(); }
             return false;
