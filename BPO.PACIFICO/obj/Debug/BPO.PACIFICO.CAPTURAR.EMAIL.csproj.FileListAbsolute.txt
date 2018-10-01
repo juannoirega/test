@@ -168,3 +168,6 @@ C:\Users\jalbanme\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\De
 C:\Users\jalbanme\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\Newtonsoft.Json.xml
 C:\Users\jalbanme\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\bin\Debug\WebDriver.xml
 C:\Users\jalbanme\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.CAPTURAR.EMAIL.csprojResolveAssemblyReference.cache
+C:\Users\ltrujill\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos2\BPO.PACIFICO\bin\Debug\BPO.PACIFICO.exe.config
+C:\Users\ltrujill\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos2\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.exe
+C:\Users\ltrujill\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos2\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.pdb

@@ -282,7 +282,10 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 //Referencia
                 InsertarValoresFielt(ticket, 1082, ExtraerDatosXPath(0, eesFields.Default.referencia, "textBox"));
 
-                _robot.SaveTicketNextState(ticket, Convert.ToInt32(_EstadoSiguiente));
+                List<StateAction> stateAction = _robot.GetNextStateAction(_robot.Tickets.FirstOrDefault());
+                StateAction nextState = stateAction.Where(sa => sa.DestinationStateId == Convert.ToInt32(_EstadoSiguiente)).SingleOrDefault();
+
+                _robot.SaveTicketNextState(ticket,nextState.Id );
             }
             catch (Exception ex)
             {
