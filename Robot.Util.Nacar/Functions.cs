@@ -710,5 +710,15 @@ namespace Robot.Util.Nacar
             List<Domain> oDominios = oContainer.Domains.Expand(a => a.DomainValues).Where(b => b.ParentId == nParentId).ToList();
             return oDominios.FirstOrDefault(c => c.Id == nDomainColumnaId).DomainValues.FirstOrDefault(c => c.LineNumber == nLineNumber).Value;
         }
+
+        public Boolean IsFieldEdit(Ticket oTicket, int nFieldId)
+        {
+            if (oTicket.TicketValues.FirstOrDefault(a => a.FieldId == nFieldId) != null)
+            {
+                if (String.IsNullOrWhiteSpace(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == nFieldId).Value)) { return false; }
+                else{ return true; }
+            }
+            return false;
+        }
     }
 }
