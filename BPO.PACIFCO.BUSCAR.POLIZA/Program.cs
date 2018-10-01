@@ -121,7 +121,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 //poner parametro
                 List<Domain> dominios = container.Domains.Expand(dv => dv.DomainValues).Where(df => df.ParentId == _dominioProceso).ToList();
                 //poner parametro
-                int numero = dominios.FirstOrDefault(o => o.Name == "nombre").DomainValues.FirstOrDefault(o => o.Value == _nombreProceso).LineNumber;
+                int numero = dominios.FirstOrDefault(o => o.Name == "id").DomainValues.FirstOrDefault(o => o.Value == _nombreProceso).LineNumber;
                 _existeValorProducto = ValidacionProducto(ticket);
                 //poner parametro para las buquesdas de dominio
                 _buscarPolicyCenter = ValidacionPoliCenter(dominios, numero);
