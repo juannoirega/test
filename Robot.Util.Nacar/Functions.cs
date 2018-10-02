@@ -174,7 +174,7 @@ namespace Robot.Util.Nacar
 
             for (int i = 0; i < oOption.Count; i++)
             {
-                if (oOption[i].Text.ToUpperInvariant().Equals(valorComparar))
+                if (oOption[i].Text.ToUpperInvariant().Equals(valorComparar.ToUpperInvariant()))
                 {
                     oOption[i].Click();
                     break;
@@ -188,7 +188,7 @@ namespace Robot.Util.Nacar
             try
             {
                 if (ticket != null)
-                    return container.DomainValues.FirstOrDefault(p => p.Id == idDominio).Value.Trim().ToUpperInvariant();
+                    return container.DomainValues.Where(p => p.Id == idDominio).FirstOrDefault().Value.Trim().ToUpperInvariant();
             }
             catch
             {
@@ -709,6 +709,16 @@ namespace Robot.Util.Nacar
             var oContainer = ODataContextWrapper.GetContainer();
             List<Domain> oDominios = oContainer.Domains.Expand(a => a.DomainValues).Where(b => b.ParentId == nParentId).ToList();
             return oDominios.FirstOrDefault(c => c.Id == nDomainColumnaId).DomainValues.FirstOrDefault(c => c.LineNumber == nLineNumber).Value;
+        }
+
+        public Boolean IsFieldEdit(Ticket oTicket, int nFieldId)
+        {
+            if (oTicket.TicketValues.FirstOrDefault(a => a.FieldId == nFieldId) != null)
+            {
+                if (String.IsNullOrWhiteSpace(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == nFieldId).Value)) { return false; }
+                else{ return true; }
+            }
+            return false;
         }
     }
 }
