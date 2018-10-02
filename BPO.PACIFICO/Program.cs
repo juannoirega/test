@@ -45,7 +45,7 @@ namespace GmailQuickstart
                 _robot = new BaseRobot<Program>(args);
                 _robot.Start();
             }
-            catch (Exception Ex) { Console.WriteLine(Ex.Message); }
+            catch (Exception Ex) { _robot.Start();  Console.WriteLine(Ex.Message); }
         }
 
         protected override void Start()
