@@ -35,7 +35,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private string _usuarioContactManager = string.Empty;
         private string _contraseñaContactManager = string.Empty;
         private string _EstadoError = string.Empty;
-        private string _EstadoSiguiente = string.Empty;
+        private Int32 _EstadoSiguiente = 0;
 
         #endregion
 
@@ -62,7 +62,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 {
                     LogFailStep(30, ex);
 
-                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_EstadoSiguiente)).Id);
+                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _EstadoSiguiente).Id);
                 }
             }
         }
@@ -216,23 +216,23 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     InsertarValoresFielt(ticket, eesFields.Default.nombre_s, ExtraerDatosXPath(0, 4, "textBox"));
                     //Apellido Paterno
                     InsertarValoresFielt(ticket, eesFields.Default.apellido_paterno, ExtraerDatosXPath(0, 5, "textBox"));
-                    //Apellido Materno
+                    ////Apellido Materno
                     InsertarValoresFielt(ticket, eesFields.Default.apellido_materno, ExtraerDatosXPath(0, 6, "textBox"));
-                    //eesFields.Default.
+                    ////eesFields.Default.
                     InsertarValoresFielt(ticket, eesFields.Default.nombre_corto, ExtraerDatosXPath(0, 8, "textBox"));
-                    //Prefijo
+                    ////Prefijo
                     InsertarValoresFielt(ticket, eesFields.Default.prefijo, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:Prefix"));
-                    //Fecha de nacimiento
+                    ////Fecha de nacimiento
                     InsertarValoresFielt(ticket, eesFields.Default.fecha_de_nacimiento, ExtraerDatosXPath(5, 5, "textBox"));
-                    //Sexo
+                    ////Sexo
                     InsertarValoresFielt(ticket, eesFields.Default.sexo, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPersonVendorInputSet:Gender"));
                     
-                    //Estado civil                                         
-                    //InsertarValoresFielt(ticket, eesFields.Default.estado_civil, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPersonVendorInputSet:MaritalStatus"));
+                    ////Estado civil                                         
+                    ////InsertarValoresFielt(ticket, eesFields.Default.estado_civil, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPersonVendorInputSet:MaritalStatus"));
                     
-                    //Correo Personal;                                     
+                    ////Correo Personal;                                     
                     InsertarValoresFielt(ticket, eesFields.Default.correo_personal, ExtraerDatosXPath(0, 41, "textBox"));
-                    //Distrito
+                    ////Distrito
                     InsertarValoresFielt(ticket, eesFields.Default.distrito, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_District"));
                 }
 
@@ -244,7 +244,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     InsertarValoresFielt(ticket, eesFields.Default.nombre_comercial, ExtraerDatosXPath(0, 5, "textBox"));
 
                     ////Fecha de inicio de Actividades;
-                    //InsertarValoresFielt(ticket, eesFields.Default.fecha_de_inicio_de_actividades, ExtraerDatosXPath(6, 5, "textBox"));
+                    InsertarValoresFielt(ticket, eesFields.Default.fecha_de_inicio_de_actividades, ExtraerDatosXPath(6, 5, "textBox"));
 
                     //Actividad económica
                     InsertarValoresFielt(ticket, eesFields.Default.actividad_economica, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:EconomicSectorActivityInputSet:EconomicSubSectorExt"));
@@ -260,36 +260,37 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 //Teléfono principal
                 //InsertarValoresFielt(ticket, 1067, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPhoneDetailsInputSet:PrimaryPhone"));
 
-                //País del teléfono
+
+                ////País del teléfono
                 InsertarValoresFielt(ticket, eesFields.Default.pais_del_telefono, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPhoneDetailsInputSet:CellPhoneCountry"));
-                //Indicativo(código de área)                           
+                ////Indicativo(código de área)                           
                 InsertarValoresFielt(ticket, eesFields.Default.indicativo_codigo_de_area, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:ABPhoneDetailsInputSet:HomeAreaCodeExtPeru"));
-                //Teléfono de Casa  
+                ////Teléfono de Casa  
                 InsertarValoresFielt(ticket, eesFields.Default.telefono_de_casa, ExtraerDatosXPath(0, 18, "textBox"));
 
-                //País
+                ////País
                 InsertarValoresFielt(ticket, eesFields.Default.pais, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Country"));
-                //Departamento                                       
+                ////Departamento                                       
                 InsertarValoresFielt(ticket, eesFields.Default.departamento, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Department"));
-                //Provincia
+                ////Provincia
                 InsertarValoresFielt(ticket, eesFields.Default.provincia, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_Province"));
-                //Tipo de calle                                     
+                ////Tipo de calle                                     
                 InsertarValoresFielt(ticket, eesFields.Default.tipo_de_calle, OptenerTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:PrimaryAddressInputSet:AddressOwnerInputSet:Address_StreetType"));
-                //Nombre de la calle                                     
+                ////Nombre de la calle                                     
                 InsertarValoresFielt(ticket, eesFields.Default.nombre_de_la_calle, ExtraerDatosXPath(0, 53, "textBox"));
-                //Número
-                InsertarValoresFielt(ticket, 1081, ExtraerDatosXPath(0, eesFields.Default.numero, "textBox"));
-                //Referencia
-                InsertarValoresFielt(ticket, 1082, ExtraerDatosXPath(0, eesFields.Default.referencia, "textBox"));
+                ////Número
+                InsertarValoresFielt(ticket, eesFields.Default.numero, ExtraerDatosXPath(0, 54, "textBox"));
+                ////Referencia
+                InsertarValoresFielt(ticket, eesFields.Default.referencia, ExtraerDatosXPath(0,55, "textBox"));
 
-                List<StateAction> stateAction = _robot.GetNextStateAction(_robot.Tickets.FirstOrDefault());
-                StateAction nextState = stateAction.Where(sa => sa.DestinationStateId == Convert.ToInt32(_EstadoSiguiente)).SingleOrDefault();
+                ////List<StateAction> stateAction = _robot.GetNextStateAction(_robot.Tickets.FirstOrDefault());
+                //StateAction nextState = stateAction.Where(sa => sa.DestinationStateId == Convert.ToInt32(_EstadoSiguiente)).SingleOrDefault();
 
-                _robot.SaveTicketNextState(ticket,nextState.Id );
+                _robot.SaveTicketNextState(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId ==_EstadoSiguiente).Id);
             }
             catch (Exception ex)
             {
-                _robot.SaveTicketNextState(ticket, Convert.ToInt32(_EstadoSiguiente));
+                
                 _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_EstadoError)).Id);
             }
         }
@@ -298,9 +299,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             ticket.TicketValues.Add(new TicketValue
             {
+                TicketId = ticket.Id,
                 FieldId = idFields,
                 Value = valor,
-                IsEncrypted = false,
                 ClonedValueOrder = null
             });
         }
@@ -313,7 +314,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _usuarioContactManager = _robot.GetValueParamRobot("UsuarioContactManager").ValueParam;
                 _contraseñaContactManager = _robot.GetValueParamRobot("PasswordContactManager").ValueParam;
                 _EstadoError = _robot.GetValueParamRobot("EstadoError").ValueParam;
-                _EstadoSiguiente = _robot.GetValueParamRobot("EstadoSiguiente").ValueParam;
+                _EstadoSiguiente =Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
 
             }
             catch (Exception ex) { throw new Exception("Ocurrió un error al obtener los parámetros del robot", ex); }
