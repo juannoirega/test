@@ -70,4 +70,3 @@ C:\Users\jalbanme\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO.BUSQUE
 C:\Users\jalbanme\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO.BUSQUEDA.CLIENTE\obj\Debug\BPO.PACIFICO.BUSQUEDA.CLIENTE.csprojResolveAssemblyReference.cache
 C:\Users\jalbanme\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO.BUSQUEDA.CLIENTE\obj\Debug\BPO.PACIFICO.BUSQUEDA.CLIENTE.exe
 C:\Users\jalbanme\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO.BUSQUEDA.CLIENTE\obj\Debug\BPO.PACIFICO.BUSQUEDA.CLIENTE.pdb
-C:\Users\jalbanme\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO.BUSQUEDA.CLIENTE\obj\Debug\BPO.PACIFICO.BUSQUEDA.CLIENTE.csproj.BPO.PACIFICO.BUSQUEDA.CLIENTE.exe.config

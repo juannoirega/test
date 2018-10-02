@@ -213,3 +213,4 @@ D:\Users\e04027\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debu
 D:\Users\e04027\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.CAPTURAR.EMAIL.csproj.BPO.PACIFICO.exe.config
 D:\Users\e04027\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.exe
 D:\Users\e04027\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.pdb
+C:\Users\jalbanme\Source\Repos\BPO.NAA.Peru.Pacifico.Endosos\BPO.PACIFICO\obj\Debug\BPO.PACIFICO.CAPTURAR.EMAIL.csproj.BPO.PACIFICO.exe.config
