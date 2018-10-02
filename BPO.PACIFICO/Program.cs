@@ -132,7 +132,7 @@ namespace GmailQuickstart
                     AcionRequest(infoResponse, service);
 
                     //Marcar correo como leído:
-                    ModifyThread(service, message.ThreadId, message.LabelIds,labelsRemove);
+                   // ModifyThread(service, message.ThreadId, message.LabelIds,labelsRemove);
 
                     _listado.Clear();
                 }
