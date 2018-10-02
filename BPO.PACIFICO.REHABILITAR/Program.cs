@@ -109,7 +109,7 @@ namespace BPO.PACIFICO.REHABILITAR
                     _idEstadoRetorno = 0;
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
                 }
-                _robot.SaveTicketNextState(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoError).Id);
+                _robot.SaveTicketNextState(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _estadoFinal).Id);
             }
         }
 
