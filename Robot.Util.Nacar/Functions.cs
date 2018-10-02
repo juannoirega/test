@@ -688,7 +688,6 @@ namespace Robot.Util.Nacar
                         if (ExisteElemento(oDriver,by,nTiempoEsperaSegundos)) { return e.FindElement(by); }
                         else { return null; }
                     });
-                    //IWebElement oElement = oEsperar.Until<IWebElement>(e => { return e.FindElement(by); });
                 }
                 return oDriver.FindElement(by);
             }
