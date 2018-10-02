@@ -188,7 +188,7 @@ namespace Robot.Util.Nacar
             try
             {
                 if (ticket != null)
-                    return container.DomainValues.FirstOrDefault(p => p.Id == idDominio).Value.Trim().ToUpperInvariant();
+                    return container.DomainValues.Where(p => p.Id == idDominio).FirstOrDefault().Value.Trim().ToUpperInvariant();
             }
             catch
             {
