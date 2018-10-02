@@ -96,8 +96,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 {
                     _reprocesoContador++;
                     _Funciones.GuardarIdPlantillaNotificacion(oTicket,
-                        Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
-                        Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea)),
+                        Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso).Value),
+                        Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value),
                         false
                         );
                     _Funciones.GuardarValoresReprocesamiento(oTicket, _reprocesoContador, _idEstadoRetorno);
@@ -246,9 +246,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 //Guardar Cambios
                 _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
                 _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Update']/span[2]")).Click();
-                _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
+                _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
                 _Funciones.CerrarDriver(_driverGlobal);
-                //_oRobot.SaveTicketNextState(ticket, _nIdEstadoSiguiente);
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error: " + Ex.Message, Ex); }
         }
@@ -402,8 +401,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             {
                 AgregarValoresTicket(oTicket);
                 _Funciones.GuardarIdPlantillaNotificacion(oTicket,
-                    Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
-                    Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea))
+                    Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso).Value),
+                    Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value)
                     );
                 //Si todo es conforme, pasa al estado Crear Ticket Hijo:
                 if (_reprocesoContador > 0) { _reprocesoContador = 0; _idEstadoRetorno = 0; _Funciones.GuardarValoresReprocesamiento(oTicket, _reprocesoContador, _idEstadoRetorno); }

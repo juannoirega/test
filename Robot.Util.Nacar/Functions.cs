@@ -177,6 +177,7 @@ namespace Robot.Util.Nacar
                 if (oOption[i].Text.ToUpperInvariant().Equals(valorComparar.ToUpperInvariant()))
                 {
                     oOption[i].Click();
+                    Esperar(3);
                     break;
                 }
             }
