@@ -246,9 +246,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 //Guardar Cambios
                 _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
                 _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Update']/span[2]")).Click();
-                _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
+                _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
                 _Funciones.CerrarDriver(_driverGlobal);
-                //_oRobot.SaveTicketNextState(ticket, _nIdEstadoSiguiente);
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error: " + Ex.Message, Ex); }
         }
