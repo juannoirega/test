@@ -930,7 +930,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 //Finalizar formulario:
                 //Clic en botón Aceptar:
                 _cElemento = "Botón Aceptar";
-                _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Update")).Click();
+                _driverGlobal.FindElement(By.XPath("//*[@id='EditPolicyContactRolePopup:ContactDetailScreen:0']/div/a[1]")).Click();
                 _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
 
                 if (_Funciones.ExisteElemento(_driverGlobal, By.Id("EditPolicyContactRolePopup:ContactDetailScreen:_msgs_msgs")))
@@ -944,7 +944,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 {
                     //Clic en Cotización:
                     _cElemento = "Botón Cotización";
-                    _driverGlobal.FindElement(By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:JobWizardToolbarButtonSet:QuoteOrReview")).Click();
+                    _driverGlobal.FindElement(By.XPath("//*[@id='PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:JobWizardToolbarButtonSet:QuoteOrReview']/span[2]")).Click();
                     _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[2]));
 
                     if (_Funciones.ExisteElemento(_driverGlobal, By.Id("UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton")))
@@ -1120,7 +1120,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     else { return false; }
                 }
             }
-            catch (Exception Ex) { throw new Exception("Ocurrió un error en análisis de riesgos: " + _cElemento, Ex); }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error en análisis de riesgos: " + Ex.Message + " " + _cElemento, Ex); }
             return true;
         }
 
@@ -1170,13 +1170,17 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         private void AgregarValoresTicket(Ticket oTicketDatos)
         {
-            oTicketDatos.TicketValues.Add(new TicketValue
+            try
             {
-                ClonedValueOrder = null,
-                TicketId = oTicketDatos.Id,
-                FieldId = eesFields.Default.endoso_nro,
-                Value = _cOrdenTrabajo
-            });
+                oTicketDatos.TicketValues.Add(new TicketValue
+                {
+                    ClonedValueOrder = null,
+                    TicketId = oTicketDatos.Id,
+                    FieldId = eesFields.Default.endoso_nro,
+                    Value = _cOrdenTrabajo
+                });
+            }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al agregar valores al ticket " + Convert.ToString(oTicketDatos.Id) + ": " + Ex.Message + " " + _cElemento, Ex); }
         }
         #endregion
     }
