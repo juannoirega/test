@@ -208,7 +208,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                         _Funciones.Esperar(2);
 
                         _pasoRealizado = "Seleccionar combobox motivo anulación";
-                        _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.anulacion_motivo).Value)));
+                        _Funciones.SeleccionarCombo(_driverGlobal, "StartCancellation:StartCancellationScreen:CancelPolicyDV:Reason2", _Funciones.ObtenerValorDominio(ticket, Convert.ToInt32(ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.poliza_anu_motivo).Value)));
                         _Funciones.Esperar(2);
 
                         _pasoRealizado = "Ingresar endoso anulacion";
