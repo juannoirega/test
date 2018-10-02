@@ -34,15 +34,6 @@ namespace Robot.Util.Nacar {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("26")]
-        public int tipo_poliza {
-            get {
-                return ((int)(this["tipo_poliza"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("21")]
         public int producto {
             get {
@@ -137,15 +128,6 @@ namespace Robot.Util.Nacar {
         public int email_cuerpo {
             get {
                 return ((int)(this["email_cuerpo"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("25")]
-        public int numero_de_poliza {
-            get {
-                return ((int)(this["numero_de_poliza"]));
             }
         }
         

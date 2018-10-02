@@ -282,7 +282,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
 
             //Ingresa Nro. de Póliza:
             _cElemento = "Número de Póliza";
-            _oDriver.FindElement(By.Id("vser_nrodepolizasolicitante576_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.numero_de_poliza).Value);
+            _oDriver.FindElement(By.Id("vser_nrodepolizasolicitante576_input")).SendKeys(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_nro ).Value);
 
             //Fecha vigencia inicio:
             _cElemento = "Fecha Inicio";
