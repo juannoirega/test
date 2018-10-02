@@ -596,7 +596,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     //Hacer clic en Cambiar Póliza:
                     _cElemento = "Opción Cambiar Póliza";
                     _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ChangePolicy")).Click();
-                    _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
+                    _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
                 }
                 else
                 {
@@ -662,14 +662,14 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _cElemento = "Tipo de Complejidad";
                     string cComplejidad = _Funciones.GetDomainValue(Convert.ToInt32(_DominioComplejidad[0]),Convert.ToInt32(_DominioComplejidad[1]), Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idcomplejidad).Value)).ToUpperInvariant();
                     _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:TypeReason", cComplejidad);
-                    _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
+                    _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
                 }
 
                 //Seleccionar motivo del endoso:
                 _cElemento = "Motivo del endoso";
                 string cMotivoEndoso = _Funciones.GetDomainValue(Convert.ToInt32(_DominioMotivo[0]), Convert.ToInt32(_DominioMotivo[1]), Convert.ToInt32(oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idmotivoendoso).Value)).ToUpperInvariant();
                 _Funciones.SeleccionarCombo(_driverGlobal, "StartPolicyChange:StartPolicyChangeScreen:StartPolicyChangeDV:Description", cMotivoEndoso);
-                _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
+                _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
 
                 //Ingresar comentarios adicionales:
                 _cElemento = "Comentarios adicionales";
@@ -930,8 +930,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 //Finalizar formulario:
                 //Clic en botón Aceptar:
                 _cElemento = "Botón Aceptar";
-                _driverGlobal.FindElement(By.XPath("//*[@id='EditPolicyContactRolePopup:ContactDetailScreen:0']/div/a[1]")).Click();
-                _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
+                _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Update")).Click();
 
                 if (_Funciones.ExisteElemento(_driverGlobal, By.Id("EditPolicyContactRolePopup:ContactDetailScreen:_msgs_msgs")))
                 {
@@ -944,10 +943,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 {
                     //Clic en Cotización:
                     _cElemento = "Botón Cotización";
-                    _driverGlobal.FindElement(By.XPath("//*[@id='PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:JobWizardToolbarButtonSet:QuoteOrReview']/span[2]")).Click();
-                    _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[2]));
+                    _Funciones.FindElement(_driverGlobal, By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:JobWizardToolbarButtonSet:QuoteOrReview"), Convert.ToInt32(_TiempoEspera[1])).Click();
 
-                    if (_Funciones.ExisteElemento(_driverGlobal, By.Id("UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton")))
+                    if (_Funciones.ExisteElemento(_driverGlobal, By.Id("UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton"), _nIntentosPolicyCenter))
                     {
                         //Clic en botón Detalles:
                         _cElemento = "Botón Detalles";
@@ -1128,7 +1126,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             try
             {
-                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:QuoteOrReview"),2))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:QuoteOrReview"),_nIntentosPolicyCenter))
                 {
                     //Clic en Cotización:
                     _cElemento = "Botón Cotización";
@@ -1136,7 +1134,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[2]));
                 }
 
-                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyChangeWizard:PolicyChangeWizard_QuoteScreen:RatingCumulDetailsPanelSet:RatingOverrideButtonDV:RatingOverrideButtonDV:OverrideRating_link")))
+                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyChangeWizard:PolicyChangeWizard_QuoteScreen:RatingCumulDetailsPanelSet:RatingOverrideButtonDV:RatingOverrideButtonDV:OverrideRating_link"),_nIntentosPolicyCenter))
                 {
                     //Clic en Reescribir prima:
                     _cElemento = "Reescribir prima y comisiones";
