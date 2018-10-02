@@ -345,9 +345,9 @@ namespace GmailQuickstart
                     AdicionarAdjuntos(ticketPadre);
 
                 if (flag)
-                    ticketPadre.StateId = 4;
+                    ticketPadre.StateId = 2;
                 else
-                    ticketPadre.StateId = 3;
+                    ticketPadre.StateId = 2;
 
                 _robot.SaveNewTicket(ticketPadre);
             }
