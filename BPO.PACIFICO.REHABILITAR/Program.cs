@@ -63,8 +63,8 @@ namespace BPO.PACIFICO.REHABILITAR
                     LogFailStep(30, ex);
                     _reprocesoContador++;
                     _Funciones.GuardarIdPlantillaNotificacion(ticket,
-                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
-                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea)),
+                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso).Value),
+                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value),
                         false
                         );
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
@@ -100,8 +100,8 @@ namespace BPO.PACIFICO.REHABILITAR
                 _Funciones.Esperar(_tiempoEsperaLargo);
                 RehabilitarPoliza(ticket);
                 _Funciones.GuardarIdPlantillaNotificacion(ticket,
-                   Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
-                   Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea))
+                   Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso).Value),
+                   Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value)
                    );
                 if (_reprocesoContador > 0)
                 {

@@ -72,8 +72,8 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                     LogFailStep(30, ex);
                     _reprocesoContador++;
                     _Funciones.GuardarIdPlantillaNotificacion(ticket, 
-                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
-                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea)),
+                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso).Value),
+                        Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value),
                         false
                         );
                     _Funciones.GuardarValoresReprocesamiento(ticket, _reprocesoContador, _idEstadoRetorno);
@@ -100,8 +100,8 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                 GuardarPdf(ticket);
                 GuardarInformacionTicket(ticket);
                 _Funciones.GuardarIdPlantillaNotificacion(ticket,
-               Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso)),
-               Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea))
+               Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso).Value),
+               Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value)
                );
                 if (_reprocesoContador > 0)
                 {
@@ -230,11 +230,11 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
                         _Funciones.Esperar();
 
                         _driverGlobal.SwitchTo().Alert().Accept();
-                        _Funciones.Esperar();
-                        _driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:JobCompleteDV:ViewPolicy")).Click();
-                        _Funciones.Esperar(2);
+                        _Funciones.Esperar(5);
                         _numeroOrdenTrabajo = _Funciones.ObtenerCadenaDeNumeros(_driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:Message")).Text);
                         _Funciones.Esperar(2);
+                        _driverGlobal.FindElement(By.Id("JobComplete:JobCompleteScreen:JobCompleteDV:ViewPolicy")).Click();
+                        _Funciones.Esperar(5);
                     }
                     else
                     {
