@@ -37,7 +37,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private static string _cUrlPolicyCenter = string.Empty;
         private static int _nFieldId;
         private static int _nFormulario;
-        private static string[] _Values;
         private static string[] _TipoContacto;
         private static string[] _Usuarios;
         private static string[] _DominioLineas;
