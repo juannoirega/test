@@ -146,7 +146,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
                 {
                     UsuariosOnBase();
                     _Funciones.InstanciarFirefoxDriver(ref _oDriver, _cRutaGeckodriver, _cRutaFirefox, _cBPMWebDriver, _cGeckodriver);
-                    if (_Funciones.StartSystem(_oDriver, _cUrlOnBase, By.Id("_loginErrorBox"), Usuarios, _nIntentosOnBase)) { break; }
+                    if (_Funciones.StartSystem(_oDriver, _cUrlOnBase, By.Id("_loginErrorBox"), Usuarios, _nIntentosOnBase, 2)) { break; }
                     _nIndice += 1;
                 }
 
