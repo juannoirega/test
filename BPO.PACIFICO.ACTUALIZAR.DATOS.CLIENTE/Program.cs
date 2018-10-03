@@ -36,6 +36,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private static int _nIntentosPolicyCenter;
         private static string _cUrlPolicyCenter = string.Empty;
         private static int _nFieldId;
+        private static string _cFieldLabel = string.Empty;
         private static int _nFormulario;
         private static string[] _TipoContacto;
         private static string[] _Usuarios;
@@ -189,7 +190,12 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 if (_valoresTickets[0].Length > 0) { Filtros(_valoresTickets[0]); }
                 else if (_valoresTickets[1].Length > 0) { Filtros(_valoresTickets[1], false); }
 
-                if (!_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div"))) { AccederRegistro(); GetFieldIdByNames(oTicketDatos, eesFields.Default.listacampos); }
+                if (!_Funciones.ExisteElemento(_driverGlobal, By.XPath("//*[@id='ABContactSearch:ABContactSearchScreen:_msgs_msgs']/div")))
+                {
+                    AccederRegistro();
+                    GetFieldIdByNames(oTicketDatos, eesFields.Default.listacampos);
+                    FinalizarActualizacion(oTicketDatos);
+                }
                 else { CambiarEstadoTicket(oTicketDatos, _oMesaControl, "No se encontraron registros para " + _valoresTickets[0] == "" ? _valoresTickets[1] : _valoresTickets[0]); }
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al actualizar en Contact Manager: " + Ex.Message, Ex); }
@@ -249,13 +255,13 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
                 foreach (string cField in oFieldNames)
                 {
-                    string cFieldLabel = container.Fields.Where(f => f.Name == cField).Select(f => new { f.Label }).FirstOrDefault().Label;
+                    _cFieldLabel = container.Fields.Where(f => f.Name == cField).Select(f => new { f.Label }).FirstOrDefault().Label;
                     _nFieldId = container.Fields.Where(f => f.Name == cField).Select(f => new { f.Id }).FirstOrDefault().Id;
                     _cTicketValue = oTicketDatos.TicketValues.FirstOrDefault(t => t.FieldId == Convert.ToInt32(_nFieldId)).Value;
 
                     if (_Funciones.IsFieldEdit(oTicketDatos, _nFieldId))
                     {
-                        if (_nFormulario == 1) { EditarFormulario(cFieldLabel, _cTicketValue); }
+                        if (_nFormulario == 1) { EditarFormulario(_cFieldLabel, _cTicketValue); }
                         else if (_nFormulario == 2) { FormularioEditarPoliza(_nFieldId); }
                         else { FormularioEditarCuenta(_nFieldId); }
                     }
@@ -356,12 +362,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                         IngresarTextoSelect("ContactDetail:ABContactDetailScreen:ContactBasicsDV:EconomicSectorActivityInputSet:EconomicSectorExt", texto);
                         break;
                 }
-
-                //Guardar Cambios
-                _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
-                _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Update']/span[2]")).Click();
-                _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
-                _Funciones.CerrarDriver(_driverGlobal);
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al editar formulario: " + Ex.Message, Ex); }
         }
@@ -389,6 +389,19 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             SelectElement elemen = new SelectElement(_driverGlobal.FindElement(By.Name(name)));
             elemen.SelectByText(texto);
             _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
+        }
+
+        private void FinalizarActualizacion(Ticket oTicketDatos)
+        {
+            //Guardar Cambios
+            _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
+            _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Update']/span[2]")).Click();
+            if (_Funciones.ExisteElemento(_driverGlobal, By.Id("WebMessageWorksheet:WebMessageWorksheetScreen:grpMsgs_msgs")))
+            {
+                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "Ocurrió un error: " + _driverGlobal.FindElement(By.Id("WebMessageWorksheet:WebMessageWorksheetScreen:grpMsgs_msgs")).Text);
+            }
+            _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
+            _Funciones.CerrarDriver(_driverGlobal);
         }
         #endregion
 
