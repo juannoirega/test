@@ -229,6 +229,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         public void AccederRegistro()
         {
+            _nFormulario = 1;
             try
             {
                 _driverGlobal.FindElement(By.Id("ABContactSearch:ABContactSearchScreen:ContactSearchResultsLV:0:DisplayName")).Click();
@@ -265,7 +266,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         public void EditarFormulario(String campo, String texto)
         {
-            _nFormulario = 1;
             try
             {
                 switch (campo)
@@ -432,6 +432,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             try
             {
+                _nFormulario = 2;
                 LogStartStep(1);
 
                 if (_cLinea == _cLineaAutos)
@@ -526,6 +527,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 }
                 else if (_cLinea == _cLineaLLPP)
                 {
+                    _nFormulario = 3;
                     IniciarCambioPoliza(oTicketDatos, false);
                     //Método para actualizar datos:
                     GetFieldIdByNames(oTicketDatos, eesFields.Default.listacampos);
@@ -670,7 +672,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         private void FormularioEditarPoliza(int nFieldId)
         {
-            _nFormulario = 2;
             try
             {
                 //Clic en Nombre del asegurado:
@@ -890,7 +891,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         private void FormularioEditarCuenta(int nFieldId)
         {
-            _nFormulario = 3;
             try
             {
                 //Clic en Editar Cuenta:
