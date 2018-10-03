@@ -32,7 +32,7 @@ namespace GmailQuickstart
         static string[] _valores = new string[10];
         static string _userId = "soportecorredor_des@pacifico.com.pe";
         static List<string> _adjuntos = null;
-        static int[] _fields = { eesFields.Default.email_cuerpo, eesFields.Default.email_asunto, eesFields.Default.error_des, eesFields.Default.id_est_hijo, eesFields.Default.id_est_padre, eesFields.Default.fields, eesFields.Default.email_fecha_hora, eesFields.Default.email_de, eesFields.Default.email_cc };
+        static int[] _fields = { eesFields.Default.email_cuerpo, eesFields.Default.email_asunto, eesFields.Default.error_des,eesFields.Default.id_est_hijo, eesFields.Default.id_est_padre, eesFields.Default.fields, eesFields.Default.email_fecha_hora, eesFields.Default.email_de, eesFields.Default.email_cc };
         static string ApplicationName = "Gmail API .NET Quickstart";
         static List<DomainValue> _listado = null;
         static List<Puntuacion> puntos = new List<Puntuacion>();
@@ -383,16 +383,19 @@ namespace GmailQuickstart
             if (!String.IsNullOrWhiteSpace(police))
             {
                 ticket.TicketValues.Add(new TicketValue { Value = police.Substring(1, 10), ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.poliza_nro });
+                _valores[5] = _valores[5] + eesFields.Default.poliza_nro + ",";
                 return true;
             }
             else if (!String.IsNullOrWhiteSpace(dni))
             {
-                ticket.TicketValues.Add(new TicketValue { Value = dni.Substring(1, 9), ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.nro_dni  });
+                ticket.TicketValues.Add(new TicketValue { Value = dni.Substring(1, 9), GUIDClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.nro_dni  });
+                _valores[5] = _valores[5] + eesFields.Default.nro_dni + ",";
                 return true;
             }
             else if (!String.IsNullOrWhiteSpace(ruc))
             {
                 ticket.TicketValues.Add(new TicketValue { Value = ruc.Substring(1, 11), ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.nro_ruc  });
+                _valores[5] = _valores[5] + eesFields.Default.nro_ruc + ",";
                 return true;
 
             }
