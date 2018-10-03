@@ -263,7 +263,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     {
                         if (_nFormulario == 1) { EditarFormulario(_cFieldLabel, _cTicketValue); }
                         else if (_nFormulario == 2) { FormularioEditarPoliza(_nFieldId); }
-                        else { FormularioEditarCuenta(_nFieldId); }
+                        else if (_nFormulario == 3) { FormularioEditarCuenta(_nFieldId); }
                     }
                 }
             }
@@ -393,16 +393,68 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
         private void FinalizarActualizacion(Ticket oTicketDatos)
         {
-            //Guardar Cambios
-            _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
-            _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Update']/span[2]")).Click();
-            if (_Funciones.ExisteElemento(_driverGlobal, By.Id("WebMessageWorksheet:WebMessageWorksheetScreen:grpMsgs_msgs")))
+            try
             {
-                CambiarEstadoTicket(oTicketDatos, _oMesaControl, "Ocurrió un error: " + _driverGlobal.FindElement(By.Id("WebMessageWorksheet:WebMessageWorksheetScreen:grpMsgs_msgs")).Text);
-                _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Cancel']/span[2]")).Click();
+                if (_nFormulario == 1)
+                {
+                    //Guardar Cambios
+                    _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
+                    _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Update']/span[2]")).Click();
+                    if (_Funciones.ExisteElemento(_driverGlobal, By.Id("WebMessageWorksheet:WebMessageWorksheetScreen:grpMsgs_msgs")))
+                    {
+                        CambiarEstadoTicket(oTicketDatos, _oMesaControl, "Ocurrió un error: " + _driverGlobal.FindElement(By.Id("WebMessageWorksheet:WebMessageWorksheetScreen:grpMsgs_msgs")).Text);
+                        _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Cancel']/span[2]")).Click();
+                        _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
+                    }
+                    _Funciones.CerrarDriver(_driverGlobal);
+                }
+                else if (_nFormulario == 2)
+                {
+                    //Finalizar formulario:
+                    //Clic en botón Aceptar:
+                    _cElemento = "Botón Aceptar";
+                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Update")).Click();
+
+                    if (_Funciones.ExisteElemento(_driverGlobal, By.Id("EditPolicyContactRolePopup:ContactDetailScreen:_msgs_msgs")))
+                    {
+                        //Clic en Cancelar:
+                        _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Cancel")).Click();
+                        _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
+                        GetFieldIdByNames(oTicketDatos, _nFieldId);
+                    }
+                    else
+                    {
+                        //Clic en Cotización:
+                        _cElemento = "Botón Cotización";
+                        _Funciones.FindElement(_driverGlobal, By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:JobWizardToolbarButtonSet:QuoteOrReview"), Convert.ToInt32(_TiempoEspera[1])).Click();
+
+                        if (_Funciones.ExisteElemento(_driverGlobal, By.Id("UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton"), _nIntentosPolicyCenter))
+                        {
+                            //Clic en botón Detalles:
+                            _cElemento = "Botón Detalles";
+                            _driverGlobal.FindElement(By.Id("UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton")).Click();
+                            _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
+                        }
+                    }
+                }
+                else if (_nFormulario == 3)
+                {
+                    //Clic en Actualizar:
+                    _cElemento = "Clic en Actualizar";
+                    _driverGlobal.FindElement(By.Id("EditAccountPopup:EditAccountScreen:Update")).Click();
+                    _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
+
+                    //Verificar si los datos son correctos:
+                    if (_Funciones.ExisteElemento(_driverGlobal, By.Id("EditAccountPopup:EditAccountScreen:_msgs_msgs"), _nIntentosPolicyCenter))
+                    {
+                        //Clic en Cancelar:
+                        _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Cancel")).Click();
+                        _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
+                        GetFieldIdByNames(oTicketDatos, _nFieldId);
+                    }
+                }
             }
-            _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
-            _Funciones.CerrarDriver(_driverGlobal);
+            catch (Exception Ex) { throw new Exception("Ocurrió un error al finalizar actualización: " + Ex.Message, Ex); }
         }
         #endregion
 
@@ -449,65 +501,15 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 _nFormulario = 2;
                 LogStartStep(1);
 
-                if (_cLinea == _cLineaAutos)
+                if (_cLinea == _cLineaLLPP)
                 {
-                    //Busca datos de Póliza por Nro. de Póliza:
-                    _cElemento = "Buscar póliza";
-                    _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_nro).Value);
-
-                    //Obtener nombre de la oferta:
-                    _cNombreOferta = _Funciones.FindElement(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering"), Convert.ToInt32(_TiempoEspera[3])).Text;
-
-                    IniciarCambioPoliza(oTicketDatos);
-                    if (!FormularioCambioPoliza(oTicketDatos)) { _bControl = true; return; }
-                    if (!String.IsNullOrWhiteSpace(_cNombreOferta)) { SeleccionarOferta(oTicketDatos); }
-
+                    _nFormulario = 3;
+                    IniciarCambioPoliza(oTicketDatos, false);
                     //Método para actualizar datos:
                     GetFieldIdByNames(oTicketDatos, eesFields.Default.listacampos);
-
-                    if (AnalisisDeRiesgos())
-                    {
-                        ConfirmarTrabajo();
-                    }
-                    else
-                    {
-                        //Cancelar cotización:
-                        _cElemento = "Cancelar cotización";
-                        _driverGlobal.FindElement(By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:WithdrawJob")).Click();
-                        _Funciones.VerificarVentanaAlerta(_driverGlobal);
-                        _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[2]));
-                    }
+                    FinalizarActualizacion(oTicketDatos);
                 }
-                else if (_cLinea == _cLineaRRGG)
-                {
-                    //Busca datos de Póliza por Nro. de Póliza:
-                    _cElemento = "Buscar póliza";
-                    _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_nro).Value);
-
-                    //Obtener nombre de la oferta:
-                    _cNombreOferta = _Funciones.FindElement(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_PolicyDV:Offering"), Convert.ToInt32(_TiempoEspera[3])).Text;
-
-                    IniciarCambioPoliza(oTicketDatos);
-                    if (!FormularioCambioPoliza(oTicketDatos)) { _bControl = true; return; }
-                    if (!String.IsNullOrWhiteSpace(_cNombreOferta)) { SeleccionarOferta(oTicketDatos); }
-
-                    //Método para actualizar datos:
-                    GetFieldIdByNames(oTicketDatos, eesFields.Default.listacampos);
-
-                    if (AnalisisDeRiesgos())
-                    {
-                        ConfirmarTrabajo();
-                    }
-                    else
-                    {
-                        //Cancelar cotización:
-                        _cElemento = "Cancelar cotización";
-                        _driverGlobal.FindElement(By.Id("PolicyChangeWizard:Job_RiskAnalysisScreen:JobWizardToolbarButtonSet:WithdrawJob")).Click();
-                        _Funciones.VerificarVentanaAlerta(_driverGlobal);
-                        _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[2]));
-                    }
-                }
-                else if (_cLinea == _cLineaAlianzas)
+                else
                 {
                     //Busca datos de Póliza por Nro. de Póliza:
                     _cElemento = "Buscar póliza";
@@ -519,12 +521,13 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     IniciarCambioPoliza(oTicketDatos);
                     if (!FormularioCambioPoliza(oTicketDatos)) { _bControl = true; return; }
                     _Funciones.VerificarVentanaAlerta(_driverGlobal);
-                    _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[2]));
+                    _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
 
                     if (!String.IsNullOrWhiteSpace(_cNombreOferta)) { SeleccionarOferta(oTicketDatos); }
 
                     //Método para actualizar datos:
                     GetFieldIdByNames(oTicketDatos, eesFields.Default.listacampos);
+                    FinalizarActualizacion(oTicketDatos);
 
                     if (AnalisisDeRiesgos())
                     {
@@ -539,13 +542,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                         _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[2]));
                     }
                 }
-                else if (_cLinea == _cLineaLLPP)
-                {
-                    _nFormulario = 3;
-                    IniciarCambioPoliza(oTicketDatos, false);
-                    //Método para actualizar datos:
-                    GetFieldIdByNames(oTicketDatos, eesFields.Default.listacampos);
-                }
+
+                _Funciones.CerrarDriver(_driverGlobal);
             }
             catch (Exception Ex) { LogFailStep(12, Ex); throw new Exception(Ex.Message + " :" + _cElemento, Ex); }
         }
@@ -872,35 +870,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _Funciones.LimpiarElementoInput(_driverGlobal, By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_AddressLine3"));
                     _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:PolicyContactRoleDetailsCV:PolicyContactDetailsDV:AddressExtInputSet:Address_AddressLine3")).SendKeys(_cTicketValue);
                 }
-
-                //Finalizar formulario:
-                //Clic en botón Aceptar:
-                _cElemento = "Botón Aceptar";
-                _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Update")).Click();
-
-                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("EditPolicyContactRolePopup:ContactDetailScreen:_msgs_msgs")))
-                {
-                    //Clic en Cancelar:
-                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Cancel")).Click();
-                    _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
-                    FormularioEditarPoliza(_nFieldId);
-                }
-                else
-                {
-                    //Clic en Cotización:
-                    _cElemento = "Botón Cotización";
-                    _Funciones.FindElement(_driverGlobal, By.Id("PolicyChangeWizard:LOBWizardStepGroup:PolicyChangeWizard_PolicyInfoScreen:JobWizardToolbarButtonSet:QuoteOrReview"), Convert.ToInt32(_TiempoEspera[1])).Click();
-
-                    if (_Funciones.ExisteElemento(_driverGlobal, By.Id("UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton"), _nIntentosPolicyCenter))
-                    {
-                        //Clic en botón Detalles:
-                        _cElemento = "Botón Detalles";
-                        _driverGlobal.FindElement(By.Id("UWBlockProgressIssuesPopup:IssuesScreen:DetailsButton")).Click();
-                        _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
-                    }
-                }
             }
-            catch (Exception Ex) { throw new Exception("Ocurrió un error en formulario Editar Cuenta: " + Ex.Message + " " + _cElemento, Ex); }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error en actualización de datos de póliza: " + Ex.Message + " " + _cElemento, Ex); }
         }
 
         private void FormularioEditarCuenta(int nFieldId)
@@ -991,22 +962,8 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                     _cElemento = "Número";
                     _driverGlobal.FindElement(By.Id("EditAccountPopup:EditAccountScreen:AddressExtInputSet:Address_AddressLine2")).SendKeys(_cTicketValue);
                 }
-
-                //Clic en Actualizar:
-                _cElemento = "Clic en Actualizar";
-                _driverGlobal.FindElement(By.Id("EditAccountPopup:EditAccountScreen:Update")).Click();
-                _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
-
-                //Verificar si los datos son correctos:
-                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("EditAccountPopup:EditAccountScreen:_msgs_msgs"), _nIntentosPolicyCenter))
-                {
-                    //Clic en Cancelar:
-                    _driverGlobal.FindElement(By.Id("EditPolicyContactRolePopup:ContactDetailScreen:Cancel")).Click();
-                    _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
-                    FormularioEditarCuenta(_nFieldId);
-                }
             }
-            catch (Exception Ex) { throw new Exception("Ocurrió un error en formulario Editar Cuenta: " + Ex.Message + " " + _cElemento, Ex); }
+            catch (Exception Ex) { throw new Exception("Ocurrió un error en actualización de Cuenta: " + Ex.Message + " " + _cElemento, Ex); }
         }
 
         //Pasos en Ventana Análisis de Riesgo:
@@ -1104,7 +1061,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             try
             {
-                oTicketDatos.TicketValues.Add(new TicketValue{ ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.endoso_nro, Value = _cOrdenTrabajo });
+                oTicketDatos.TicketValues.Add(new TicketValue { ClonedValueOrder = null, TicketId = oTicketDatos.Id, FieldId = eesFields.Default.endoso_nro, Value = _cOrdenTrabajo });
             }
             catch (Exception Ex) { throw new Exception("Ocurrió un error al agregar valores al ticket " + Convert.ToString(oTicketDatos.Id) + ": " + Ex.Message + " " + _cElemento, Ex); }
         }
