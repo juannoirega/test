@@ -251,7 +251,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
             }
             catch (Exception Ex)
             {
-                throw new Exception("Ocurrió un error al validar reglas de Rehabilitación para " + _cLinea, Ex);
+                throw new Exception("Ocurrió un error al validar reglas de Actualización para " + _cLinea, Ex);
             }
             return true;
         }
