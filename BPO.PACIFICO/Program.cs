@@ -80,7 +80,7 @@ namespace GmailQuickstart
             _valores[2] = _robot.GetValueParamRobot("EstadoError").ValueParam;
             _valores[3] = _robot.GetValueParamRobot("EstadoHijo").ValueParam;
             _valores[4] = _robot.GetValueParamRobot("EstadoPadre").ValueParam;
-            _domainpalabrasclaves = _robot.GetValueParamRobot("DominioPalbrasClaves").ValueParam;
+            _domainpalabrasclaves = _robot.GetValueParamRobot("DominioPalabrasClaves").ValueParam;
             _diretorio = _robot.GetValueParamRobot("Diretorio").ValueParam;
             LogEndStep(4);
         }
