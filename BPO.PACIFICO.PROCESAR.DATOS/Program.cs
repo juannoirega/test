@@ -115,10 +115,10 @@ namespace RobotProcesarTicket
                 //Parámetros del Robot Procesamiento de Datos:
                 _nDiasArrepentimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolRenovadaAuto").ValueParam);
                 _nDiasDesistimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolNuevaAuto").ValueParam); 
-                _cLineaAutos = "AUTOS";
-                _cLineaLLPP = "LLPP";
-                _cLineaAlianzas = "ALIANZAS";
-                _cLineaRRGG = "RRGG ";
+                _cLineaAutos = "1";
+                _cLineaLLPP = "2";
+                _cLineaAlianzas = "3";
+                _cLineaRRGG = "4 ";
                 _procesos = _oRobot.GetValueParamRobot("reglaEstado").ValueParam.Split(',');
             }
             catch (Exception Ex) { LogFailStep(12, Ex); }

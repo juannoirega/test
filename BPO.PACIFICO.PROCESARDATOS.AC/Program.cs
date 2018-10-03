@@ -106,10 +106,10 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
                 //Parámetros del Robot Procesamiento de Datos:
                 _nDiasArrepentimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolRenovadaAuto").ValueParam);
                 _nDiasDesistimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolNuevaAuto").ValueParam);
-                _cLineaAutos = "AUTOS";
-                _cLineaRRGG = "RRGG ";
-                _cLineaLLPP = "LLPP";
-                _cLineaAlianzas = "ALIANZAS";
+                _cLineaAutos = "7";
+                _cLineaRRGG = "8 ";
+                _cLineaLLPP = "9";
+                _cLineaAlianzas = "10";
                 _procesos = _oRobot.GetValueParamRobot("reglaEstado").ValueParam.Split(',');
             }
             catch (Exception Ex)
