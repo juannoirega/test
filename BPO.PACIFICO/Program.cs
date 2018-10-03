@@ -77,7 +77,7 @@ namespace GmailQuickstart
 
         public void GetRobotParam()
         {
-            _valores[2] = _robot.GetValueParamRobot("EstadoError").ValueParam;
+            _valores[9] = _robot.GetValueParamRobot("EstadoError").ValueParam;
             _valores[3] = _robot.GetValueParamRobot("EstadoHijo").ValueParam;
             _valores[4] = _robot.GetValueParamRobot("EstadoPadre").ValueParam;
             _domainpalabrasclaves = _robot.GetValueParamRobot("DominioPalabrasClaves").ValueParam;
