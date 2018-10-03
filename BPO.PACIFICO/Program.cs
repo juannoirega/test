@@ -32,11 +32,12 @@ namespace GmailQuickstart
         static string[] _valores = new string[10];
         static string _userId = "soportecorredor_des@pacifico.com.pe";
         static List<string> _adjuntos = null;
-        static int[] _fields = { eesFields.Default.email_cuerpo, eesFields.Default.email_asunto, eesFields.Default.error_des,eesFields.Default.id_est_hijo, eesFields.Default.id_est_padre, eesFields.Default.fields, eesFields.Default.email_fecha_hora, eesFields.Default.email_de, eesFields.Default.email_cc };
+        static int[] _fields = { eesFields.Default.email_cuerpo, eesFields.Default.email_asunto, eesFields.Default.error_des, eesFields.Default.id_est_hijo, eesFields.Default.id_est_mesa_control, eesFields.Default.id_est_padre, eesFields.Default.fields, eesFields.Default.email_fecha_hora, eesFields.Default.email_de, eesFields.Default.email_cc };
         static string ApplicationName = "Gmail API .NET Quickstart";
         static List<DomainValue> _listado = null;
         static List<Puntuacion> puntos = new List<Puntuacion>();
         static string _diretorio = String.Empty;
+        static string _domainpalabrasclaves = String.Empty;
         #endregion
         static void Main(string[] args)
         {
@@ -79,7 +80,7 @@ namespace GmailQuickstart
             _valores[2] = _robot.GetValueParamRobot("EstadoError").ValueParam;
             _valores[3] = _robot.GetValueParamRobot("EstadoHijo").ValueParam;
             _valores[4] = _robot.GetValueParamRobot("EstadoPadre").ValueParam;
-
+            _domainpalabrasclaves = _robot.GetValueParamRobot("DominioPalbrasClaves").ValueParam;
             _diretorio = _robot.GetValueParamRobot("Diretorio").ValueParam;
             LogEndStep(4);
         }
@@ -280,7 +281,7 @@ namespace GmailQuickstart
         {
             var container = ODataContextWrapper.GetContainer();
 
-            return container.DomainValues.Where(a => a.DomainId == 1009).ToList();
+            return container.DomainValues.Where(a => a.DomainId ==Convert.ToInt32(_domainpalabrasclaves)).ToList();
         }
 
         static string DecodeBase64(string sInput)

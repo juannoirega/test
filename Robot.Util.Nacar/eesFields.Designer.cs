@@ -922,5 +922,14 @@ namespace Robot.Util.Nacar {
                 this["poliza_nro_ruc"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("53")]
+        public int id_est_mesa_control {
+            get {
+                return ((int)(this["id_est_mesa_control"]));
+            }
+        }
     }
 }
