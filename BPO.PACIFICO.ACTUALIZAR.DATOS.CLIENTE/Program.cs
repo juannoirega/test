@@ -399,8 +399,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             if (_Funciones.ExisteElemento(_driverGlobal, By.Id("WebMessageWorksheet:WebMessageWorksheetScreen:grpMsgs_msgs")))
             {
                 CambiarEstadoTicket(oTicketDatos, _oMesaControl, "Ocurrió un error: " + _driverGlobal.FindElement(By.Id("WebMessageWorksheet:WebMessageWorksheetScreen:grpMsgs_msgs")).Text);
+                _driverGlobal.FindElement(By.XPath("//*[@id='ContactDetail:ABContactDetailScreen:ContactBasicsDV_tb:Cancel']/span[2]")).Click();
             }
-            _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[1]));
+            _Funciones.Esperar(Convert.ToInt32(_TiempoEspera[0]));
             _Funciones.CerrarDriver(_driverGlobal);
         }
         #endregion
