@@ -40,6 +40,7 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         private static StateAction _oRegistro;
         private static Functions _Funciones;
         private static string[] Usuarios;
+        private static int _nIndice;
         #endregion
 
         static void Main(string[] args)
@@ -115,19 +116,19 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
         }
 
         //Obtiene los usuarios OnBase según Línea de negocio:
-        private string[] UsuariosOnBase(int nIndice = 1)
+        private string[] UsuariosOnBase()
         {
             try
             {
                 if (_cLineaTicket == _cLineaPorDefecto)
                 {
                     //Usuario y contraseña de Autos:
-                    Usuarios = _oRobot.GetValueParamRobot("AccesoOnBase_Autos_" + nIndice).ValueParam.Split(',');
+                    Usuarios = _oRobot.GetValueParamRobot("AccesoOnBase_Autos_" + _nIndice).ValueParam.Split(',');
                 }
                 else
                 {
                     //Usuario y contraseña de Riesgos Generales y Líneas Personales:
-                    Usuarios = _oRobot.GetValueParamRobot("AccesoOnBase_LLPP_" + nIndice).ValueParam.Split(',');
+                    Usuarios = _oRobot.GetValueParamRobot("AccesoOnBase_LLPP_" + _nIndice).ValueParam.Split(',');
                 }
                 return Usuarios;
             }
@@ -140,19 +141,15 @@ namespace BPO.PACIFICO.REGISTRAR.ENVIAR.BPM
             //Valida campos no vacíos:
             if (ValidarVacios(oTicketDatos))
             {
-                int nIndice = 1;
+                _nIndice = 1;
                 for (int i = 0; i < _nIntentosOnBase; i++)
                 {
+                    UsuariosOnBase();
                     _Funciones.InstanciarFirefoxDriver(ref _oDriver, _cRutaGeckodriver, _cRutaFirefox, _cBPMWebDriver, _cGeckodriver);
-                    UsuariosOnBase(nIndice);
-                    _Funciones.IngresarBPM(_oDriver, _cUrlOnBase, Usuarios[0], Usuarios[1]);
-                    if (_Funciones.ExisteElemento(_oDriver, By.Id("controlBarMenuName"), _nIntentosOnBase))
-                    {
-                        break;
-                    }
-                    _Funciones.CerrarDriver(_oDriver);
-                    nIndice += 1;
+                    if (_Funciones.StartSystem(_oDriver, _cUrlOnBase, By.Id("_loginErrorBox"), Usuarios, _nIntentosOnBase)) { break; }
+                    _nIndice += 1;
                 }
+
                 RegistrarBPM(oTicketDatos);
             }
             else

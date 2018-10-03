@@ -28,7 +28,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private static string texto = string.Empty;
         static string[] _valoresTickets = new string[10];
         static string[] _valoresTickets_Ident = new string[10];
-        private string _urlContactManager = string.Empty;
+        private string _cUrlContactManager = string.Empty;
         private string _usuarioContactManager = string.Empty;
         private string _contraseñaContactManager = string.Empty;
         private static int _nIdEstadoError; //Mesa de Control
@@ -123,7 +123,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         {
             try
             {
-                _urlContactManager = _oRobot.GetValueParamRobot("URLContactManager").ValueParam;
+                _cUrlContactManager = _oRobot.GetValueParamRobot("URLContactManager").ValueParam;
                 _usuarioContactManager = _oRobot.GetValueParamRobot("UsuarioContactManager").ValueParam;
                 _contraseñaContactManager = _oRobot.GetValueParamRobot("PasswordContactManager").ValueParam;
                 _nIdEstadoError = Convert.ToInt32(_oRobot.GetValueParamRobot("EstadoError").ValueParam);
@@ -158,21 +158,22 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
             PolicyCenter(oTicket);
         }
 
-        #region CONTACT MANAGER
-        private void ContactManager(Ticket oTicket)
+        private void IniciarSistema(string cUrl)
         {
             _nIndice = 1;
             for (int i = 0; i < _nIntentosPolicyCenter; i++)
             {
-                _Funciones.AbrirSelenium(ref _driverGlobal);
-                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _cUrlPolicyCenter);
                 Credenciales();
-                _Funciones.LoginPolicyCenter(_driverGlobal, _Usuarios[0], _Usuarios[1]);
-                if (_Funciones.ExisteElemento(_driverGlobal, By.Name("ABContactSearch:ABContactSearchScreen:ContactSearchDV:ContactSubtype"), _nIntentosPolicyCenter)) { break; }
-                _Funciones.CerrarDriver(_driverGlobal);
+                _Funciones.AbrirSelenium(ref _driverGlobal);
+                if (_Funciones.StartSystem(_driverGlobal, cUrl, By.Id("diagnose"), _Usuarios, _nIntentosPolicyCenter)) { break; }
                 _nIndice += 1;
             }
+        }
 
+        #region CONTACT MANAGER
+        private void ContactManager(Ticket oTicket)
+        {
+            IniciarSistema(_cUrlContactManager);
             ActualizarContactManager(oTicket);
         }
 
@@ -394,19 +395,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         #region POLICYCENTER
         private void PolicyCenter(Ticket oTicket)
         {
-            _nIndice = 1;
-            for (int i = 0; i < _nIntentosPolicyCenter; i++)
-            {
-                _Funciones.AbrirSelenium(ref _driverGlobal);
-                _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _cUrlPolicyCenter);
-                Credenciales();
-                _Funciones.LoginPolicyCenter(_driverGlobal, _Usuarios[0], _Usuarios[1]);
-                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("TabBar:PolicyTab_arrow"), _nIntentosPolicyCenter)) { break; }
-                _Funciones.CerrarDriver(_driverGlobal);
-                _nIndice += 1;
-            }
-
+            IniciarSistema(_cUrlPolicyCenter);
             ActualizarPolicyCenter(oTicket);
+
             if (String.IsNullOrWhiteSpace(_cOrdenTrabajo))
             {
                 CambiarEstadoTicket(oTicket, _oMesaControl, _bControl == true ? "La fecha efectiva del cambio no se encuentra dentro del rango de vigencia." : "Ocurrió un error en Análisis de Riesgos para la línea " + _cLinea + ", se requiere aprobación del endoso.");

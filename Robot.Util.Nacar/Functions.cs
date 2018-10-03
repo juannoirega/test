@@ -720,5 +720,20 @@ namespace Robot.Util.Nacar
             }
             return false;
         }
+
+        //Anina: Método para iniciar sistemas en Pacífico. Retorna true si el sistema se inició correctamente.
+        public Boolean StartSystem(IWebDriver oDriver,string cUrlSistema,By by, string[] cCredenciales, int nIntentos = 1, int nSistema = 1)
+        {
+            if (nSistema == 1)
+            {
+                NavegarUrlPolicyCenter(oDriver, cUrlSistema);
+                LoginPolicyCenter(oDriver, cCredenciales[0], cCredenciales[1]);
+            }
+            else { IngresarBPM(oDriver, cUrlSistema, cCredenciales[0], cCredenciales[1]); }
+
+            if (!ExisteElemento(oDriver, by, nIntentos)) { return true; }
+            CerrarDriver(oDriver);
+            return false;
+        }
     }
 }
