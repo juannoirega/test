@@ -239,7 +239,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
             try
             {
                 string estadoPoliza = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_est).Value;
-                Boolean _bFlagVigencia = (_procesos.Where(o => o == estadoPoliza).FirstOrDefault() == null);
+                Boolean _bFlagVigencia = (_procesos.Where(o => o == estadoPoliza).FirstOrDefault() != null);
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
