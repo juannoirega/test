@@ -304,7 +304,7 @@ namespace RobotProcesarTicket
 
 
                     //VERIFICA QUE SEA EMISIÓN:
-                    if (Convert.ToInt32 (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.flg_nuevo).Value)  == 1)
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.flg_nuevo).Value  == "True")
                     {
                         msgObservacion = "La poliza esta en estado de Emisión. " + msgObservacion;
                         if (!(nDiferencia.Days > _nDiasDesistimiento))
