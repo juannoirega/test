@@ -228,11 +228,17 @@ namespace RobotProcesarTicket
                         //Enviar a notificación de correo:
                         CambiarEstadoTicket(oTicketDatos, _oNotificacion);
                     }
+                    else
+                    {
+                        //Enviar a mesa de control: Tiene campos vacíos.
+                        CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cuenta con todos los datos necesarios.");
+                        return;
+                    }
                 }
                 else
                 {
                     //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cuenta con todos los datos necesarios.");
+                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cumple con las reglas necesarias.");
                     return;
                 }
             }
@@ -244,6 +250,12 @@ namespace RobotProcesarTicket
                     {
                         //Enviar a notificación de correo:
                         CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                    }
+                    else
+                    {
+                        //Enviar a mesa de control: Tiene campos vacíos.
+                        CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cumple con las reglas necesarias.");
+                        return;
                     }
                 }
                 else
