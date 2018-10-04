@@ -168,6 +168,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                     {
                         //Enviar a notificación de correo:
                         CambiarEstadoTicket(oTicketDatos, _oNotificacion);
+                        return;
                     }
                 }
                 else
