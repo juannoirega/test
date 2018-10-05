@@ -120,7 +120,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 //poner parametro
                 List<Domain> dominios = container.Domains.Expand(dv => dv.DomainValues).Where(df => df.ParentId == _dominioProceso).ToList();
                 //poner parametro
-                int numero = dominios.FirstOrDefault(o => o.Name == "id").DomainValues.FirstOrDefault(o => o.Value == ticket.TicketValues.FirstOrDefault(f=>f.FieldId==eesFields.Default.idproceso).Value).LineNumber;
+                int numero = dominios.FirstOrDefault(o => o.Name == "id").DomainValues.FirstOrDefault(o => o.Value == ticket.TicketValues.FirstOrDefault(f => f.FieldId == eesFields.Default.idproceso).Value).LineNumber;
                 _existeValorProducto = ValidacionProducto(ticket);
                 //poner parametro para las buquesdas de dominio
                 _buscarPolicyCenter = ValidacionPoliCenter(dominios, numero);
@@ -133,7 +133,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
                 throw new Exception("Error al Verificar el tipo de Proceso", ex);
             }
 
-            if (_buscarPolicyCenter)
+            if (_buscarPolicyCenter && ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.poliza_nro).Value != "")
             {
                 if (!_existeValorProducto)
                 {
@@ -210,7 +210,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             LogStartStep(42);
             string _idDesplegable = string.Empty, banderaDnioRuc = string.Empty;
 
-            if(!String.IsNullOrEmpty(_Funciones.FindElement(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:ExtContactOfficialIDsLV:0:Type"), _tiempoEsperaLargo).Text))
+            if (!String.IsNullOrEmpty(_Funciones.FindElement(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:ExtContactOfficialIDsLV:0:Type"), _tiempoEsperaLargo).Text))
             {
                 banderaDnioRuc = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:ExtContactOfficialIDsLV:0:Type"));
                 if (banderaDnioRuc.Equals("RUC"))
