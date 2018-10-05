@@ -23,7 +23,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
         private static string _cLineaAlianzas = string.Empty; 
         private static string _cProceso = string.Empty;
         private static string _cTratamientoManual = string.Empty;
-        private static string[] _procesos;
+        private static string[] _procesosEstado;
         private List<string> _productosAutos = new List<string>();
         private List<string> _productosRG = new List<string>();
         private List<string> _productosAlianzas = new List<string>();
@@ -110,7 +110,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
                 _cLineaRRGG = "8 ";
                 _cLineaLLPP = "9";
                 _cLineaAlianzas = "10";
-                _procesos = _oRobot.GetValueParamRobot("reglaEstado").ValueParam.Split(',');
+                _procesosEstado = _oRobot.GetValueParamRobot("reglaEstado").ValueParam.Split(',');
             }
             catch (Exception Ex)
             {
@@ -239,7 +239,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.AC
             try
             {
                 string estadoPoliza = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_est).Value;
-                Boolean _bFlagVigencia = (_procesos.Where(o => o == estadoPoliza).FirstOrDefault() != null);
+                Boolean _bFlagVigencia = (_procesosEstado.Where(o => o == estadoPoliza).FirstOrDefault() != null);
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {

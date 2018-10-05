@@ -29,10 +29,10 @@ namespace GmailQuickstart
         // at ~/.credentials/gmail-dotnet-quickstart.json
         static string[] Scopes = { GmailService.Scope.GmailReadonly };
         static string[] _palabras = new string[2];
-        static string[] _valores = new string[11];
+        static string[] _valores = new string[12];
         static string _userId = "soportecorredor_des@pacifico.com.pe";
         static List<string> _adjuntos = null;
-        static int[] _fields = { eesFields.Default.email_cuerpo, eesFields.Default.email_asunto, eesFields.Default.error_des, eesFields.Default.id_est_hijo, eesFields.Default.id_est_padre, eesFields.Default.fields, eesFields.Default.email_fecha_hora, eesFields.Default.email_de, eesFields.Default.email_cc, eesFields.Default.id_est_mesa_control, eesFields.Default.fec_solicitud };
+        static int[] _fields = { eesFields.Default.email_cuerpo, eesFields.Default.email_asunto, eesFields.Default.error_des, eesFields.Default.id_est_hijo, eesFields.Default.id_est_padre, eesFields.Default.fields, eesFields.Default.email_fecha_hora, eesFields.Default.email_de, eesFields.Default.email_cc, eesFields.Default.id_est_mesa_control, eesFields.Default.fec_solicitud, eesFields.Default.idproceso };
         static string ApplicationName = "Gmail API .NET Quickstart";
         static List<DomainValue> _listado = null;
         static List<Puntuacion> puntos = new List<Puntuacion>();
