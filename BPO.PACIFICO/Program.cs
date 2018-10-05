@@ -388,7 +388,7 @@ namespace GmailQuickstart
                 _valores[5] = _valores[5] + eesFields.Default.poliza_nro + ",";
                 return true;
             }
-            ºif (!String.IsNullOrWhiteSpace(dni))
+            if (!String.IsNullOrWhiteSpace(dni))
             {
                 ticket.TicketValues.Add(new TicketValue { Value = dni.Substring(1, 9), ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.nro_dni  });
                 _valores[5] = _valores[5] + eesFields.Default.nro_dni + ",";
