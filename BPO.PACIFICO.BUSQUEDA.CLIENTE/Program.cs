@@ -34,17 +34,22 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
         private string _urlContactManager = string.Empty;
         private string _usuarioContactManager = string.Empty;
         private string _contraseñaContactManager = string.Empty;
-        private string _EstadoError = string.Empty;
-        private Int32 _EstadoSiguiente = 0;
+        private static int _EstadoError;
+        private static int _EstadoSiguiente;
 
         #endregion
 
 
         static void Main(string[] args)
         {
-            _Funciones = new Functions();
-            _robot = new BaseRobot<Program>(args);
-            _robot.Start();
+            try
+            {
+                _Funciones = new Functions();
+                _robot = new BaseRobot<Program>(args);
+                _robot.Start();
+            }
+            catch (Exception Ex) { Console.WriteLine(Ex.Message); }
+            finally { Environment.Exit(0); }
         }
 
         protected override void Start()
@@ -61,10 +66,29 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 catch (Exception ex)
                 {
                     LogFailStep(30, ex);
-
-                    _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _EstadoSiguiente).Id);
+                    CambiarEstadoTicket(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _EstadoError), ex.Message);                  
                 }
             }
+        }
+
+        private void GetParameterRobots()
+        {
+            try
+            {
+                _urlContactManager = _robot.GetValueParamRobot("URLContactManager").ValueParam;
+                _usuarioContactManager = _robot.GetValueParamRobot("UsuarioContactManager").ValueParam;
+                _contraseñaContactManager = _robot.GetValueParamRobot("PasswordContactManager").ValueParam;
+                _EstadoError = Convert.ToInt32(_robot.GetValueParamRobot("EstadoError").ValueParam);
+                _EstadoSiguiente = Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
+
+            }
+            catch (Exception ex) { throw new Exception("Ocurrió un error al obtener los parámetros del robot", ex); }
+        }
+
+        private void CambiarEstadoTicket(Ticket oTicket, StateAction oAccion, string cMensaje = "")
+        {
+            _robot.SaveTicketNextState(cMensaje == "" ? oTicket : _Funciones.MesaDeControl(oTicket, cMensaje), oAccion.Id);
+            _Funciones.CerrarDriver(_driverGlobal);
         }
 
         private void ProcesarTicket(Ticket ticket)
@@ -152,7 +176,7 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
             if (Acceso == "Negativo")
             {
-                _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, "Registro no Encontrado"), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_EstadoSiguiente)).Id);
+                CambiarEstadoTicket(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _EstadoError), "No se encontraron resultados.");                
             }
             else
             {
@@ -285,14 +309,9 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
 
                 ////List<StateAction> stateAction = _robot.GetNextStateAction(_robot.Tickets.FirstOrDefault());
                 //StateAction nextState = stateAction.Where(sa => sa.DestinationStateId == Convert.ToInt32(_EstadoSiguiente)).SingleOrDefault();
-
-                _robot.SaveTicketNextState(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId ==_EstadoSiguiente).Id);
+                CambiarEstadoTicket(ticket, _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == _EstadoSiguiente));
             }
-            catch (Exception ex)
-            {
-                
-                _robot.SaveTicketNextState(_Funciones.MesaDeControl(ticket, ex.Message), _robot.GetNextStateAction(ticket).First(o => o.DestinationStateId == Convert.ToInt32(_EstadoError)).Id);
-            }
+            catch (Exception ex) { throw new Exception(ex.Message, ex); }   
         }
 
         public void InsertarValoresFielt(Ticket ticket, Int32 idFields, String valor)
@@ -304,20 +323,6 @@ namespace BPO.PACIFICO.ACTUALIZAR.DATOS.CLIENTE
                 Value = valor,
                 ClonedValueOrder = null
             });
-        }
-
-        private void GetParameterRobots()
-        {
-            try
-            {
-                _urlContactManager = _robot.GetValueParamRobot("URLContactManager").ValueParam;
-                _usuarioContactManager = _robot.GetValueParamRobot("UsuarioContactManager").ValueParam;
-                _contraseñaContactManager = _robot.GetValueParamRobot("PasswordContactManager").ValueParam;
-                _EstadoError = _robot.GetValueParamRobot("EstadoError").ValueParam;
-                _EstadoSiguiente =Convert.ToInt32(_robot.GetValueParamRobot("EstadoSiguiente").ValueParam);
-
-            }
-            catch (Exception ex) { throw new Exception("Ocurrió un error al obtener los parámetros del robot", ex); }
         }
 
         private void AbrirSelenium()
