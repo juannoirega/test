@@ -97,7 +97,6 @@ namespace BPO.PACIFICO.REHABILITAR
                 _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _urlPolicyCenter);
                 _Funciones.LoginPolicyCenter(_driverGlobal, _usuarioPolicyCenter, _contraseñaPolicyCenter);
                 _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(tv => tv.FieldId == eesFields.Default.poliza_nro).Value);
-                _Funciones.Esperar(_tiempoEsperaLargo);
                 RehabilitarPoliza(ticket);
                 _Funciones.GuardarIdPlantillaNotificacion(ticket,
                    Convert.ToInt32(ticket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idproceso).Value),
@@ -118,7 +117,7 @@ namespace BPO.PACIFICO.REHABILITAR
             LogStartStep(44);
             try
             {
-                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:0"),2))
+                if (!String.IsNullOrEmpty(_Funciones.FindElement(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:0"),_tiempoEsperaLargo).Text))
                 {
                     _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();
                     if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile:PolicyFileMenuActions:PolicyFileMenuActions_NewWorkOrder:PolicyFileMenuActions_ReinstatePolicy"), 2))
