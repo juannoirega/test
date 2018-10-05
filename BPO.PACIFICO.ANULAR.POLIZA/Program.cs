@@ -164,7 +164,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             //else
             //{
             _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.poliza_nro).Value);
-            _Funciones.Esperar(_tiempoEsperaLargo);
+            
             //}
 
         }
@@ -190,7 +190,7 @@ namespace BPO.PACIFICO.ANULAR.POLIZA
             LogStartStep(45);
             try
             {
-                if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV"), 2))
+                if (!String.IsNullOrEmpty(_Funciones.FindElement(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_TransactionsLV"),_tiempoEsperaLargo).Text))
                 {
                     _pasoRealizado = "Menu acciones";
                     _driverGlobal.FindElement(By.Id("PolicyFile:PolicyFileMenuActions")).Click();

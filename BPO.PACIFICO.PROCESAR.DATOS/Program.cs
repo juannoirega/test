@@ -227,12 +227,13 @@ namespace RobotProcesarTicket
                     {
                         //Enviar a notificación de correo:
                         CambiarEstadoTicket(oTicketDatos, _oNotificacion);
-                    }
+                        return;
+                    } 
                 }
                 else
                 {
                     //Enviar a mesa de control: Tiene campos vacíos.
-                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cuenta con todos los datos necesarios.");
+                    CambiarEstadoTicket(oTicketDatos, _oMesaControl, "El ticket " + Convert.ToString(oTicketDatos.Id) + " no cumple con las reglas necesarias.");
                     return;
                 }
             }
@@ -244,7 +245,8 @@ namespace RobotProcesarTicket
                     {
                         //Enviar a notificación de correo:
                         CambiarEstadoTicket(oTicketDatos, _oNotificacion);
-                    }
+                        return;
+                    } 
                 }
                 else
                 {
@@ -269,7 +271,8 @@ namespace RobotProcesarTicket
             try
             {
                 string estadoPoliza = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_est).Value;
-                Boolean _bFlagVigencia = (_procesos.Where(o => o == estadoPoliza).FirstOrDefault() == null);
+                Boolean _bFlagVigencia;
+                _bFlagVigencia = (_procesos.Where(o => o == estadoPoliza).FirstOrDefault() != null);
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
@@ -301,7 +304,7 @@ namespace RobotProcesarTicket
 
 
                     //VERIFICA QUE SEA EMISIÓN:
-                    if (Convert.ToInt32 (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.flg_nuevo).Value)  == 1)
+                    if (oTicketDatos.TicketValues.FirstOrDefault(o => o.FieldId == eesFields.Default.flg_nuevo).Value  == "True")
                     {
                         msgObservacion = "La poliza esta en estado de Emisión. " + msgObservacion;
                         if (!(nDiferencia.Days > _nDiasDesistimiento))

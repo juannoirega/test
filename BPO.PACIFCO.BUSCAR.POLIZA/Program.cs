@@ -203,7 +203,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             _Funciones.NavegarUrlPolicyCenter(_driverGlobal, _url);
             _Funciones.LoginPolicyCenter(_driverGlobal, _usuario, _contraseña);
             _Funciones.BuscarPolizaPolicyCenter(_driverGlobal, ticket.TicketValues.FirstOrDefault(np => np.FieldId == eesFields.Default.poliza_nro).Value);
-            _Funciones.Esperar(_tiempoEsperaLargo);
             ObtenerDatos(ticket);
             GrabarInformacion(ticket);
         }
@@ -212,7 +211,7 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             LogStartStep(42);
             string _idDesplegable = string.Empty, banderaDnioRuc = string.Empty;
 
-            if (_Funciones.ExisteElemento(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:ExtContactOfficialIDsLV:0:Type"),2))
+            if(!String.IsNullOrEmpty(_Funciones.FindElement(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:ExtContactOfficialIDsLV:0:Type"), _tiempoEsperaLargo).Text))
             {
                 banderaDnioRuc = _Funciones.GetElementValue(_driverGlobal, By.Id("PolicyFile_Summary:Policy_SummaryScreen:Policy_Summary_AccountDV:ExtContactOfficialIDsLV:0:Type"));
                 if (banderaDnioRuc.Equals("RUC"))
