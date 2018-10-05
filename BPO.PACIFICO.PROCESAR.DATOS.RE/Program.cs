@@ -21,7 +21,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
         private static string _cLineaAlianzas = string.Empty;
         private static string _cProceso = string.Empty;
         private static string _cTratamientoManual = string.Empty;
-        private static string[] _procesos;
+        private static string[] _procesosEstado;
         private List<string> _productosAlianzas = new List<string>();
         private List<string> _tProductosAlianzas = new List<string>();
         private List<string> _tProductosLPersonales = new List<string>();
@@ -60,7 +60,6 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                 try
                 {
                     _oMesaControl = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Mesa de Control");
-                    _cLinea = _Funciones.ObtenerValorDominio(oTicket, Convert.ToInt32(oTicket.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.idlinea).Value)).ToUpperInvariant();
                     _oPantallaValidacion = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Validar");
                     _oNotificacion = _oRobot.GetNextStateAction(oTicket).First(a => a.ActionDescription == "Rechazar");                    
                     ProcesarTicket(oTicket);
@@ -135,9 +134,9 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
                 //Parámetros del Robot Procesamiento de Datos:
                 _nDiasArrepentimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolRenovadaAuto").ValueParam);
                 _nDiasDesistimiento = Convert.ToInt32(_oRobot.GetValueParamRobot("reglaDiasPolNuevaAuto").ValueParam);
-                _cLineaLLPP = "LLPP";
-                _cLineaAlianzas = "ALIANZAS";
-                _procesos = _oRobot.GetValueParamRobot("reglaEstado").ValueParam.Split(',');
+                _cLineaLLPP = "6";
+                _cLineaAlianzas = "5";
+                _procesosEstado = _oRobot.GetValueParamRobot("reglaEstado").ValueParam.Split(',');
             }
             catch (Exception Ex)
             {
@@ -204,7 +203,7 @@ namespace BPO.PACIFICO.PROCESARDATOS.RE
             try
             {
                 string estadoPoliza = oTicketDatos.TicketValues.FirstOrDefault(a => a.FieldId == eesFields.Default.poliza_est).Value;
-                Boolean _bFlagVigencia = (_procesos.Where(o => o == estadoPoliza).FirstOrDefault() != null);
+                Boolean _bFlagVigencia = (_procesosEstado.Where(o => o == estadoPoliza).FirstOrDefault() != null);
 
                 if (_bFlagVigencia) //Estado: VIGENTE. 
                 {
