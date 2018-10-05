@@ -386,18 +386,17 @@ namespace GmailQuickstart
             {
                 ticket.TicketValues.Add(new TicketValue { Value = police.Substring(1, 10), ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.poliza_nro });
                 _valores[5] = _valores[5] + eesFields.Default.poliza_nro + ",";
-                
-
+                _valores[5] = _valores[5] + eesFields.Default.nro_dni + ",";
+                _valores[5] = _valores[5] + eesFields.Default.nro_ruc + ",";
                 if (!String.IsNullOrWhiteSpace(dni))
                 {
                     ticket.TicketValues.Add(new TicketValue { Value = dni.Substring(1, 9), ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.nro_dni });
-                    _valores[5] = _valores[5] + eesFields.Default.nro_dni + ",";
                     return true;
                 }
                 else if (!String.IsNullOrWhiteSpace(ruc))
                 {
                     ticket.TicketValues.Add(new TicketValue { Value = ruc.Substring(1, 11), ClonedValueOrder = null, TicketId = ticket.Id, FieldId = eesFields.Default.nro_ruc });
-                    _valores[5] = _valores[5] + eesFields.Default.nro_ruc + ",";
+                    
                     return true;
 
                 }
