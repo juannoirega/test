@@ -371,7 +371,6 @@ namespace BPO.PACIFCO.BUSCAR.POLIZA
             _procesoContact = _robot.GetValueParamRobot("ProcessoContact").ValueParam;
             _procesoInicio = _robot.GetValueParamRobot("ProcessoInicio").ValueParam;
             //Verificar como se trabajara este parametro
-            _idProceso =Convert.ToInt32(_robot.GetValueParamRobot("IdProceso").ValueParam);
             _tiempoEsperaLargo = Convert.ToInt32(_robot.GetValueParamRobot("TiempoEsperaLargo").ValueParam);
             LogEndStep(4);
         }
