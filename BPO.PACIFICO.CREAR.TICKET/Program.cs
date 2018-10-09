@@ -26,8 +26,12 @@ namespace BPO.PACIFICO.CREAR.TICKET.HIJO
 
         static void Main(string[] args)
         {
-            _robot = new BaseRobot<Program>(args);
+            try
+            {
+                _robot = new BaseRobot<Program>(args);
             _robot.Start();
+            }
+            catch (Exception Ex) { Console.WriteLine(Ex.Message); }
         }
 
         protected override void Start()
