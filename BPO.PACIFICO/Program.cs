@@ -1,4 +1,4 @@
-using everis.Ees.Proxy.Core;
+    using everis.Ees.Proxy.Core;
 using everis.Ees.Proxy.Services.Interfaces;
 using Everis.Ees.Entities;
 using Google.Apis.Auth.OAuth2;
@@ -111,7 +111,7 @@ namespace GmailQuickstart
 
             // Define parameters of request.
             UsersResource.MessagesResource.ListRequest request = service.Users.Messages.List(_userId);
-            request.MaxResults = 5;
+            request.MaxResults = 1;
             request.LabelIds = "INBOX";
             request.IncludeSpamTrash = false;
             request.Q = "is:unread";
@@ -379,7 +379,7 @@ namespace GmailQuickstart
         public bool AdicionarNumeroPolizaoDnioRuc(Ticket ticket, string texto)
         {
             string police = Regex.Match(texto, @"[^1-9]((2[1-9])[0-9]{4}[0-9]{4})([^1-9]|$)").Value;
-            string dni = Regex.Match(texto, @"[^1-9](([1-9])[0-9]{4}[0-9]{4})([^1-9]|$)").Value;
+            string dni = Regex.Match(texto, @"[^1-9](([1-9])[0-9]{3}[0-9]{4})([^1-9]|$)").Value;
             string ruc = Regex.Match(texto, @"[^1-9](([1-9])[0-9]{5}[0-9]{5})([^1-9]|$)").Value;
             ruc = ValidarRuc(ruc);
             if (!String.IsNullOrWhiteSpace(police))
