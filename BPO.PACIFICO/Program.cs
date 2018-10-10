@@ -379,7 +379,7 @@ namespace GmailQuickstart
         public bool AdicionarNumeroPolizaoDnioRuc(Ticket ticket, string texto)
         {
             string police = Regex.Match(texto, @"[^1-9]((2[1-9])[0-9]{4}[0-9]{4})([^1-9]|$)").Value;
-            string dni = Regex.Match(texto, @"[^1-9](([1-9])[0-9]{3}[0-9]{4})([^1-9]|$)").Value;
+            string dni = Regex.Match(texto, @"[^1-9](([1-9])[0-9]{4}[0-9]{4})([^1-9]|$)").Value;
             string ruc = Regex.Match(texto, @"[^1-9](([1-9])[0-9]{5}[0-9]{5})([^1-9]|$)").Value;
             ruc = ValidarRuc(ruc);
             if (!String.IsNullOrWhiteSpace(police))
